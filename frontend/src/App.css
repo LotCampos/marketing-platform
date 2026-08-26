@@ -1,0 +1,37 @@
+/* =========================================================
+   UI-CADO — APPLICATION SHELL
+   ========================================================= */
+
+.application-shell {
+  width: 100%;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+
+  background:
+    radial-gradient(
+      circle at 90% 5%,
+      rgba(249, 115, 22, 0.035),
+      transparent 28rem
+    ),
+    linear-gradient(
+      135deg,
+      #f8fafc 0%,
+      #f3f4f6 100%
+    );
+
+  color: var(--slate-800);
+}
+
+.application-content {
+  width: 100%;
+  min-width: 0;
+  flex: 1;
+}
+
+.application-main {
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
+  flex: 1;
+}
