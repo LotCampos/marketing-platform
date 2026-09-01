@@ -54,3 +54,14 @@ coverage.xml
 *.temp
 *.swp
 *.swo
+
+# Local project backups
+backups/
+frontend/backups/
+*.bak
+*.backup
+*.pre_*
+*.before_*
+
+# Python environment backups
+venv_py39_backup/
