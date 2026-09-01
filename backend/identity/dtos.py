@@ -31,3 +31,10 @@ class UpdateUserDTO:
     system_role: Optional[str] = None
     is_active: Optional[bool] = None
     expected_version: int = 1
+
+
+@dataclass(frozen=True)
+class SetPasswordDTO:
+    user_id: UUID
+    password: str
+    expected_version: int

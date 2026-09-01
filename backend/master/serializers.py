@@ -1,9 +1,15 @@
 from rest_framework import serializers
 
-from .models import Client, Installation, ServiceCatalog
+from .models import (
+    Client,
+    Installation,
+    InstallationType,
+    ServiceCatalog,
+)
 
 
 class ClientSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = Client
         fields = (
@@ -14,7 +20,12 @@ class ClientSerializer(serializers.ModelSerializer):
 
 
 class InstallationSerializer(serializers.ModelSerializer):
+
     client_id = serializers.UUIDField(
+        read_only=True,
+    )
+
+    installation_type_id = serializers.UUIDField(
         read_only=True,
     )
 
@@ -23,6 +34,7 @@ class InstallationSerializer(serializers.ModelSerializer):
         fields = (
             "id",
             "client_id",
+            "installation_type_id",
             "address",
             "gps_lat",
             "gps_lng",
@@ -30,7 +42,20 @@ class InstallationSerializer(serializers.ModelSerializer):
         )
 
 
+class InstallationTypeSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = InstallationType
+        fields = (
+            "id",
+            "code",
+            "name",
+            "is_active",
+        )
+
+
 class ServiceCatalogSerializer(serializers.ModelSerializer):
+
     class Meta:
         model = ServiceCatalog
         fields = (

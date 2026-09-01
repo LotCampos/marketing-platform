@@ -1,17 +1,11 @@
-import './commercial-pages.css'
+import "./agreements-page.css"
 
 
 import { useQuery } from '@tanstack/react-query'
 
-import CommercialHeader from '../../../shared/components/CommercialHeader'
-
-import CommercialSidebar from '../../../shared/components/CommercialSidebar'
-
-import CommercialTable from '../../../shared/components/CommercialTable'
-
-import StatusBadge from '../../../shared/components/StatusBadge'
-
 import { getAgreements } from '../../../infrastructure/api/commercialApi'
+import CommercialTable from '../../../shared/components/CommercialTable'
+import StatusBadge from '../../../shared/components/StatusBadge'
 
 export default function AgreementsPage() {
   const query = useQuery({
@@ -19,61 +13,121 @@ export default function AgreementsPage() {
     queryFn: getAgreements,
   })
 
+  const agreements = query.data?.results ?? []
+
   return (
-    <div className="application-shell">
-      <CommercialSidebar />
+          <div className="agreements-page">
+        <header className="agreements-hero">
+          <div>
+            <span>
+              COMERCIAL / FORMALIZACIÓN
+            </span>
 
-      <div className="application-main">
-        <CommercialHeader title="Contratos" />
+            <h2>
+              Contratos y acuerdos
+            </h2>
 
-        <main className="page-container">
-          <header className="page-header">
+            <p>
+              Control de la formalización contractual
+              derivada de las oportunidades y cotizaciones
+              comerciales.
+            </p>
+          </div>
+
+          <div className="agreements-summary">
+            <small>REGISTROS</small>
+
+            <strong>
+              {query.data?.count ?? 0}
+            </strong>
+          </div>
+        </header>
+
+        <section className="agreements-panel">
+          <header className="agreements-panel-header">
             <div>
-              <p className="eyebrow">COMERCIAL / FORMALIZACIÓN</p>
-              <h1>Contratos y acuerdos</h1>
-              <p className="page-description">
-                Control de acuerdos derivados del proceso comercial.
-              </p>
+              <span>
+                FORMALIZACIÓN CONTRACTUAL
+              </span>
+
+              <h3>
+                Registro de acuerdos
+              </h3>
             </div>
+
+            <strong>
+              {query.isLoading
+                ? 'Cargando'
+                : `${agreements.length} registros`}
+            </strong>
           </header>
 
-          <section className="dashboard-panel">
-            <div className="panel-heading">
-              <h2>Acuerdos</h2>
-              <span className="record-count">
-                {query.data?.count ?? 0} registros
-              </span>
-            </div>
-
-            <CommercialTable
-              headers={[
-                'Número',
-                'Cotización',
-                'Oportunidad',
-                'Cliente',
-                'Estado',
-                'Vigencia',
-              ]}
-            >
-              {(query.data?.results ?? []).map((item) => (
+          <CommercialTable
+            headers={[
+              'Número',
+              'Cotización',
+              'Oportunidad',
+              'Cliente',
+              'Estado',
+              'Inicio',
+              'Vencimiento',
+            ]}
+          >
+            {query.isLoading ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="empty-state"
+                >
+                  Cargando contratos...
+                </td>
+              </tr>
+            ) : agreements.length === 0 ? (
+              <tr>
+                <td
+                  colSpan={7}
+                  className="empty-state"
+                >
+                  No existen contratos registrados.
+                </td>
+              </tr>
+            ) : (
+              agreements.map((item) => (
                 <tr key={item.id}>
-                  <td className="table-primary">{item.agreement_number}</td>
-                  <td>{item.quotation_id}</td>
-                  <td>{item.opportunity_id}</td>
-                  <td>{item.client_id}</td>
-                  <td>
-                    <StatusBadge value={item.status} />
+                  <td className="table-primary">
+                    {item.agreement_number}
                   </td>
+
                   <td>
-                    {item.effective_from ?? '—'} →{' '}
+                    {item.quotation_id}
+                  </td>
+
+                  <td>
+                    {item.opportunity_id}
+                  </td>
+
+                  <td>
+                    {item.client_id}
+                  </td>
+
+                  <td>
+                    <StatusBadge
+                      value={item.status}
+                    />
+                  </td>
+
+                  <td>
+                    {item.effective_from ?? '—'}
+                  </td>
+
+                  <td>
                     {item.effective_until ?? '—'}
                   </td>
                 </tr>
-              ))}
-            </CommercialTable>
-          </section>
-        </main>
+              ))
+            )}
+          </CommercialTable>
+        </section>
       </div>
-    </div>
   )
 }

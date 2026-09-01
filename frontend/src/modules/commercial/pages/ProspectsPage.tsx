@@ -1,6 +1,4 @@
-import './commercial-pages.css'
-
-import { useState } from 'react'
+import "./prospects-page.css"
 
 import {
   useMutation,
@@ -8,22 +6,23 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
+import { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+
 import {
   createProspect,
   getProspects,
 } from '../../../infrastructure/api/commercialApi'
 
 import type {
+  CreateProspectInput,
   Prospect,
   ProspectStatus,
-  CreateProspectInput,
 } from '../types/commercial'
 
-import CommercialLayout from '../components/CommercialLayout'
 import ProspectForm from '../components/ProspectForm'
-import PageContainer from '../../../shared/components/PageContainer'
+
 import CommercialTable from '../../../shared/components/CommercialTable'
-import StatusBadge from '../../../shared/components/StatusBadge'
 
 const STATUS_LABELS: Record<ProspectStatus, string> = {
   NEW: 'Nuevo',
@@ -37,21 +36,29 @@ const STATUS_LABELS: Record<ProspectStatus, string> = {
 
 export default function ProspectsPage() {
   const queryClient = useQueryClient()
+  const navigate = useNavigate()
 
   const [showForm, setShowForm] = useState(false)
 
-  const prospectsQuery = useQuery({
-    queryKey: ['commercial', 'prospects'],
+  const query = useQuery({
+    queryKey: [
+      'commercial',
+      'prospects',
+    ],
     queryFn: getProspects,
   })
 
-  const createProspectMutation = useMutation({
-    mutationFn: (data: CreateProspectInput) =>
-      createProspect(data),
+  const createMutation = useMutation({
+    mutationFn: (
+      data: CreateProspectInput,
+    ) => createProspect(data),
 
     onSuccess: async () => {
       await queryClient.invalidateQueries({
-        queryKey: ['commercial', 'prospects'],
+        queryKey: [
+          'commercial',
+          'prospects',
+        ],
       })
 
       setShowForm(false)
@@ -59,16 +66,16 @@ export default function ProspectsPage() {
   })
 
   const prospects: Prospect[] =
-    prospectsQuery.data?.results ?? []
+    query.data?.results ?? []
 
-  const handleCreateProspect = (
+  const handleSubmit = (
     data: CreateProspectInput,
   ) => {
-    createProspectMutation.mutate(data)
+    createMutation.mutate(data)
   }
 
-  const handleCancelForm = () => {
-    if (createProspectMutation.isPending) {
+  const handleCancel = () => {
+    if (createMutation.isPending) {
       return
     }
 
@@ -76,180 +83,204 @@ export default function ProspectsPage() {
   }
 
   return (
-    <CommercialLayout>
-      <PageContainer
-        title="Prospectos"
-        description="Gestión y seguimiento de prospectos comerciales registrados en UI-CADO."
-      >
-        {/* =====================================================
-            HEADER DEL REGISTRO
-        ====================================================== */}
+    <div className="prospects-page">
 
-        <section className="dashboard-panel">
-          <div className="panel-heading">
-            <div>
-              <h2>Registro de prospectos</h2>
+      <header className="prospects-hero">
 
-              <span className="record-count">
-                {prospectsQuery.isLoading
-                  ? 'Cargando'
-                  : `${prospects.length} registros`}
-              </span>
-            </div>
+        <div className="prospects-hero-content">
 
-            <button
-              type="button"
-              className="commercial-primary-button"
-              onClick={() => setShowForm(true)}
-              disabled={createProspectMutation.isPending}
-            >
-              <svg
-                viewBox="0 0 24 24"
-                fill="none"
-                stroke="currentColor"
-                strokeWidth="1.8"
-                aria-hidden="true"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M12 5v14m7-7H5"
-                />
-              </svg>
+          <span className="prospects-hero-eyebrow">
+            COMERCIAL / PROSPECTOS
+          </span>
 
-              Nuevo prospecto
-            </button>
+          <h2>
+            Prospectos comerciales
+          </h2>
+
+          <p>
+            Gestión y seguimiento de prospectos
+            comerciales registrados en UI-CADO.
+          </p>
+
+        </div>
+
+        <button
+          type="button"
+          className="prospects-primary-action"
+          onClick={() => setShowForm(true)}
+          disabled={createMutation.isPending}
+        >
+          <span aria-hidden="true">
+            +
+          </span>
+
+          Nuevo prospecto
+        </button>
+
+      </header>
+
+      {showForm && (
+        <section className="prospect-form-container">
+
+          <ProspectForm
+            onSubmit={handleSubmit}
+            onCancel={handleCancel}
+            isPending={
+              createMutation.isPending
+            }
+          />
+
+        </section>
+      )}
+
+      {createMutation.isError && (
+        <div
+          className="prospects-error"
+          role="alert"
+        >
+          No fue posible crear el prospecto.
+          Verifique la información e intente
+          nuevamente.
+        </div>
+      )}
+
+      {query.isError && (
+        <div
+          className="prospects-error"
+          role="alert"
+        >
+          No fue posible cargar los
+          prospectos comerciales.
+        </div>
+      )}
+
+      <section className="prospects-panel">
+
+        <header className="prospects-panel-header">
+
+          <div>
+
+            <span>
+              REGISTRO COMERCIAL
+            </span>
+
+            <h3>
+              Prospectos registrados
+            </h3>
+
           </div>
 
-          {/* ===================================================
-              ERROR DE CREACIÓN
-          ==================================================== */}
+          <strong>
+            {query.isLoading
+              ? 'Cargando'
+              : `${query.data?.count ?? 0} registros`}
+          </strong>
 
-          {createProspectMutation.isError && (
-            <div
-              className="commercial-form-error"
-              role="alert"
-            >
-              <strong>
-                No fue posible crear el prospecto.
-              </strong>
+        </header>
 
-              <span>
-                Verifique la información e intente nuevamente.
-              </span>
-            </div>
+        <CommercialTable
+          headers={[
+            'Prospecto',
+            'Empresa',
+            'Contacto',
+            'RFC',
+            'Origen',
+            'Estado',
+            'Versión',
+          ]}
+        >
+
+          {query.isLoading ? (
+
+            <tr>
+              <td
+                colSpan={7}
+                className="empty-state"
+              >
+                Cargando prospectos...
+              </td>
+            </tr>
+
+          ) : query.isError ? (
+
+            <tr>
+              <td
+                colSpan={7}
+                className="empty-state"
+              >
+                No fue posible cargar los
+                prospectos.
+              </td>
+            </tr>
+
+          ) : prospects.length === 0 ? (
+
+            <tr>
+              <td
+                colSpan={7}
+                className="empty-state"
+              >
+                No existen prospectos
+                registrados.
+              </td>
+            </tr>
+
+          ) : (
+
+            prospects.map((prospect) => (
+
+              <tr
+                key={prospect.id}
+                onClick={() =>
+                  navigate(
+                    `/commercial/prospects/${prospect.id}`,
+                  )
+                }
+                className="prospect-row"
+              >
+
+                <td className="table-primary">
+                  {prospect.prospect_number}
+                </td>
+
+                <td className="table-primary">
+                  {prospect.business_name}
+                </td>
+
+                <td>
+                  {prospect.contact_name ?? '—'}
+                </td>
+
+                <td>
+                  {prospect.rfc ?? '—'}
+                </td>
+
+                <td>
+                  {prospect.source ?? '—'}
+                </td>
+
+                <td>
+                  <span className="status-badge">
+                    {STATUS_LABELS[
+                      prospect.status
+                    ] ?? prospect.status}
+                  </span>
+                </td>
+
+                <td>
+                  {prospect.version_lock}
+                </td>
+
+              </tr>
+
+            ))
+
           )}
 
-          {/* ===================================================
-              TABLA
-          ==================================================== */}
+        </CommercialTable>
 
-          <CommercialTable
-            headers={[
-              'Prospecto',
-              'Empresa',
-              'Contacto',
-              'RFC',
-              'Origen',
-              'Estado',
-              'Versión',
-            ]}
-            emptyMessage="No existen prospectos registrados."
-          >
-            {prospectsQuery.isLoading ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  className="empty-state"
-                >
-                  Cargando prospectos...
-                </td>
-              </tr>
-            ) : prospectsQuery.isError ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  className="empty-state"
-                >
-                  No fue posible cargar los prospectos.
-                </td>
-              </tr>
-            ) : prospects.length === 0 ? (
-              <tr>
-                <td
-                  colSpan={7}
-                  className="empty-state"
-                >
-                  No existen prospectos registrados.
-                </td>
-              </tr>
-            ) : (
-              prospects.map((prospect) => (
-                <tr key={prospect.id}>
-                  <td>
-                    <span className="table-primary">
-                      {prospect.prospect_number}
-                    </span>
-                  </td>
+      </section>
 
-                  <td>
-                    <span className="table-primary">
-                      {prospect.business_name}
-                    </span>
-                  </td>
-
-                  <td>
-                    {prospect.contact_name ?? '—'}
-                  </td>
-
-                  <td>
-                    {prospect.rfc ?? '—'}
-                  </td>
-
-                  <td>
-                    {prospect.source ?? '—'}
-                  </td>
-
-                  <td>
-                    <StatusBadge
-                      value={
-                        STATUS_LABELS[
-                          prospect.status
-                        ]
-                      }
-                    />
-                  </td>
-
-                  <td>
-                    {prospect.version_lock}
-                  </td>
-                </tr>
-              ))
-            )}
-          </CommercialTable>
-        </section>
-
-        {/* =====================================================
-            FORMULARIO NUEVO PROSPECTO
-        ====================================================== */}
-
-        {showForm && (
-          <div
-            className="prospect-form-floating"
-            role="dialog"
-            aria-modal="true"
-            aria-label="Nuevo prospecto"
-          >
-            <ProspectForm
-              onSubmit={handleCreateProspect}
-              onCancel={handleCancelForm}
-              isPending={
-                createProspectMutation.isPending
-              }
-            />
-          </div>
-        )}
-      </PageContainer>
-    </CommercialLayout>
+    </div>
   )
 }

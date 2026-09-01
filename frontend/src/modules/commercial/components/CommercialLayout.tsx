@@ -1,3 +1,5 @@
+import "./CommercialLayout.css"
+
 import type { ReactNode } from 'react'
 
 import CommercialSidebar from '../../../shared/components/CommercialSidebar'
@@ -15,7 +17,7 @@ export default function CommercialLayout({
 
       <main className="commercial-main">
         <header className="commercial-header">
-          <div>
+          <div className="commercial-header-content">
             <span className="commercial-header-kicker">
               OPERACIÓN COMERCIAL
             </span>
@@ -23,7 +25,10 @@ export default function CommercialLayout({
             <h1>Comercial</h1>
           </div>
 
-          <div className="commercial-header-status">
+          <div
+            className="commercial-header-status"
+            aria-label="Estado de conexión"
+          >
             <span className="status-indicator" />
             <span>API conectada</span>
           </div>

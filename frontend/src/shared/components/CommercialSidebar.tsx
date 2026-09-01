@@ -1,17 +1,20 @@
+import "./CommercialSidebar.css"
+
 import { NavLink } from 'react-router-dom'
 
-const navigation = [
+interface NavigationItem {
+  label: string
+  path: string
+}
+
+const navigation: NavigationItem[] = [
   {
-    label: 'Resumen',
+    label: 'Dashboard',
     path: '/commercial',
   },
   {
     label: 'Prospectos',
     path: '/commercial/prospects',
-  },
-  {
-    label: 'Solicitudes',
-    path: '/commercial/service-requests',
   },
   {
     label: 'Oportunidades',
@@ -21,25 +24,33 @@ const navigation = [
     label: 'Cotizaciones',
     path: '/commercial/quotations',
   },
-  {
-    label: 'Contratos',
-    path: '/commercial/agreements',
-  },
 ]
 
 export default function CommercialSidebar() {
   return (
     <aside className="commercial-sidebar">
-      <div className="brand">
-        <div className="brand-mark">UI</div>
+      <div className="commercial-brand">
+        <div
+          className="commercial-brand-mark"
+          aria-hidden="true"
+        >
+          UI
+        </div>
 
-        <div>
+        <div className="commercial-brand-copy">
           <strong>UI-CADO</strong>
-          <span>Sistema Operativo Digital</span>
+          <span>
+            Sistema Operativo Digital
+          </span>
         </div>
       </div>
 
-      <div className="module-label">COMERCIAL</div>
+      <div className="commercial-module">
+        <span className="commercial-module-label">
+          MÓDULO
+        </span>
+        <strong>Comercial · Prospección</strong>
+      </div>
 
       <nav
         className="commercial-navigation"
@@ -51,19 +62,30 @@ export default function CommercialSidebar() {
             to={item.path}
             end={item.path === '/commercial'}
             className={({ isActive }) =>
-              isActive
-                ? 'navigation-link active'
-                : 'navigation-link'
+              [
+                'commercial-navigation-link',
+                isActive
+                  ? 'commercial-navigation-link-active'
+                  : '',
+              ]
+                .filter(Boolean)
+                .join(' ')
             }
           >
-            {item.label}
+            <span className="commercial-navigation-indicator" />
+
+            <span className="commercial-navigation-label">
+              {item.label}
+            </span>
           </NavLink>
         ))}
       </nav>
 
-      <div className="sidebar-footer">
+      <div className="commercial-sidebar-footer">
         <span>UI-CADO</span>
-        <small>Enterprise Operations</small>
+        <small>
+          Enterprise Operations
+        </small>
       </div>
     </aside>
   )

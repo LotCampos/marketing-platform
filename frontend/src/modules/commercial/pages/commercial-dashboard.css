@@ -1,0 +1,303 @@
+/* =========================================================
+   UI-CADO
+   COMMERCIAL DASHBOARD
+   Enterprise Liquid Glass
+   ========================================================= */
+
+.dashboard-page {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   PAGE HEADER
+   ========================================================= */
+
+.dashboard-page .page-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+
+  margin-bottom: 28px;
+  padding: 30px;
+
+  border: 1px solid rgba(255, 255, 255, 0.78);
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at 100% 0%,
+      rgba(249, 115, 22, 0.16),
+      transparent 22rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.88),
+      rgba(248, 250, 252, 0.72)
+    );
+
+  box-shadow:
+    0 24px 60px rgba(15, 23, 42, 0.07),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(26px);
+  -webkit-backdrop-filter: blur(26px);
+}
+
+.dashboard-page .page-header > div {
+  min-width: 0;
+}
+
+.dashboard-page .eyebrow {
+  display: block;
+
+  margin-bottom: 8px;
+
+  color: #ea580c;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.dashboard-page .page-header h1 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: clamp(25px, 3vw, 34px);
+  line-height: 1.1;
+
+  font-weight: 780;
+  letter-spacing: -0.035em;
+}
+
+.dashboard-page .page-description {
+  max-width: 760px;
+
+  margin: 12px 0 0;
+
+  color: #64748b;
+
+  font-size: 14px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   API ERROR
+   ========================================================= */
+
+.dashboard-page .api-error {
+  display: flex;
+  align-items: center;
+
+  margin-bottom: 24px;
+  padding: 14px 18px;
+
+  border: 1px solid rgba(239, 68, 68, 0.16);
+  border-radius: 14px;
+
+  background: rgba(254, 242, 242, 0.82);
+
+  color: #991b1b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   KPI GRID
+   ========================================================= */
+
+.dashboard-page .kpi-grid {
+  display: grid;
+
+  grid-template-columns:
+    repeat(4, minmax(0, 1fr));
+
+  gap: 18px;
+
+  margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   DASHBOARD PANELS
+   ========================================================= */
+
+.dashboard-page .dashboard-panel {
+  overflow: hidden;
+
+  margin-bottom: 24px;
+
+  border: 1px solid rgba(148, 163, 184, 0.16);
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.88),
+      rgba(248, 250, 252, 0.72)
+    );
+
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+
+/* =========================================================
+   PANEL HEADER
+   ========================================================= */
+
+.dashboard-page .panel-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+
+  gap: 24px;
+
+  padding: 24px 26px 20px;
+
+  border-bottom:
+    1px solid rgba(148, 163, 184, 0.12);
+}
+
+.dashboard-page .panel-heading > div {
+  min-width: 0;
+}
+
+.dashboard-page .panel-heading .eyebrow {
+  margin-bottom: 6px;
+
+  color: #f97316;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.dashboard-page .panel-heading h2 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 17px;
+  font-weight: 750;
+
+  letter-spacing: -0.02em;
+}
+
+.dashboard-page .record-count {
+  flex: 0 0 auto;
+
+  padding: 7px 11px;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.15);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.62);
+
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+
+/* =========================================================
+   TABLE VISIBILITY
+   ========================================================= */
+
+.dashboard-page .dashboard-panel > .table-container {
+  width: 100%;
+  overflow-x: auto;
+}
+
+.dashboard-page .dashboard-panel table {
+  width: 100%;
+}
+
+.dashboard-page .dashboard-panel tbody {
+  visibility: visible;
+}
+
+.dashboard-page .dashboard-panel tbody tr {
+  visibility: visible;
+}
+
+.dashboard-page .dashboard-panel tbody td {
+  visibility: visible;
+}
+
+
+/* =========================================================
+   TABLE DESCRIPTION
+   ========================================================= */
+
+.dashboard-page .commercial-table-description {
+  display: block;
+
+  max-width: 420px;
+
+  overflow: hidden;
+
+  color: #64748b;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 1200px) {
+  .dashboard-page .kpi-grid {
+    grid-template-columns:
+      repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 820px) {
+  .dashboard-page .page-header {
+    flex-direction: column;
+    align-items: stretch;
+
+    padding: 22px;
+  }
+}
+
+@media (max-width: 680px) {
+  .dashboard-page .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .dashboard-page .panel-heading {
+    flex-direction: column;
+  }
+
+  .dashboard-page .record-count {
+    align-self: flex-start;
+  }
+}
+
+@media (max-width: 640px) {
+  .dashboard-page .page-header h1 {
+    font-size: 26px;
+  }
+}

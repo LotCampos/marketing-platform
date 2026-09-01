@@ -1,19 +1,25 @@
 from rest_framework import viewsets
-from rest_framework.permissions import AllowAny
 
-from .models import Client, Installation, ServiceCatalog
+from .models import (
+    Client,
+    Installation,
+    InstallationType,
+    ServiceCatalog,
+)
 from .serializers import (
     ClientSerializer,
     InstallationSerializer,
+    InstallationTypeSerializer,
     ServiceCatalogSerializer,
 )
 
 
 class MasterBaseViewSet(viewsets.ReadOnlyModelViewSet):
-    permission_classes = [AllowAny]
+    pass
 
 
 class ClientViewSet(MasterBaseViewSet):
+
     serializer_class = ClientSerializer
 
     def get_queryset(self):
@@ -25,6 +31,7 @@ class ClientViewSet(MasterBaseViewSet):
 
 
 class InstallationViewSet(MasterBaseViewSet):
+
     serializer_class = InstallationSerializer
 
     def get_queryset(self):
@@ -46,7 +53,20 @@ class InstallationViewSet(MasterBaseViewSet):
         return queryset
 
 
+class InstallationTypeViewSet(MasterBaseViewSet):
+
+    serializer_class = InstallationTypeSerializer
+
+    def get_queryset(self):
+        return (
+            InstallationType.objects
+            .filter(is_active=True)
+            .order_by("name")
+        )
+
+
 class ServiceCatalogViewSet(MasterBaseViewSet):
+
     serializer_class = ServiceCatalogSerializer
 
     def get_queryset(self):

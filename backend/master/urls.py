@@ -3,6 +3,7 @@ from rest_framework.routers import DefaultRouter
 from .views import (
     ClientViewSet,
     InstallationViewSet,
+    InstallationTypeViewSet,
     ServiceCatalogViewSet,
 )
 
@@ -19,6 +20,12 @@ router.register(
     "installations",
     InstallationViewSet,
     basename="master-installation",
+)
+
+router.register(
+    "installation-types",
+    InstallationTypeViewSet,
+    basename="master-installation-type",
 )
 
 router.register(

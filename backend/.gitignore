@@ -5,11 +5,12 @@ __pycache__/
 
 # Virtual environments
 venv/
+venv_py39_backup/
 .venv/
 ENV/
 env/
 
-# Django
+# Django / local database
 *.sqlite3
 *.sqlite3-journal
 media/
@@ -41,3 +42,15 @@ htmlcov/
 
 # Logs
 *.log
+
+# Generated / temporary files
+*.before_*
+*.pre_*
+
+# Local project backups
+backups/
+frontend/backups/
+
+# Accidental temporary files
+*.tmp
+*.temp

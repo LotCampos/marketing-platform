@@ -1,3 +1,5 @@
+import "./CommercialTable.css"
+
 import type { ReactNode } from 'react'
 
 interface CommercialTableProps {

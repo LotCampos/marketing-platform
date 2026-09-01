@@ -3,6 +3,7 @@ from decimal import Decimal
 from django.db import models
 
 from core.models import UICadoBaseModel
+from master.models import InstallationType
 
 
 class CommercialBaseModel(UICadoBaseModel):
@@ -191,6 +192,14 @@ class Opportunity(CommercialBaseModel):
         db_column="opportunity_number",
     )
 
+    prospect = models.ForeignKey(
+        "Prospect",
+        on_delete=models.PROTECT,
+        db_column="prospect_id",
+        related_name="opportunities",
+        null=True,
+        blank=True,
+    )
     service_request_id = models.UUIDField(
         db_column="service_request_id",
     )
@@ -460,6 +469,15 @@ class Prospect(CommercialBaseModel):
     rfc = models.CharField(
         max_length=13,
         db_column="rfc",
+        null=True,
+        blank=True,
+    )
+
+    installation_type = models.ForeignKey(
+        InstallationType,
+        on_delete=models.DO_NOTHING,
+        db_column="installation_type_id",
+        related_name="prospects",
         null=True,
         blank=True,
     )

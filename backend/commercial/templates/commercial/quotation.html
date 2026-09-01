@@ -1,0 +1,1055 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+
+  <meta charset="UTF-8">
+
+  <title>Carta Cotización - UI CADO</title>
+
+  <style>
+
+    /* =========================================================
+       CONFIGURACIÓN DE PÁGINA PDF
+       ========================================================= */
+
+    @page {
+      size: letter;
+      margin: 5mm 0 0 0;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: Arial, "Helvetica Neue", Helvetica, sans-serif;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+    }
+
+    body {
+      background: #ffffff;
+      margin: 0;
+      padding: 0;
+    }
+
+    .page {
+      width: 100%;
+      background-color: #ffffff;
+      padding: 0 50px 0 50px;
+      position: relative;
+    }
+
+    /* =========================================================
+       VARIABLES
+       ========================================================= */
+
+    .ph {
+      color: #000000;
+    }
+
+    /* =========================================================
+       HEADER
+       ========================================================= */
+
+    .header {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      width: 100%;
+      height: 27mm;
+      padding: 8px 45px 0 45px;
+      background-color: #ffffff;
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      z-index: 1000;
+    }
+
+    .header-left {
+      width: 30%;
+      display: flex;
+      align-items: center;
+    }
+
+    .logo-image {
+      width: 100%;
+      max-height: 65px;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
+    }
+
+    .header-right {
+      width: 68%;
+    }
+
+    .header-right .top-title {
+      font-size: 17pt;
+      font-weight: 900;
+      color: #1a1a1a;
+      letter-spacing: 2.9px;
+      text-align: center;
+      margin-bottom: 3px;
+    }
+
+    .header-bar {
+      display: flex;
+      height: 13px;
+      width: 100%;
+      margin-bottom: 5px;
+    }
+
+    .header-bar-orange {
+      width: 50%;
+      background-color: #e57f24;
+    }
+
+    .header-bar-grey {
+      width: 50%;
+      background-color: #000000;
+    }
+
+    .acreditaciones {
+      display: flex;
+      justify-content: space-between;
+      font-size: 8pt;
+      font-weight: bold;
+      color: #000000;
+      padding: 0 19px;
+    }
+
+    /* =========================================================
+       CONTENIDO
+       ========================================================= */
+
+    .document-content {
+      width: 100%;
+      min-height: 67mm;
+    }
+
+    /* =========================================================
+       TÍTULO
+       ========================================================= */
+
+    .doc-title-container {
+      text-align: center;
+      margin: 100px 0 20px 0;
+      page-break-inside: avoid;
+    }
+
+    .doc-title {
+      font-size: 14pt;
+      font-weight: 900;
+      color: #000000;
+      letter-spacing: 0.5px;
+    }
+
+    /* =========================================================
+       FECHA
+       ========================================================= */
+
+    .date-row {
+      text-align: right;
+      font-size: 9pt;
+      color: #000000;
+      margin-bottom: 20px;
+    }
+
+    /* =========================================================
+       INFORMACIÓN CLIENTE
+       ========================================================= */
+
+    .info-block {
+      font-size: 9pt;
+      line-height: 1.4;
+      margin-bottom: 15px;
+      color: #000000;
+      page-break-inside: avoid;
+    }
+
+    .info-block strong {
+      color: #000000;
+      font-weight: bold;
+    }
+
+    /* =========================================================
+       PÁRRAFOS
+       ========================================================= */
+
+    .paragraph {
+      font-size: 9pt;
+      line-height: 1.4;
+      color: #000000;
+      margin-bottom: 15px;
+      text-align: justify;
+    }
+
+    /* =========================================================
+       TABLA COTIZACIÓN
+       ========================================================= */
+
+    .table-section {
+      margin: 15px 0;
+    }
+
+    .quote-table-wrapper {
+      page-break-inside: auto;
+    }
+
+    table.cotizacion-table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 8pt;
+      table-layout: fixed;
+      page-break-inside: auto;
+    }
+
+    table.cotizacion-table th {
+      background-color: #e57f24;
+      color: #000000;
+      font-weight: bold;
+      text-align: center;
+      padding: 5px 3px;
+      border: 1px solid #000000;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    .quotation-category-row th {
+      background-color: #c9cbce;
+      color: #ffffff;
+      font-size: 8pt;
+      font-weight: 900;
+      text-align: center;
+      padding: 6px 4px;
+      border: 1px solid #000000;
+      text-transform: uppercase;
+      vertical-align: middle;
+    }
+
+    table.cotizacion-table td {
+      border: 1px solid #000000;
+      padding: 5px 6px;
+      min-height: 22px;
+      vertical-align: middle;
+    }
+
+    .col-instalacion {
+      width: 25%;
+      text-align: center;
+    }
+
+    .col-norma {
+      width: 45%;
+      text-align: left;
+    }
+
+    .col-cant {
+      width: 10%;
+      text-align: center;
+    }
+
+    .col-pu {
+      width: 10%;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .col-pt {
+      width: 10%;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    .empty-row td {
+      height: 22px;
+    }
+
+    thead {
+      display: table-header-group;
+    }
+
+    tbody {
+      display: table-row-group;
+    }
+
+    tr {
+      page-break-inside: avoid;
+      page-break-after: auto;
+    }
+
+    /* =========================================================
+       TOTALES
+       ========================================================= */
+
+    .no-border-cell {
+      border: none !important;
+      background: transparent !important;
+    }
+
+    .summary-label {
+      background-color: #c9cbce;
+      font-weight: bold;
+      text-align: right;
+      padding-right: 8px !important;
+      border: 1px solid #000000 !important;
+    }
+
+    .summary-value {
+      background-color: #c9cbce;
+      text-align: right;
+      border: 1px solid #000000 !important;
+      font-weight: bold;
+      white-space: nowrap;
+    }
+
+    .discount-row .summary-value {
+      color: #000000;
+    }
+
+    .total-row .summary-label,
+    .total-row .summary-value {
+      font-size: 8pt;
+      font-weight: 900;
+    }
+
+    /* =========================================================
+       CONDICIONES
+       ========================================================= */
+
+    .conditions-list {
+      list-style: none;
+      font-size: 8pt;
+      line-height: 1.3;
+      margin: 20px 0 10px 0;
+      page-break-inside: avoid;
+    }
+
+    .conditions-list li {
+      display: flex;
+      margin-bottom: 4px;
+      text-align: justify;
+    }
+
+    .conditions-list .label {
+      width: 24px;
+      flex-shrink: 0;
+      font-weight: bold;
+    }
+
+    /* =========================================================
+       DESPEDIDA
+       ========================================================= */
+
+    .closing {
+      text-align: center;
+      font-size: 8pt;
+      margin: 30px 0 30px 0;
+      page-break-inside: avoid;
+    }
+
+    /* =========================================================
+       FIRMAS
+       ========================================================= */
+
+    .signatures {
+      display: flex;
+      justify-content: space-between;
+      padding: 0 10px;
+      margin-bottom: 17px;
+      page-break-inside: avoid;
+    }
+
+    .sig-box {
+      width: 42%;
+      text-align: center;
+      page-break-inside: avoid;
+    }
+
+    .sig-image {
+      display: block;
+      width: 225px;
+      height: 100px;
+      object-fit: contain;
+      object-position: center;
+      margin: 0 auto 4px auto;
+    }
+
+    .sig-line {
+      border-top: 1px solid #000000;
+      margin-bottom: 6px;
+    }
+
+    .sig-title {
+      font-size: 8pt;
+      font-weight: bold;
+      line-height: 1.25;
+    }
+
+    .sig-client-name {
+      color: #000000;
+    }
+
+    /* =========================================================
+       FOOTER
+       ========================================================= */
+
+    .footer-container {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      width: 100%;
+      background-color: #ffffff;
+      z-index: 1000;
+    }
+
+    .footer-bar {
+      display: flex;
+      height: 16px;
+      width: 100%;
+    }
+
+    .footer-orange {
+      width: 70%;
+      background-color: #e57f24;
+    }
+
+    .footer-dark {
+      width: 30%;
+      background-color: #333333;
+    }
+
+    /* =========================================================
+       IMPRESIÓN
+       ========================================================= */
+
+    @media print {
+
+      body {
+        background: #ffffff;
+        padding: 0;
+        margin: 0;
+      }
+
+      .page {
+        width: 100%;
+        min-height: 0;
+        margin: 0;
+        padding-bottom: 20px;
+        box-shadow: none;
+      }
+
+    }
+
+  </style>
+
+</head>
+
+
+<body>
+
+  <div class="page">
+
+    <!-- =====================================================
+         HEADER
+         ===================================================== -->
+
+    <header class="header">
+
+      <div class="header-left">
+
+        <img
+          src="{{ LOGO_URI }}"
+          alt="UI CADO"
+          class="logo-image"
+        >
+
+      </div>
+
+
+      <div class="header-right">
+
+        <div class="top-title">
+          UNIDAD DE INSPECCIÓN
+        </div>
+
+
+        <div class="header-bar">
+
+          <div class="header-bar-orange"></div>
+
+          <div class="header-bar-grey"></div>
+
+        </div>
+
+
+        <div class="acreditaciones">
+
+          <span>
+            Acreditación EMA: ES-081 | UVPET-007
+          </span>
+
+          <span>
+            Acreditación MAAC: 23UIC015
+          </span>
+
+        </div>
+
+      </div>
+
+    </header>
+
+
+    <!-- =====================================================
+         CONTENIDO
+         ===================================================== -->
+
+    <main class="document-content">
+
+
+      <!-- ===================================================
+           TÍTULO
+           =================================================== -->
+
+      <div class="doc-title-container">
+
+        <div class="doc-title">
+          CARTA COTIZACIÓN
+        </div>
+
+      </div>
+
+
+      <!-- ===================================================
+           FECHA
+           =================================================== -->
+
+      <div class="date-row">
+
+        Puebla, Pue. a
+
+        <span class="ph">
+          {{ FECHA_DE_COTIZACION }}
+        </span>
+
+      </div>
+
+
+      <!-- ===================================================
+           REFERENCIA DE COTIZACIÓN
+           =================================================== -->
+
+      <div class="info-block">
+
+        <strong>
+          FOLIO:
+        </strong>
+
+        <span class="ph">
+          {{ FOLIO_COTIZACION }}
+        </span>
+
+        &nbsp;&nbsp;&nbsp;
+
+        <strong>
+          VERSIÓN:
+        </strong>
+
+        <span class="ph">
+          {{ NUMERO_VERSION }}
+        </span>
+
+        <br>
+
+
+        <strong>
+          ATENCIÓN:
+        </strong>
+
+        <span class="ph">
+          {{ NOMBRE_CONTACTO }}
+        </span>
+
+        <br>
+
+
+        <strong>
+          EMPRESA:
+        </strong>
+
+        <span class="ph">
+          {{ NOMBRE_EMPRESA }}
+        </span>
+
+      </div>
+
+
+      <!-- ===================================================
+           PÁRRAFOS
+           =================================================== -->
+
+      <p class="paragraph">
+
+        Nos es grato extenderle un cordial saludo, deseando que usted y sus colaboradores se encuentren bien. En <strong>UI CADO</strong> garantizamos el cumplimiento de nuestra política de calidad, confidencialidad e imparcialidad en la prestación de todos nuestros servicios.
+
+      </p>
+
+      <p class="paragraph">
+
+        En atención a su amable solicitud y con el compromiso de brindarle un servicio confiable y profesional, nos permitimos presentar a su consideración la siguiente cotización para los servicios de evaluación de la conformidad correspondientes a
+
+        <span class="ph">
+          {{ SERVICIO }}
+        </span>.
+
+      </p>
+
+
+      <!-- ===================================================
+           TABLA COTIZACIÓN
+           =================================================== -->
+
+      <div class="table-section quote-table-wrapper">
+
+        <table class="cotizacion-table">
+
+          <thead>
+
+            <tr class="quotation-category-row">
+              <th colspan="5">
+                  {{ CATEGORIA_COTIZACION }}
+              </th>
+            </tr>
+            <tr>
+
+              <th style="width: 22%;">
+                TIPO DE INSTALACIÓN
+              </th>
+
+              <th style="width: 45%;">
+                NORMA OFICIAL
+              </th>
+
+              <th style="width: 10%;">
+                CANTIDAD
+              </th>
+
+              <th style="width: 11%;">
+                PRECIO UNITARIO
+              </th>
+
+              <th style="width: 12%;">
+                PRECIO TOTAL
+              </th>
+
+            </tr>
+
+          </thead>
+
+
+          <tbody>
+
+            {% for partida in partidas %}
+
+            <tr>
+
+              <td class="col-instalacion">
+
+                <span class="ph">
+                  {{ partida.tipo_instalacion }}
+                </span>
+
+              </td>
+
+
+              <td class="col-norma">
+
+                <span class="ph">
+                  {{ partida.norma_oficial }}
+                </span>
+
+                {% if partida.descripcion %}
+
+                <br>
+
+                <span style="
+                  font-size: 7.5pt;
+                  color: #444444;
+                ">
+                  {{ partida.descripcion }}
+                </span>
+
+                {% endif %}
+
+              </td>
+
+
+              <td class="col-cant">
+
+                <span class="ph">
+                  {{ partida.cantidad }}
+                </span>
+
+              </td>
+
+
+              <td class="col-pu">
+
+                <span class="ph">
+                  {{ partida.precio_unitario }}
+                </span>
+
+              </td>
+
+
+              <td class="col-pt">
+
+                <span class="ph">
+                  {{ partida.precio_total }}
+                </span>
+
+              </td>
+
+            </tr>
+
+            {% empty %}
+
+            <tr class="empty-row">
+
+              <td colspan="5" style="text-align: center;">
+
+                Sin partidas registradas.
+
+              </td>
+
+            </tr>
+
+            {% endfor %}
+
+
+            <!-- =============================================
+                 DESCUENTO
+                 ============================================= -->
+
+            {% if MOSTRAR_DESCUENTO %}
+
+              <tr class="discount-row">
+
+                <td
+                  colspan="3"
+                  class="no-border-cell"
+                ></td>
+
+                <td class="summary-label">
+                  DESCUENTO
+                </td>
+
+                <td class="summary-value ph">
+                  {{ DESCUENTO }}
+                </td>
+
+              </tr>
+
+            {% endif %}
+
+            <!-- =============================================
+                 SUBTOTAL
+                 ============================================= -->
+
+            <tr>
+
+              <td colspan="3" class="no-border-cell"></td>
+
+              <td class="summary-label">
+                SUBTOTAL
+              </td>
+
+              <td class="summary-value ph">
+                {{ SUBTOTAL }}
+              </td>
+
+            </tr>
+
+
+            <!-- =============================================
+                 IVA
+                 ============================================= -->
+
+            <tr>
+
+              <td colspan="3" class="no-border-cell"></td>
+
+              <td class="summary-label">
+                IVA {{ IVA_PORCENTAJE }}%
+              </td>
+
+              <td class="summary-value ph">
+                {{ IVA }}
+              </td>
+
+            </tr>
+
+
+            <!-- =============================================
+                 TOTAL
+                 ============================================= -->
+
+            <tr class="total-row">
+
+              <td colspan="3" class="no-border-cell"></td>
+
+              <td class="summary-label">
+                TOTAL
+              </td>
+
+              <td class="summary-value ph">
+                {{ TOTAL }}
+              </td>
+
+            </tr>
+
+          </tbody>
+
+        </table>
+
+      </div>
+
+
+      <!-- ===================================================
+           CONDICIONES
+           =================================================== -->
+
+      <ul class="conditions-list">
+
+
+            <!-- a) -->
+
+            <li>
+
+              <span class="label">
+                a)
+              </span>
+
+              <span>
+                Forma de pago: 50% de anticipo y 50% a la finalización del proceso (A contra entrega Dictámenes y Certificado.)
+              </span>
+
+            </li>
+
+
+            <!-- b) VIATICOS DINAMICOS -->
+
+            <li>
+
+              <span class="label">
+                b)
+              </span>
+
+              <span>
+
+                {% if VIATICOS_INCLUIDOS %}
+
+                  El costo por concepto de viáticos se encuentra incluidos en el monto total de esta propuesta.
+
+                {% else %}
+
+                  El costo por concepto de viaticos vienen incluidos al aceptar la cotización.
+
+                {% endif %}
+
+              </span>
+
+            </li>
+
+
+            <!-- c) -->
+
+            <li>
+
+              <span class="label">
+                c)
+              </span>
+
+              <span>
+                Se le solicitará de su amable colaboración para la entrega de documentación previa, con la finalidad de optimizar los tiempos en la visita.
+              </span>
+
+            </li>
+
+
+            <!-- d) -->
+
+            <li>
+
+              <span class="label">
+                d)
+              </span>
+
+              <span>
+                En caso de tener hallazgos durante la visita, se coordinará con la estación el tiempo conveniente y de ser necesario se diseñará un plan de seguimiento para poder solventarlos (sin que esto afecte la entrega de sus Dictámenes y Certificado).
+              </span>
+
+            </li>
+
+
+            <!-- e) -->
+
+            <li>
+
+              <span class="label">
+                e)
+              </span>
+
+              <span>
+                Para realizar la inspección en sitio se le solicitará amablemente la disponibilidad de horario.
+              </span>
+
+            </li>
+
+
+            <!-- f) -->
+
+            <li>
+
+              <span class="label">
+                f)
+              </span>
+
+              <span>
+
+                Esta cotización tiene una vigencia de
+
+                <strong>
+                  {{ VIGENCIA_DIAS }} días
+                </strong>
+
+                , contados a partir de su fecha de emisión.
+
+              </span>
+
+            </li>
+
+
+            <!-- g) -->
+
+            <li>
+
+              <span class="label">
+                g)
+              </span>
+
+              <span>
+                Para la aceptación de la Contratación del Servicio, favor de enviar firmada esta Carta Cotización.
+              </span>
+
+            </li>
+
+
+          </ul>
+
+
+      <!-- ===================================================
+           DESPEDIDA
+           =================================================== -->
+
+      <div class="closing">
+
+        Quedo a sus órdenes.
+
+      </div>
+
+
+      <!-- ===================================================
+           FIRMAS
+           =================================================== -->
+
+      <div class="signatures">
+
+
+        <!-- FIRMA UI CADO -->
+
+        <div class="sig-box">
+
+          <img
+            src="{{ FIRMA_DIRECTOR_URI }}"
+            alt="Firma Director General"
+            class="sig-image"
+          >
+
+
+          <div class="sig-line"></div>
+
+
+          <div class="sig-title">
+
+            ING. SERGIO NOE REYES ZAPATA
+
+            <br>
+
+            DIRECTOR GENERAL
+
+          </div>
+
+        </div>
+
+
+        <!-- FIRMA CLIENTE -->
+
+        <div class="sig-box">
+
+          <div style="height: 100px;"></div>
+
+
+          <div class="sig-line"></div>
+
+
+          <div class="sig-title">
+
+            <span class="sig-client-name">
+              {{ NOMBRE_EMPRESA }}
+            </span>
+
+            <br>
+
+            CLIENTE
+
+          </div>
+
+        </div>
+
+
+      </div>
+
+
+    </main>
+
+
+    <!-- =====================================================
+         FOOTER
+         ===================================================== -->
+
+    <footer class="footer-container">
+
+      <div class="footer-bar">
+
+        <div class="footer-orange"></div>
+
+        <div class="footer-dark"></div>
+
+      </div>
+
+    </footer>
+
+
+  </div>
+
+</body>
+
+</html>

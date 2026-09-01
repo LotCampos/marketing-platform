@@ -26,6 +26,7 @@ class ProspectCreateData:
     assigned_to: Optional[UUID] = None
     interest_description: Optional[str] = None
     notes: Optional[str] = None
+    installation_type: Optional[UUID] = None
 
 
 class OptimisticLockError(ValidationError):
@@ -113,6 +114,7 @@ class ProspectService:
             prospect_number=cls._generate_prospect_number(),
             business_name=normalized.business_name,
             rfc=normalized.rfc,
+            installation_type_id=normalized.installation_type,
             contact_name=normalized.contact_name,
             contact_email=normalized.contact_email,
             contact_phone=normalized.contact_phone,
@@ -136,16 +138,44 @@ class ProspectService:
     ) -> Prospect:
         """
         Performs a controlled Prospect state transition
-        using optimistic concurrency control.
+        with strict optimistic concurrency control.
+
+        The expected version is part of the write condition.
+        A stale version can never overwrite a newer version.
         """
 
         new_status = cls._normalize_status(new_status)
 
-        prospect = Prospect.objects.get(
-            id=prospect_id,
-        )
+        if expected_version < 1:
+            raise ValidationError(
+                {
+                    "version_lock": (
+                        "Expected version must be greater than or equal to 1."
+                    )
+                }
+            )
+
+        try:
+            prospect = Prospect.objects.only(
+                "id",
+                "status",
+                "version_lock",
+            ).get(
+                id=prospect_id,
+            )
+        except Prospect.DoesNotExist:
+            raise ValidationError(
+                {
+                    "prospect_id": (
+                        "Prospect does not exist."
+                    )
+                }
+            )
 
         current_status = prospect.status
+
+        if prospect.version_lock != expected_version:
+            raise OptimisticLockError()
 
         if current_status == new_status:
             return prospect
@@ -249,6 +279,7 @@ class ProspectService:
             notes=cls._clean_optional(
                 data.notes
             ),
+            installation_type=data.installation_type,
         )
 
     @classmethod

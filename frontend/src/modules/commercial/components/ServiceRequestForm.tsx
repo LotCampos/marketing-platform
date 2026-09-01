@@ -1,41 +1,49 @@
 import './commercial-forms.css'
+
 import { useMemo, useState } from 'react'
+
 import type {
   ChangeEvent,
   FormEvent,
 } from 'react'
+
 import { useQuery } from '@tanstack/react-query'
 
 import {
   getClients,
   getInstallations,
-} from '../../../infrastructure/api/masterApi'
-
-import {
+  getInstallationTypes,
   getServiceCatalog,
 } from '../../../infrastructure/api/commercialApi'
 
 import type {
   Client,
-  Installation,
-  MasterCollection,
-} from '../../master/types/master'
-
-import type {
+  CommercialCollection,
   CreateServiceRequestInput,
+  Installation,
+  InstallationType,
+  ServiceCatalog,
 } from '../types/commercial'
 
 interface ServiceRequestFormProps {
   onSubmit: (
     data: CreateServiceRequestInput,
   ) => void
+
   onCancel: () => void
+
   isPending: boolean
 }
 
-const initialFormData: CreateServiceRequestInput = {
+type ServiceRequestFormData =
+  CreateServiceRequestInput & {
+    installation_type_id: string
+  }
+
+const initialFormData: ServiceRequestFormData = {
   client_id: '',
   installation_id: '',
+  installation_type_id: '',
   service_catalog_id: '',
   request_number: '',
   requested_by_name: '',
@@ -44,8 +52,14 @@ const initialFormData: CreateServiceRequestInput = {
   request_description: '',
 }
 
+/* =========================================================
+   HELPERS
+========================================================= */
+
 function normalizeCollection<T>(
-  data: T[] | MasterCollection<T>,
+  data:
+    | T[]
+    | CommercialCollection<T>,
 ): T[] {
   if (Array.isArray(data)) {
     return data
@@ -57,18 +71,30 @@ function normalizeCollection<T>(
 function getClientLabel(
   client: Client,
 ): string {
-  return client.business_name
-    ? `${client.business_name} — ${client.rfc}`
-    : client.rfc
+  if (client.business_name) {
+    return client.rfc
+      ? `${client.business_name} — ${client.rfc}`
+      : client.business_name
+  }
+
+  return client.rfc ?? client.id
 }
 
 function getInstallationLabel(
   installation: Installation,
 ): string {
-  return installation.cre_asea_permit
-    ? `${installation.address} — ${installation.cre_asea_permit}`
-    : installation.address
+  if (
+    installation.cre_asea_permit
+  ) {
+    return `${installation.address} — ${installation.cre_asea_permit}`
+  }
+
+  return installation.address ?? ''
 }
+
+/* =========================================================
+   COMPONENT
+========================================================= */
 
 export const ServiceRequestForm = ({
   onSubmit,
@@ -76,24 +102,79 @@ export const ServiceRequestForm = ({
   isPending,
 }: ServiceRequestFormProps) => {
   const [formData, setFormData] =
-    useState<CreateServiceRequestInput>(
+    useState<ServiceRequestFormData>(
       initialFormData,
     )
 
-  const clientsQuery = useQuery({
-    queryKey: ['master', 'clients'],
+  /* =======================================================
+     CLIENTS
+  ======================================================= */
+
+  const clientsQuery = useQuery<
+    Client[] | CommercialCollection<Client>
+  >({
+    queryKey: [
+      'master',
+      'clients',
+    ],
+
     queryFn: getClients,
   })
 
-  const installationsQuery = useQuery({
-    queryKey: ['master', 'installations'],
-    queryFn: getInstallations,
-  })
+  /* =======================================================
+     INSTALLATIONS
+  ======================================================= */
 
-  const serviceCatalogQuery = useQuery({
-    queryKey: ['master', 'service-catalog'],
-    queryFn: getServiceCatalog,
-  })
+  const installationsQuery =
+    useQuery<
+      Installation[] |
+      CommercialCollection<Installation>
+    >({
+      queryKey: [
+        'master',
+        'installations',
+      ],
+
+      queryFn: getInstallations,
+    })
+
+  /* =======================================================
+     INSTALLATION TYPES
+  ======================================================= */
+
+  const installationTypesQuery =
+    useQuery<
+      InstallationType[] |
+      CommercialCollection<InstallationType>
+    >({
+      queryKey: [
+        'master',
+        'installation-types',
+      ],
+
+      queryFn: getInstallationTypes,
+    })
+
+  /* =======================================================
+     SERVICE CATALOG
+  ======================================================= */
+
+  const serviceCatalogQuery =
+    useQuery<
+      ServiceCatalog[] |
+      CommercialCollection<ServiceCatalog>
+    >({
+      queryKey: [
+        'commercial',
+        'service-catalog',
+      ],
+
+      queryFn: getServiceCatalog,
+    })
+
+  /* =======================================================
+     NORMALIZED DATA
+  ======================================================= */
 
   const clients = useMemo(
     () =>
@@ -102,18 +183,43 @@ export const ServiceRequestForm = ({
             clientsQuery.data,
           )
         : [],
+
     [clientsQuery.data],
   )
 
-  const installations = useMemo(
+  const installations =
+    useMemo(
+      () =>
+        installationsQuery.data
+          ? normalizeCollection(
+              installationsQuery.data,
+            )
+          : [],
+
+      [installationsQuery.data],
+    )
+
+  const installationTypes = useMemo(
     () =>
-      installationsQuery.data
+      installationTypesQuery.data
         ? normalizeCollection(
-            installationsQuery.data,
+            installationTypesQuery.data,
           )
         : [],
-    [installationsQuery.data],
+
+    [installationTypesQuery.data],
   )
+
+  const activeInstallationTypes =
+    useMemo(
+      () =>
+        installationTypes.filter(
+          (
+            installationType: InstallationType,
+          ) => installationType.is_active,
+        ),
+      [installationTypes],
+    )
 
   const services = useMemo(
     () =>
@@ -122,17 +228,30 @@ export const ServiceRequestForm = ({
             serviceCatalogQuery.data,
           )
         : [],
+
     [serviceCatalogQuery.data],
   )
 
-  const activeServices = useMemo(
-    () =>
-      services.filter(
-        (service) =>
-          service.is_active,
-      ),
-    [services],
-  )
+  /* =======================================================
+     ACTIVE SERVICES
+  ======================================================= */
+
+  const activeServices =
+    useMemo(
+      () =>
+        services.filter(
+          (
+            service: ServiceCatalog,
+          ) =>
+            service.is_active,
+        ),
+
+      [services],
+    )
+
+  /* =======================================================
+     AVAILABLE INSTALLATIONS
+  ======================================================= */
 
   const availableInstallations =
     useMemo(() => {
@@ -141,7 +260,9 @@ export const ServiceRequestForm = ({
       }
 
       return installations.filter(
-        (installation) =>
+        (
+          installation: Installation,
+        ) =>
           installation.client_id ===
           formData.client_id,
       )
@@ -150,45 +271,89 @@ export const ServiceRequestForm = ({
       formData.client_id,
     ])
 
-  const selectedClient = useMemo(
-    () =>
-      clients.find(
-        (client) =>
-          client.id ===
-          formData.client_id,
-      ),
-    [
-      clients,
-      formData.client_id,
-    ],
-  )
+  /* =======================================================
+     SELECTED CLIENT
+  ======================================================= */
+
+  const selectedClient =
+    useMemo(
+      () =>
+        clients.find(
+          (
+            client: Client,
+          ) =>
+            client.id ===
+            formData.client_id,
+        ),
+
+      [
+        clients,
+        formData.client_id,
+      ],
+    )
+
+  /* =======================================================
+     SELECTED INSTALLATION
+  ======================================================= */
+
+  const selectedInstallationType =
+    useMemo(
+      () =>
+        installationTypes.find(
+          (
+            installationType: InstallationType,
+          ) =>
+            installationType.id ===
+            formData.installation_type_id,
+        ),
+
+      [
+        installationTypes,
+        formData.installation_type_id,
+      ],
+    )
 
   const selectedInstallation =
     useMemo(
       () =>
         installations.find(
-          (installation) =>
+          (
+            installation: Installation,
+          ) =>
             installation.id ===
             formData.installation_id,
         ),
+
       [
         installations,
         formData.installation_id,
       ],
     )
 
-  const selectedService = useMemo(
-    () =>
-      services.find(
-        (service) =>
-          service.id ===
-          formData.service_catalog_id,
-      ),
-    [
-      services,
-      formData.service_catalog_id,
-    ],
-  )
+  /* =======================================================
+     SELECTED SERVICE
+  ======================================================= */
+
+  const selectedService =
+    useMemo(
+      () =>
+        services.find(
+          (
+            service: ServiceCatalog,
+          ) =>
+            service.id ===
+            formData.service_catalog_id,
+        ),
+
+      [
+        services,
+        formData.service_catalog_id,
+      ],
+    )
+
+  /* =======================================================
+     HANDLERS
+  ======================================================= */
 
   const handleChange = (
     event: ChangeEvent<
@@ -202,10 +367,14 @@ export const ServiceRequestForm = ({
       value,
     } = event.target
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }))
+    setFormData(
+      (
+        previous,
+      ) => ({
+        ...previous,
+        [name]: value,
+      }),
+    )
   }
 
   const handleClientChange = (
@@ -214,11 +383,19 @@ export const ServiceRequestForm = ({
     const clientId =
       event.target.value
 
-    setFormData((previous) => ({
-      ...previous,
-      client_id: clientId,
-      installation_id: '',
-    }))
+    setFormData(
+      (
+        previous,
+      ) => ({
+        ...previous,
+
+        client_id:
+          clientId,
+
+        installation_id:
+          '',
+      }),
+    )
   }
 
   const handleSubmit = (
@@ -226,53 +403,81 @@ export const ServiceRequestForm = ({
   ) => {
     event.preventDefault()
 
+    const serviceRequestData = { ...formData }
+
     onSubmit({
-      ...formData,
+      ...serviceRequestData,
 
       client_id:
         formData.client_id.trim(),
 
       installation_id:
         (
-          formData.installation_id ?? ''
-        ).trim() || null,
+          formData.installation_id ??
+          ''
+        ).trim(),
 
       service_catalog_id:
-        formData.service_catalog_id.trim(),
+        formData
+          .service_catalog_id
+          .trim(),
 
       request_number:
-        formData.request_number.trim(),
+        formData
+          .request_number
+          .trim(),
 
       requested_by_name:
-        formData.requested_by_name.trim(),
+        formData
+          .requested_by_name
+          .trim(),
 
       requested_by_email:
-        formData.requested_by_email.trim(),
+        formData
+          .requested_by_email
+          .trim(),
 
       requested_by_phone:
-        formData.requested_by_phone.trim(),
+        formData
+          .requested_by_phone
+          .trim(),
 
       request_description:
-        formData.request_description.trim(),
+        formData
+          .request_description
+          .trim(),
     })
   }
+
+  /* =======================================================
+     STATUS
+  ======================================================= */
 
   const catalogLoading =
     clientsQuery.isLoading ||
     installationsQuery.isLoading ||
+    installationTypesQuery.isLoading ||
     serviceCatalogQuery.isLoading
 
   const catalogError =
     clientsQuery.isError ||
     installationsQuery.isError ||
+    installationTypesQuery.isError ||
     serviceCatalogQuery.isError
 
   const canSubmit =
     !isPending &&
     !catalogLoading &&
     !catalogError &&
-    Boolean(formData.client_id) &&
-    Boolean(formData.service_catalog_id) &&
+    Boolean(
+      formData.client_id,
+    ) &&
+    Boolean(
+      formData.installation_type_id,
+    ) &&
+    Boolean(
+      formData.service_catalog_id,
+    ) &&
     Boolean(
       formData.request_number.trim(),
     ) &&
@@ -286,14 +491,18 @@ export const ServiceRequestForm = ({
       formData.request_description.trim(),
     )
 
+  /* =======================================================
+     RENDER
+  ======================================================= */
+
   return (
     <form
       onSubmit={handleSubmit}
       className="app-form"
     >
-      {/* =====================================================
+      {/* ===================================================
           INTRO
-      ====================================================== */}
+      =================================================== */}
 
       <div className="form-intro">
         <div className="form-intro-icon">
@@ -322,15 +531,16 @@ export const ServiceRequestForm = ({
           </h3>
 
           <p className="form-subtitle">
-            Registre el origen, relación corporativa,
-            servicio requerido y datos del solicitante.
+            Registre el origen, relación
+            corporativa, servicio requerido
+            y datos del solicitante.
           </p>
         </div>
       </div>
 
-      {/* =====================================================
+      {/* ===================================================
           ERROR CATÁLOGOS
-      ====================================================== */}
+      =================================================== */}
 
       {catalogError && (
         <div
@@ -355,20 +565,22 @@ export const ServiceRequestForm = ({
 
           <div>
             <strong>
-              No fue posible cargar los catálogos
+              No fue posible cargar
+              los catálogos
             </strong>
 
             <p>
-              Verifique la disponibilidad del servicio
-              API antes de continuar.
+              Verifique la disponibilidad
+              del servicio API antes de
+              continuar.
             </p>
           </div>
         </div>
       )}
 
-      {/* =====================================================
+      {/* ===================================================
           01 — IDENTIFICACIÓN
-      ====================================================== */}
+      =================================================== */}
 
       <section className="form-section">
         <div className="form-section-header">
@@ -382,7 +594,8 @@ export const ServiceRequestForm = ({
             </h4>
 
             <p>
-              Identificador único de la solicitud.
+              Identificador único de
+              la solicitud.
             </p>
           </div>
         </div>
@@ -416,9 +629,9 @@ export const ServiceRequestForm = ({
         </div>
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           02 — CLIENTE E INSTALACIÓN
-      ====================================================== */}
+      =================================================== */}
 
       <section className="form-section">
         <div className="form-section-header">
@@ -432,12 +645,15 @@ export const ServiceRequestForm = ({
             </h4>
 
             <p>
-              Relación con el maestro corporativo.
+              Relación con el maestro
+              corporativo.
             </p>
           </div>
         </div>
 
         <div className="form-grid form-grid-2">
+          {/* CLIENTE */}
+
           <div className="form-field">
             <label htmlFor="client_id">
               Cliente
@@ -448,8 +664,12 @@ export const ServiceRequestForm = ({
               name="client_id"
               id="client_id"
               required
-              value={formData.client_id}
-              onChange={handleClientChange}
+              value={
+                formData.client_id
+              }
+              onChange={
+                handleClientChange
+              }
               disabled={
                 isPending ||
                 clientsQuery.isLoading ||
@@ -462,14 +682,20 @@ export const ServiceRequestForm = ({
                   : 'Seleccione un cliente'}
               </option>
 
-              {clients.map((client) => (
-                <option
-                  key={client.id}
-                  value={client.id}
-                >
-                  {getClientLabel(client)}
-                </option>
-              ))}
+              {clients.map(
+                (
+                  client: Client,
+                ) => (
+                  <option
+                    key={client.id}
+                    value={client.id}
+                  >
+                    {getClientLabel(
+                      client,
+                    )}
+                  </option>
+                ),
+              )}
             </select>
 
             {selectedClient && (
@@ -479,7 +705,8 @@ export const ServiceRequestForm = ({
                 </span>
 
                 <strong>
-                  {selectedClient.rfc}
+                  {selectedClient.rfc ??
+                    'No registrado'}
                 </strong>
               </div>
             )}
@@ -488,10 +715,58 @@ export const ServiceRequestForm = ({
               !clientsQuery.isError &&
               clients.length === 0 && (
                 <small className="field-error">
-                  No existen clientes disponibles.
+                  No existen clientes
+                  disponibles.
                 </small>
               )}
           </div>
+
+          {/* TIPO DE INSTALACIÓN */}
+
+          <div className="form-field">
+            <label htmlFor="installation_type_id">
+              Tipo de instalación
+              <span>*</span>
+            </label>
+
+            <select
+              name="installation_type_id"
+              id="installation_type_id"
+              required
+              value={
+                formData.installation_type_id
+              }
+              onChange={handleChange}
+              disabled={
+                isPending ||
+                installationTypesQuery.isLoading ||
+                installationTypesQuery.isError
+              }
+            >
+              <option value="">
+                {installationTypesQuery.isLoading
+                  ? 'Cargando tipos de instalación...'
+                  : 'Seleccione un tipo de instalación'}
+              </option>
+
+              {activeInstallationTypes.map(
+                (
+                  installationType: InstallationType,
+                ) => (
+                  <option
+                    key={installationType.id}
+                    value={installationType.id}
+                  >
+                    {installationType.code}
+                    {' — '}
+                    {installationType.name}
+                  </option>
+                ),
+              )}
+            </select>
+          </div>
+
+          {/* INSTALACIÓN */}
 
           <div className="form-field">
             <label htmlFor="installation_id">
@@ -503,7 +778,8 @@ export const ServiceRequestForm = ({
               name="installation_id"
               id="installation_id"
               value={
-                formData.installation_id ?? ''
+                formData.installation_id ??
+                ''
               }
               onChange={handleChange}
               disabled={
@@ -522,10 +798,16 @@ export const ServiceRequestForm = ({
               </option>
 
               {availableInstallations.map(
-                (installation) => (
+                (
+                  installation: Installation,
+                ) => (
                   <option
-                    key={installation.id}
-                    value={installation.id}
+                    key={
+                      installation.id
+                    }
+                    value={
+                      installation.id
+                    }
                   >
                     {getInstallationLabel(
                       installation,
@@ -566,20 +848,22 @@ export const ServiceRequestForm = ({
 
             {formData.client_id &&
               !installationsQuery.isLoading &&
+              !installationsQuery.isError &&
               availableInstallations.length ===
                 0 && (
                 <small className="field-warning">
-                  El cliente seleccionado no tiene
-                  instalaciones disponibles.
+                  El cliente seleccionado
+                  no tiene instalaciones
+                  disponibles.
                 </small>
               )}
           </div>
         </div>
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           03 — SERVICIO
-      ====================================================== */}
+      =================================================== */}
 
       <section className="form-section">
         <div className="form-section-header">
@@ -593,7 +877,8 @@ export const ServiceRequestForm = ({
             </h4>
 
             <p>
-              Servicio del catálogo regulatorio.
+              Servicio del catálogo
+              regulatorio.
             </p>
           </div>
         </div>
@@ -625,12 +910,15 @@ export const ServiceRequestForm = ({
             </option>
 
             {activeServices.map(
-              (service) => (
+              (
+                service: ServiceCatalog,
+              ) => (
                 <option
                   key={service.id}
                   value={service.id}
                 >
-                  {service.service_code} —{' '}
+                  {service.service_code}
+                  {' — '}
                   {service.service_name}
                 </option>
               ),
@@ -658,11 +946,15 @@ export const ServiceRequestForm = ({
 
             <div className="form-selected-content">
               <span className="form-selected-code">
-                {selectedService.service_code}
+                {
+                  selectedService.service_code
+                }
               </span>
 
               <h5>
-                {selectedService.service_name}
+                {
+                  selectedService.service_name
+                }
               </h5>
 
               {selectedService.regulatory_basis && (
@@ -683,14 +975,15 @@ export const ServiceRequestForm = ({
           !serviceCatalogQuery.isError &&
           activeServices.length === 0 && (
             <small className="field-error">
-              No existen servicios activos disponibles.
+              No existen servicios activos
+              disponibles.
             </small>
           )}
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           04 — SOLICITANTE
-      ====================================================== */}
+      =================================================== */}
 
       <section className="form-section">
         <div className="form-section-header">
@@ -704,12 +997,15 @@ export const ServiceRequestForm = ({
             </h4>
 
             <p>
-              Persona responsable de originar la solicitud.
+              Persona responsable de
+              originar la solicitud.
             </p>
           </div>
         </div>
 
         <div className="form-grid form-grid-2">
+          {/* NOMBRE */}
+
           <div className="form-field">
             <label htmlFor="requested_by_name">
               Nombre completo
@@ -731,6 +1027,8 @@ export const ServiceRequestForm = ({
             />
           </div>
 
+          {/* EMAIL */}
+
           <div className="form-field">
             <label htmlFor="requested_by_email">
               Correo electrónico
@@ -751,6 +1049,8 @@ export const ServiceRequestForm = ({
               placeholder="correo@empresa.com"
             />
           </div>
+
+          {/* TELÉFONO */}
 
           <div className="form-field">
             <label htmlFor="requested_by_phone">
@@ -774,9 +1074,9 @@ export const ServiceRequestForm = ({
         </div>
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           05 — ALCANCE
-      ====================================================== */}
+      =================================================== */}
 
       <section className="form-section">
         <div className="form-section-header">
@@ -790,7 +1090,8 @@ export const ServiceRequestForm = ({
             </h4>
 
             <p>
-              Describa el requerimiento comercial.
+              Describa el requerimiento
+              comercial.
             </p>
           </div>
         </div>
@@ -815,16 +1116,17 @@ export const ServiceRequestForm = ({
           />
 
           <small>
-            La descripción quedará asociada al registro
-            de solicitud y podrá utilizarse como referencia
-            para las siguientes etapas comerciales.
+            La descripción quedará asociada
+            al registro de solicitud y podrá
+            utilizarse como referencia para
+            las siguientes etapas comerciales.
           </small>
         </div>
       </section>
 
-      {/* =====================================================
+      {/* ===================================================
           RESUMEN
-      ====================================================== */}
+      =================================================== */}
 
       {(selectedClient ||
         selectedInstallation ||
@@ -848,6 +1150,8 @@ export const ServiceRequestForm = ({
           </div>
 
           <div className="form-summary-grid">
+            {/* CLIENTE */}
+
             <div>
               <span>
                 Cliente
@@ -859,6 +1163,21 @@ export const ServiceRequestForm = ({
               </strong>
             </div>
 
+            {/* TIPO DE INSTALACIÓN */}
+
+            <div>
+              <span>
+                Tipo de instalación
+              </span>
+
+              <strong>
+                {selectedInstallationType?.name ??
+                  'No seleccionado'}
+              </strong>
+            </div>
+
+            {/* INSTALACIÓN */}
+
             <div>
               <span>
                 Instalación
@@ -869,6 +1188,8 @@ export const ServiceRequestForm = ({
                   'No seleccionada'}
               </strong>
             </div>
+
+            {/* SERVICIO */}
 
             <div>
               <span>
@@ -884,9 +1205,9 @@ export const ServiceRequestForm = ({
         </section>
       )}
 
-      {/* =====================================================
+      {/* ===================================================
           ACTIONS
-      ====================================================== */}
+      =================================================== */}
 
       <div className="form-actions">
         <div className="form-required">

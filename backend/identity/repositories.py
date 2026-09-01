@@ -1,8 +1,6 @@
 from typing import Optional
 from uuid import UUID
 
-from django.db import transaction
-
 from core.exceptions import ConcurrencyError
 from core.repositories.base import Repository
 
@@ -50,6 +48,7 @@ class UserRepository(Repository[User, UUID]):
                 full_name=entity.full_name,
                 system_role=entity.system_role,
                 is_active=entity.is_active,
+                password_hash=entity.password_hash,
                 version_lock=current_version + 1,
             )
         )

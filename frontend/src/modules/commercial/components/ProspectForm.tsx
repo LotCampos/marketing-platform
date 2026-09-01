@@ -1,5 +1,6 @@
 import './commercial-forms.css'
 import { useState } from 'react'
+import { useQuery } from '@tanstack/react-query'
 import type {
   ChangeEvent,
   FormEvent,
@@ -8,6 +9,10 @@ import type {
 import type {
   CreateProspectInput,
 } from '../types/commercial'
+
+import {
+  getInstallationTypes,
+} from '../../../infrastructure/api/commercialApi'
 
 interface ProspectFormProps {
   onSubmit: (data: CreateProspectInput) => void
@@ -18,6 +23,7 @@ interface ProspectFormProps {
 const initialFormData: CreateProspectInput = {
   business_name: '',
   rfc: '',
+  installation_type: '',
   contact_name: '',
   contact_email: '',
   contact_phone: '',
@@ -32,6 +38,14 @@ export default function ProspectForm({
   onCancel,
   isPending,
 }: ProspectFormProps) {
+
+  const installationTypesQuery =
+    useQuery({
+      queryKey: ['master', 'installation-types'],
+      queryFn: getInstallationTypes,
+      staleTime: 5 * 60 * 1000,
+    })
+
   const [formData, setFormData] =
     useState<CreateProspectInput>(
       initialFormData,
@@ -66,6 +80,8 @@ export default function ProspectForm({
 
       rfc:
         formData.rfc?.trim() || null,
+      installation_type:
+        formData.installation_type?.trim() || null,
 
       contact_name:
         formData.contact_name?.trim() || null,
@@ -211,6 +227,46 @@ export default function ProspectForm({
               disabled={isPending}
               placeholder="RFC del prospecto"
             />
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="installation_type">
+              Tipo de instalación
+              <em>opcional</em>
+            </label>
+
+            <select
+              id="installation_type"
+              name="installation_type"
+              value={
+                formData.installation_type ?? ''
+              }
+              onChange={handleChange}
+              disabled={
+                isPending ||
+                installationTypesQuery.isLoading
+              }
+            >
+              <option value="">
+                Seleccione un tipo de instalación
+              </option>
+
+              {installationTypesQuery.data &&
+                (
+                  Array.isArray(
+                    installationTypesQuery.data,
+                  )
+                    ? installationTypesQuery.data
+                    : installationTypesQuery.data.results
+                ).map((installationType) => (
+                  <option
+                    key={installationType.id}
+                    value={installationType.id}
+                  >
+                    {installationType.name}
+                  </option>
+                ))}
+            </select>
           </div>
         </div>
       </section>

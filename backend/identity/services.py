@@ -1,8 +1,16 @@
+from django.contrib.auth.hashers import make_password
+from django.contrib.auth.password_validation import validate_password
+from django.core.exceptions import ValidationError as DjangoValidationError
 from django.db import transaction
 
-from core.exceptions import ValidationError
+from core.exceptions import ConcurrencyError, ValidationError
 
-from .dtos import CreateUserDTO, UpdateUserDTO, UserDTO
+from .dtos import (
+    CreateUserDTO,
+    SetPasswordDTO,
+    UpdateUserDTO,
+    UserDTO,
+)
 from .models import User
 from .repositories import UserRepository
 
@@ -12,7 +20,7 @@ class UserService:
     Application service for Identity users.
 
     Owns application-level validation, transaction boundaries,
-    repository interaction, and DTO mapping.
+    repository interaction, password hashing, and DTO mapping.
     """
 
     def __init__(self, repository: UserRepository | None = None) -> None:
@@ -71,18 +79,18 @@ class UserService:
                 f"User {data.user_id} does not exist."
             )
 
-        if user.version_lock != data.expected_version:
-            from core.exceptions import ConcurrencyError
-
-            raise ConcurrencyError(
-                f"Optimistic concurrency conflict for User {user.id}."
-            )
+        self._validate_expected_version(
+            user,
+            data.expected_version,
+        )
 
         if data.email is not None:
             email = data.email.strip().lower()
 
             if not email:
-                raise ValidationError("User email is required.")
+                raise ValidationError(
+                    "User email is required."
+                )
 
             if User.objects.filter(
                 email=email
@@ -142,6 +150,43 @@ class UserService:
         return self._to_dto(user)
 
     @transaction.atomic
+    def set_password(self, data: SetPasswordDTO) -> UserDTO:
+        user = self.repository.get_by_id(data.user_id)
+
+        if user is None:
+            raise ValidationError(
+                f"User {data.user_id} does not exist."
+            )
+
+        self._validate_expected_version(
+            user,
+            data.expected_version,
+        )
+
+        password = data.password
+
+        if not password:
+            raise ValidationError(
+                "Password is required."
+            )
+
+        try:
+            validate_password(
+                password,
+                user=user,
+            )
+        except DjangoValidationError as exc:
+            raise ValidationError(
+                "Password does not satisfy the security policy."
+            ) from exc
+
+        user.password_hash = make_password(password)
+
+        user = self.repository.update(user)
+
+        return self._to_dto(user)
+
+    @transaction.atomic
     def deactivate_user(
         self,
         user_id,
@@ -154,12 +199,10 @@ class UserService:
                 f"User {user_id} does not exist."
             )
 
-        if user.version_lock != expected_version:
-            from core.exceptions import ConcurrencyError
-
-            raise ConcurrencyError(
-                f"Optimistic concurrency conflict for User {user.id}."
-            )
+        self._validate_expected_version(
+            user,
+            expected_version,
+        )
 
         if not user.is_active:
             return self._to_dto(user)
@@ -180,6 +223,16 @@ class UserService:
             )
 
         return self._to_dto(user)
+
+    @staticmethod
+    def _validate_expected_version(
+        user: User,
+        expected_version: int,
+    ) -> None:
+        if user.version_lock != expected_version:
+            raise ConcurrencyError(
+                f"Optimistic concurrency conflict for User {user.id}."
+            )
 
     @staticmethod
     def _to_dto(user: User) -> UserDTO:

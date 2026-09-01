@@ -1,0 +1,106 @@
+/* =========================================================
+   CommercialTable
+   Shared table component for Commercial module
+   ========================================================= */
+
+.table-container {
+  width: 100%;
+  overflow-x: auto;
+  border: 1px solid #e5e7eb;
+  border-radius: 14px;
+  background: #ffffff;
+  box-shadow: 0 4px 18px rgba(15, 23, 42, 0.05);
+}
+
+.commercial-table {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 13px;
+  color: #334155;
+}
+
+.commercial-table thead th {
+  padding: 14px 16px;
+  border-bottom: 1px solid #e5e7eb;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+  text-align: left;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.commercial-table tbody td {
+  padding: 15px 16px;
+  border-bottom: 1px solid #eef2f7;
+  background: #ffffff;
+  vertical-align: middle;
+}
+
+.commercial-table tbody tr:last-child td {
+  border-bottom: 0;
+}
+
+.commercial-table tbody tr {
+  transition:
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.commercial-table tbody tr:hover td {
+  background: #f8fafc;
+}
+
+.commercial-table .table-primary {
+  font-size: 13px;
+  font-weight: 600;
+  color: #0f172a;
+}
+
+.status-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 5px 9px;
+  border: 1px solid #dbe1e8;
+  border-radius: 999px;
+  background: #f8fafc;
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  line-height: 1;
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.status-neutral {
+  border-color: #dbe1e8;
+  background: #f8fafc;
+  color: #64748b;
+}
+
+.empty-state {
+  padding: 40px 24px !important;
+  color: #94a3b8;
+  text-align: center;
+}
+
+@media (max-width: 900px) {
+  .table-container {
+    border-radius: 12px;
+  }
+
+  .commercial-table {
+    min-width: 680px;
+  }
+
+  .commercial-table thead th,
+  .commercial-table tbody td {
+    padding: 12px 13px;
+  }
+}

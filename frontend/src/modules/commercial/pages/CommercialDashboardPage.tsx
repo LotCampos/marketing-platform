@@ -1,3 +1,5 @@
+import "./commercial-dashboard.css"
+
 import './commercial-pages.css'
 
 
@@ -219,15 +221,15 @@ export default function CommercialDashboardPage() {
                     </td>
 
                     <td>
-                      {item.requested_at
+                      {item.created_at
                         ? new Date(
-                            item.requested_at,
+                            item.created_at,
                           ).toLocaleDateString()
                         : '-'}
                     </td>
 
                     <td>
-                      {item.request_description}
+                      {item.description}
                     </td>
                   </tr>
                 ))}

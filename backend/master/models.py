@@ -148,12 +148,45 @@ class Contact(MasterBaseModel):
         return self.full_name
 
 
+class InstallationType(MasterBaseModel):
+    code = models.CharField(
+        max_length=100,
+        unique=True,
+        db_column="code",
+    )
+
+    name = models.CharField(
+        max_length=255,
+        db_column="name",
+    )
+
+    is_active = models.BooleanField(
+        default=True,
+        db_column="is_active",
+    )
+
+    class Meta:
+        db_table = '"master"."installation_types"'
+
+    def __str__(self) -> str:
+        return self.name
+
+
 class Installation(MasterBaseModel):
     client = models.ForeignKey(
         Client,
         on_delete=models.DO_NOTHING,
         db_column="client_id",
         related_name="installations",
+    )
+
+    installation_type = models.ForeignKey(
+        InstallationType,
+        on_delete=models.DO_NOTHING,
+        db_column="installation_type_id",
+        related_name="installations",
+        null=True,
+        blank=True,
     )
 
     address = models.TextField(
@@ -208,7 +241,7 @@ class Installation(MasterBaseModel):
     )
 
     class Meta:
-        db_table = "installations"
+        db_table = '"master"."installations"'
 
     def __str__(self) -> str:
         return self.address
@@ -285,10 +318,41 @@ class ServiceCatalog(MasterBaseModel):
     )
 
     class Meta:
-        db_table = "service_catalog"
+        db_table = '"master"."service_catalog"'
 
     def __str__(self) -> str:
         return f"{self.service_code} - {self.service_name}"
+
+
+class ServiceCatalogInstallationType(MasterBaseModel):
+    service_catalog = models.ForeignKey(
+        ServiceCatalog,
+        on_delete=models.DO_NOTHING,
+        db_column="service_catalog_id",
+        related_name="installation_type_links",
+    )
+
+    installation_type = models.ForeignKey(
+        InstallationType,
+        on_delete=models.DO_NOTHING,
+        db_column="installation_type_id",
+        related_name="service_catalog_links",
+    )
+
+    class Meta:
+        db_table = '"master"."service_catalog_installation_types"'
+        constraints = [
+            models.UniqueConstraint(
+                fields=["service_catalog", "installation_type"],
+                name="service_catalog_installation_types_unique",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return (
+            f"{self.service_catalog_id} -> "
+            f"{self.installation_type_id}"
+        )
 
 
 class ServiceCatalogVersion(MasterBaseModel):
@@ -327,7 +391,7 @@ class ServiceCatalogVersion(MasterBaseModel):
     )
 
     class Meta:
-        db_table = "service_catalog_versions"
+        db_table = '"master"."service_catalog_versions"'
         constraints = [
             models.UniqueConstraint(
                 fields=["service_catalog", "version_number"],

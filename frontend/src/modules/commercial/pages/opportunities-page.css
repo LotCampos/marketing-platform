@@ -1,0 +1,265 @@
+/* =========================================================
+   UI-CADO
+   OPPORTUNITIES PAGE
+   Enterprise Liquid Glass
+   ========================================================= */
+
+.opportunities-page {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.opportunities-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+
+  margin-bottom: 24px;
+  padding: 30px;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at 95% 0%,
+      rgba(249, 115, 22, 0.18),
+      transparent 23rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(248, 250, 252, 0.74)
+    );
+
+  box-shadow:
+    0 22px 55px rgba(15, 23, 42, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.opportunities-hero > div:first-child > span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #ea580c;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.opportunities-hero h2 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 32px;
+  line-height: 1.1;
+
+  font-weight: 780;
+
+  letter-spacing: -0.035em;
+}
+
+.opportunities-hero p {
+  max-width: 720px;
+
+  margin: 11px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+.opportunities-summary {
+  min-width: 150px;
+
+  padding: 16px 18px;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.16);
+
+  border-radius: 16px;
+
+  background:
+    rgba(255, 255, 255, 0.62);
+
+  box-shadow:
+    0 10px 30px rgba(15, 23, 42, 0.04);
+}
+
+.opportunities-summary small {
+  display: block;
+
+  color: #94a3b8;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.13em;
+}
+
+.opportunities-summary strong {
+  display: block;
+
+  margin-top: 4px;
+
+  color: #172033;
+
+  font-size: 25px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.opportunities-error {
+  margin-bottom: 22px;
+  padding: 14px 18px;
+
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 14px;
+
+  background: rgba(254, 242, 242, 0.82);
+
+  color: #991b1b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+
+.opportunities-panel {
+  overflow: hidden;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.16);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(248, 250, 252, 0.72)
+    );
+
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.opportunities-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 23px 26px;
+
+  border-bottom:
+    1px solid rgba(148, 163, 184, 0.12);
+}
+
+.opportunities-panel-header span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #f97316;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.opportunities-panel-header h3 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.opportunities-count {
+  padding: 7px 11px;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.15);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.62);
+
+  color: #64748b;
+
+  font-size: 10px;
+  font-weight: 700;
+}
+
+.opportunity-description {
+  display: block;
+
+  max-width: 360px;
+
+  overflow: hidden;
+
+  color: #64748b;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .opportunities-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .opportunities-summary {
+    width: 100%;
+  }
+}
+
+@media (max-width: 640px) {
+  .opportunities-hero {
+    padding: 22px;
+  }
+
+  .opportunities-hero h2 {
+    font-size: 27px;
+  }
+
+  .opportunities-panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

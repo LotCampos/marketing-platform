@@ -1,0 +1,288 @@
+/* =========================================================
+   UI-CADO
+   SERVICE REQUESTS PAGE
+   Enterprise Liquid Glass
+   ========================================================= */
+
+.service-requests-page {
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
+}
+
+
+/* =========================================================
+   HERO
+   ========================================================= */
+
+.service-requests-hero {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 28px;
+
+  margin-bottom: 24px;
+  padding: 30px;
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 24px;
+
+  background:
+    radial-gradient(
+      circle at 95% 0%,
+      rgba(249, 115, 22, 0.17),
+      transparent 23rem
+    ),
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(248, 250, 252, 0.74)
+    );
+
+  box-shadow:
+    0 22px 55px rgba(15, 23, 42, 0.065),
+    inset 0 1px 0 rgba(255, 255, 255, 0.92);
+
+  backdrop-filter: blur(24px);
+  -webkit-backdrop-filter: blur(24px);
+}
+
+.service-requests-hero > div > span {
+  display: block;
+
+  margin-bottom: 7px;
+
+  color: #ea580c;
+
+  font-size: 10px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.service-requests-hero h2 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 32px;
+  line-height: 1.1;
+
+  font-weight: 780;
+
+  letter-spacing: -0.035em;
+}
+
+.service-requests-hero p {
+  max-width: 760px;
+
+  margin: 11px 0 0;
+
+  color: #64748b;
+
+  font-size: 13px;
+  line-height: 1.7;
+}
+
+
+/* =========================================================
+   ACTION
+   ========================================================= */
+
+.service-request-primary-action {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+
+  flex: 0 0 auto;
+
+  min-height: 44px;
+
+  padding: 0 17px;
+
+  border: 1px solid rgba(234, 88, 12, 0.28);
+  border-radius: 13px;
+
+  background:
+    linear-gradient(
+      135deg,
+      #f97316,
+      #ea580c
+    );
+
+  color: #ffffff;
+
+  font-size: 12px;
+  font-weight: 750;
+
+  box-shadow:
+    0 10px 24px rgba(234, 88, 12, 0.22),
+    inset 0 1px 0 rgba(255, 255, 255, 0.25);
+
+  transition:
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.service-request-primary-action:hover {
+  transform: translateY(-1px);
+
+  box-shadow:
+    0 14px 30px rgba(234, 88, 12, 0.26),
+    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.service-request-primary-action span {
+  font-size: 19px;
+  line-height: 1;
+}
+
+
+/* =========================================================
+   FORM CONTAINER
+   ========================================================= */
+
+.service-request-form-container {
+  margin-bottom: 24px;
+}
+
+
+/* =========================================================
+   ERROR
+   ========================================================= */
+
+.service-requests-error {
+  margin-bottom: 22px;
+  padding: 14px 18px;
+
+  border: 1px solid rgba(239, 68, 68, 0.15);
+  border-radius: 14px;
+
+  background: rgba(254, 242, 242, 0.82);
+
+  color: #991b1b;
+
+  font-size: 12px;
+}
+
+
+/* =========================================================
+   PANEL
+   ========================================================= */
+
+.service-requests-panel {
+  overflow: hidden;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.16);
+
+  border-radius: 20px;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.9),
+      rgba(248, 250, 252, 0.72)
+    );
+
+  box-shadow:
+    0 18px 48px rgba(15, 23, 42, 0.055),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(22px);
+  -webkit-backdrop-filter: blur(22px);
+}
+
+.service-requests-panel-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+
+  padding: 23px 26px;
+
+  border-bottom:
+    1px solid rgba(148, 163, 184, 0.12);
+}
+
+.service-requests-panel-header span {
+  display: block;
+
+  margin-bottom: 5px;
+
+  color: #f97316;
+
+  font-size: 9px;
+  font-weight: 800;
+
+  letter-spacing: 0.15em;
+}
+
+.service-requests-panel-header h3 {
+  margin: 0;
+
+  color: #172033;
+
+  font-size: 17px;
+  font-weight: 750;
+}
+
+.service-requests-panel-header strong {
+  padding: 7px 11px;
+
+  border:
+    1px solid rgba(148, 163, 184, 0.15);
+
+  border-radius: 999px;
+
+  background:
+    rgba(255, 255, 255, 0.62);
+
+  color: #64748b;
+
+  font-size: 10px;
+}
+
+.service-request-description {
+  display: block;
+
+  max-width: 420px;
+
+  overflow: hidden;
+
+  color: #64748b;
+
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .service-requests-hero {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .service-request-primary-action {
+    justify-content: center;
+  }
+}
+
+@media (max-width: 640px) {
+  .service-requests-hero {
+    padding: 22px;
+  }
+
+  .service-requests-hero h2 {
+    font-size: 27px;
+  }
+
+  .service-requests-panel-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+}

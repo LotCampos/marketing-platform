@@ -7,6 +7,68 @@ CREATE SCHEMA IF NOT EXISTS identity;
 """
 
 
+SQL_CREATE_PGCRYPTO = """
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+"""
+
+
+SQL_CREATE_UUIDV7 = """
+CREATE OR REPLACE FUNCTION public.uuidv7()
+RETURNS uuid
+LANGUAGE plpgsql
+VOLATILE
+AS $$
+DECLARE
+    v_time timestamptz := clock_timestamp();
+    v_timestamp bigint;
+    v_timestamp_hex varchar;
+    v_random bytea;
+    v_random_hex varchar;
+    v_bytes bytea;
+BEGIN
+    v_timestamp := floor(
+        extract(epoch FROM v_time) * 1000
+    )::bigint;
+
+    v_timestamp_hex := lpad(
+        to_hex(v_timestamp),
+        12,
+        '0'
+    );
+
+    v_random := gen_random_bytes(10);
+
+    v_random_hex := encode(
+        v_random,
+        'hex'
+    );
+
+    v_bytes := decode(
+        v_timestamp_hex || v_random_hex,
+        'hex'
+    );
+
+    v_bytes := set_byte(
+        v_bytes,
+        6,
+        (get_byte(v_bytes, 6) & 15) | 112
+    );
+
+    v_bytes := set_byte(
+        v_bytes,
+        8,
+        (get_byte(v_bytes, 8) & 63) | 128
+    );
+
+    RETURN encode(
+        v_bytes,
+        'hex'
+    )::uuid;
+END;
+$$;
+"""
+
+
 SQL_CREATE_TABLE = """
 CREATE TABLE IF NOT EXISTS identity.users (
     id uuid PRIMARY KEY DEFAULT public.uuidv7(),
@@ -48,15 +110,21 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.RunSQL(
+            sql=SQL_CREATE_PGCRYPTO,
+            reverse_sql=migrations.RunSQL.noop,
+        ),
+        migrations.RunSQL(
             sql=SQL_CREATE_SCHEMA,
             reverse_sql=migrations.RunSQL.noop,
         ),
-
+        migrations.RunSQL(
+            sql=SQL_CREATE_UUIDV7,
+            reverse_sql=migrations.RunSQL.noop,
+        ),
         migrations.RunSQL(
             sql=SQL_CREATE_TABLE,
             reverse_sql=migrations.RunSQL.noop,
         ),
-
         migrations.SeparateDatabaseAndState(
             database_operations=[],
             state_operations=[
@@ -110,13 +178,13 @@ class Migration(migrations.Migration):
                         ),
                         (
                             "version_lock",
-                            models.PositiveIntegerField(
+                            models.IntegerField(
                                 default=1,
                             ),
                         ),
                     ],
                     options={
-                        "db_table": "users",
+                        "db_table": "identity.users",
                         "managed": False,
                     },
                 ),
