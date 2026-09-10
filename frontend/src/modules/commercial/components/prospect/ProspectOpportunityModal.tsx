@@ -2,11 +2,11 @@ import { useMemo, useState } from 'react'
 import type { FormEvent } from 'react'
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 
-import { useAuth } from '../../../app/auth/useAuth'
+import { useAuth } from '../../../../app/auth/useAuth'
 import {
   createOpportunity,
   getOpportunities,
-} from '../../../infrastructure/api/commercialApi'
+} from '../../../../infrastructure/api/commercialApi'
 import type { Opportunity, Prospect } from '../../types/commercial'
 
 interface ProspectOpportunityModalProps {
@@ -24,11 +24,7 @@ function errorMessage(error: unknown): string {
   return error instanceof Error ? error.message : 'No fue posible crear la oportunidad.'
 }
 
-export default function ProspectOpportunityModal({
-  prospect,
-  open,
-  onClose,
-}: ProspectOpportunityModalProps) {
+export default function ProspectOpportunityModal({ prospect, open, onClose }: ProspectOpportunityModalProps) {
   const { user } = useAuth()
   const queryClient = useQueryClient()
   const [opportunityNumber, setOpportunityNumber] = useState('')
@@ -43,9 +39,7 @@ export default function ProspectOpportunityModal({
   })
 
   const relatedOpportunities = useMemo(
-    () => collectionResults<Opportunity>(opportunitiesQuery.data).filter(
-      (opportunity) => opportunity.prospect === prospect.id,
-    ),
+    () => collectionResults<Opportunity>(opportunitiesQuery.data).filter((opportunity) => opportunity.prospect === prospect.id),
     [opportunitiesQuery.data, prospect.id],
   )
 
@@ -79,13 +73,7 @@ export default function ProspectOpportunityModal({
 
   return (
     <div className="prospect-modal-backdrop" role="presentation" onMouseDown={onClose}>
-      <section
-        className="prospect-modal prospect-modal-large"
-        role="dialog"
-        aria-modal="true"
-        aria-labelledby="prospect-opportunity-modal-title"
-        onMouseDown={(event) => event.stopPropagation()}
-      >
+      <section className="prospect-modal prospect-modal-large" role="dialog" aria-modal="true" aria-labelledby="prospect-opportunity-modal-title" onMouseDown={(event) => event.stopPropagation()}>
         <header className="prospect-modal-header">
           <div>
             <span>COMERCIAL / {prospect.prospect_number}</span>
@@ -98,11 +86,7 @@ export default function ProspectOpportunityModal({
           {relatedOpportunities.length > 0 && (
             <div className="prospect-modal-notice">
               <strong>Oportunidades existentes</strong>
-              {relatedOpportunities.map((opportunity) => (
-                <div key={opportunity.id}>
-                  {opportunity.opportunity_number} — {opportunity.title}
-                </div>
-              ))}
+              {relatedOpportunities.map((opportunity) => <div key={opportunity.id}>{opportunity.opportunity_number} — {opportunity.title}</div>)}
             </div>
           )}
 
@@ -111,50 +95,25 @@ export default function ProspectOpportunityModal({
           <form onSubmit={handleSubmit}>
             <div>
               <label htmlFor="prospect-opportunity-number">Número de oportunidad</label>
-              <input
-                id="prospect-opportunity-number"
-                value={opportunityNumber}
-                onChange={(event) => setOpportunityNumber(event.target.value)}
-                placeholder="OPP-2026-000007"
-                required
-              />
+              <input id="prospect-opportunity-number" value={opportunityNumber} onChange={(event) => setOpportunityNumber(event.target.value)} placeholder="OPP-2026-000007" required />
             </div>
 
             <div>
               <label htmlFor="prospect-opportunity-title">Título</label>
-              <input
-                id="prospect-opportunity-title"
-                value={title}
-                onChange={(event) => setTitle(event.target.value)}
-                placeholder={`Servicio para ${prospect.business_name}`}
-                required
-              />
+              <input id="prospect-opportunity-title" value={title} onChange={(event) => setTitle(event.target.value)} placeholder={`Servicio para ${prospect.business_name}`} required />
             </div>
 
             <div>
               <label htmlFor="prospect-opportunity-description">Descripción</label>
-              <textarea
-                id="prospect-opportunity-description"
-                value={description}
-                onChange={(event) => setDescription(event.target.value)}
-              />
+              <textarea id="prospect-opportunity-description" value={description} onChange={(event) => setDescription(event.target.value)} />
             </div>
 
             <div>
               <label htmlFor="prospect-opportunity-value">Valor estimado</label>
-              <input
-                id="prospect-opportunity-value"
-                type="number"
-                min="0"
-                step="0.01"
-                value={estimatedValue}
-                onChange={(event) => setEstimatedValue(event.target.value)}
-              />
+              <input id="prospect-opportunity-value" type="number" min="0" step="0.01" value={estimatedValue} onChange={(event) => setEstimatedValue(event.target.value)} />
             </div>
 
-            {createMutation.isError && (
-              <div className="prospects-error" role="alert">{errorMessage(createMutation.error)}</div>
-            )}
+            {createMutation.isError && <div className="prospects-error" role="alert">{errorMessage(createMutation.error)}</div>}
 
             <div className="prospect-modal-actions">
               <button type="button" onClick={onClose}>Cancelar</button>
