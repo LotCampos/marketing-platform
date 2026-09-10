@@ -1,12 +1,12 @@
 from decimal import Decimal
 from uuid import UUID
 
+from django.http import HttpResponse
 from rest_framework import status, viewsets
 from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError as DRFValidationError
-from django.http import HttpResponse
-from rest_framework.response import Response
 from rest_framework.renderers import BaseRenderer
+from rest_framework.response import Response
 
 from core.exceptions import ValidationError as ApplicationValidationError
 from identity.permissions import (
@@ -18,7 +18,6 @@ from identity.permissions import (
     CanView,
     IsAdmin,
 )
-from master.models import Client, Contact, ServiceCatalog
 
 from .dtos import CreateServiceRequestDTO
 from .models import (
@@ -42,6 +41,8 @@ from .serializers import (
     ServiceRequestSerializer,
 )
 from .services import (
+    AgreementCreateData,
+    AgreementService,
     OptimisticLockError,
     OpportunityCreateData,
     OpportunityService,
@@ -82,6 +83,21 @@ class CommercialBaseViewSet(viewsets.ModelViewSet):
             return [IsAdmin()]
         return [permission_class()]
 
+    @staticmethod
+    def _authenticated_user_id(request) -> UUID | None:
+        user = getattr(request, "user", None)
+        if user is None or not getattr(user, "is_authenticated", False):
+            return None
+        user_id = getattr(user, "id", None)
+        return UUID(str(user_id)) if user_id is not None else None
+
+    @staticmethod
+    def _parse_uuid(value, field_name: str) -> UUID:
+        try:
+            return UUID(str(value))
+        except (TypeError, ValueError) as exc:
+            raise DRFValidationError({field_name: f"{field_name} must be a valid UUID."}) from exc
+
 
 class ServiceRequestViewSet(CommercialBaseViewSet):
     queryset = ServiceRequest.objects.all().order_by("-created_at")
@@ -90,12 +106,6 @@ class ServiceRequestViewSet(CommercialBaseViewSet):
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        authenticated_user_id = None
-        request_user = getattr(request, "user", None)
-        if request_user is not None and getattr(request_user, "is_authenticated", False):
-            user_id = getattr(request_user, "id", None)
-            if user_id is not None:
-                authenticated_user_id = UUID(str(user_id))
         data = CreateServiceRequestDTO(
             client_id=serializer.validated_data["client_id"],
             installation_id=serializer.validated_data.get("installation_id"),
@@ -105,7 +115,7 @@ class ServiceRequestViewSet(CommercialBaseViewSet):
             requested_by_email=serializer.validated_data.get("requested_by_email"),
             requested_by_phone=serializer.validated_data.get("requested_by_phone"),
             request_description=serializer.validated_data.get("request_description"),
-            created_by=authenticated_user_id,
+            created_by=self._authenticated_user_id(request),
         )
         try:
             service_request = ServiceRequestService().create_service_request(data)
@@ -125,24 +135,10 @@ class ProspectViewSet(CommercialBaseViewSet):
     queryset = Prospect.objects.all().order_by("-created_at")
     serializer_class = ProspectSerializer
 
-    @staticmethod
-    def _parse_uuid(value, field_name: str) -> UUID:
-        try:
-            return UUID(str(value))
-        except (TypeError, ValueError):
-            raise DRFValidationError({field_name: f"{field_name} must be a valid UUID."})
-
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        authenticated_user_id = None
-        request_user = getattr(request, "user", None)
-        if request_user is not None and getattr(request_user, "is_authenticated", False):
-            user_id = getattr(request_user, "id", None)
-            if user_id is not None:
-                authenticated_user_id = UUID(str(user_id))
         data = ProspectCreateData(
-            prospect_number=serializer.validated_data["prospect_number"],
             business_name=serializer.validated_data["business_name"],
             rfc=serializer.validated_data.get("rfc"),
             contact_name=serializer.validated_data.get("contact_name"),
@@ -154,11 +150,9 @@ class ProspectViewSet(CommercialBaseViewSet):
             notes=serializer.validated_data.get("notes"),
             service_catalog_id=serializer.validated_data.get("service_catalog_id"),
             installation_type_id=serializer.validated_data.get("installation_type_id"),
-            installation_id=serializer.validated_data.get("installation_id"),
-            created_by=authenticated_user_id,
         )
         try:
-            prospect = ProspectService().create(data)
+            prospect = ProspectService.create(data)
         except ApplicationValidationError as exc:
             raise DRFValidationError({"detail": exc.message_dict}) from exc
         response_serializer = self.get_serializer(prospect)
@@ -168,19 +162,19 @@ class ProspectViewSet(CommercialBaseViewSet):
     @action(detail=True, methods=["post"], url_path="change-status")
     def change_status(self, request, pk=None):
         prospect_id = self._parse_uuid(pk, "prospect_id")
-        new_status = request.data.get("status")
         expected_version = request.data.get("expected_version")
         if expected_version is None:
             raise DRFValidationError({"expected_version": "expected_version is required."})
         try:
             expected_version = int(expected_version)
-        except (TypeError, ValueError):
-            raise DRFValidationError({"expected_version": "expected_version must be an integer."})
+        except (TypeError, ValueError) as exc:
+            raise DRFValidationError({"expected_version": "expected_version must be an integer."}) from exc
         try:
             prospect = ProspectService.change_status(
                 prospect_id=prospect_id,
-                new_status=new_status,
+                new_status=request.data.get("status"),
                 expected_version=expected_version,
+                changed_by=self._authenticated_user_id(request),
             )
         except OptimisticLockError:
             return Response(
@@ -203,8 +197,8 @@ class ProspectViewSet(CommercialBaseViewSet):
         try:
             assigned_to = UUID(str(assigned_to))
             expected_version = int(expected_version)
-        except (TypeError, ValueError):
-            raise DRFValidationError({"detail": "assigned_to must be a valid UUID and expected_version an integer."})
+        except (TypeError, ValueError) as exc:
+            raise DRFValidationError({"detail": "assigned_to must be a valid UUID and expected_version an integer."}) from exc
         try:
             prospect = ProspectService.assign(
                 prospect_id=prospect_id,
@@ -273,12 +267,12 @@ class QuotationViewSet(CommercialBaseViewSet):
         data = QuotationCreateData(
             quotation_number=validated_data["quotation_number"],
             opportunity_id=validated_data["opportunity_id"],
-            client_id=validated_data["client_id"],
-            issued_by=validated_data.get("issued_by"),
+            client_id=validated_data.get("client_id"),
+            issued_by=validated_data.get("issued_by") or self._authenticated_user_id(request),
             valid_until=validated_data.get("valid_until"),
             currency=validated_data.get("currency", "MXN"),
             notes=validated_data.get("notes"),
-            tax_percentage=validated_data.get("tax_percentage", Decimal("0")),
+            tax_percentage=validated_data.get("tax_percentage", Decimal("16.00")),
             items=item_data,
         )
         try:
@@ -306,6 +300,31 @@ class QuotationItemViewSet(CommercialBaseViewSet):
 class AgreementViewSet(CommercialBaseViewSet):
     queryset = Agreement.objects.all().order_by("-created_at")
     serializer_class = AgreementSerializer
+
+    def create(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        validated_data = serializer.validated_data
+        data = AgreementCreateData(
+            agreement_number=validated_data["agreement_number"],
+            quotation_id=validated_data["quotation_id"],
+            opportunity_id=validated_data["opportunity_id"],
+            client_id=validated_data["client_id"],
+            status=validated_data.get("status", "DRAFT"),
+            signed_by=validated_data.get("signed_by"),
+            signed_at=validated_data.get("signed_at"),
+            effective_from=validated_data.get("effective_from"),
+            effective_until=validated_data.get("effective_until"),
+            terms_hash=validated_data.get("terms_hash"),
+            notes=validated_data.get("notes"),
+        )
+        try:
+            agreement = AgreementService.create(data)
+        except ApplicationValidationError as exc:
+            raise DRFValidationError({"detail": exc.message_dict}) from exc
+        response_serializer = self.get_serializer(agreement)
+        headers = self.get_success_headers(response_serializer.data)
+        return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
 
 class AgreementTermViewSet(CommercialBaseViewSet):
