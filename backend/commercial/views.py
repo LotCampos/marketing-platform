@@ -18,6 +18,7 @@ from identity.permissions import (
     CanView,
     IsAdmin,
 )
+from master.models import Client, Contact, ServiceCatalog
 
 from .dtos import CreateServiceRequestDTO
 from .models import (
@@ -283,12 +284,92 @@ class QuotationViewSet(CommercialBaseViewSet):
         headers = self.get_success_headers(response_serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
 
-    @action(detail=True, methods=["get"], url_path="pdf", renderer_classes=[PDFRenderer])
+    @action(detail=True, methods=["get"], url_path="pdf", url_name="pdf", renderer_classes=[PDFRenderer])
     def pdf(self, request, pk=None):
-        quotation_id = self._parse_uuid(pk, "quotation_id")
-        pdf_bytes = QuotationPDFService().generate(quotation_id)
-        response = HttpResponse(pdf_bytes, content_type="application/pdf")
-        response["Content-Disposition"] = f'inline; filename="quotation-{quotation_id}.pdf"'
+        quotation = self.get_object()
+
+        items = list(
+            QuotationItem.objects.filter(
+                quotation_id=quotation.id,
+            ).order_by("created_at")
+        )
+        if not items:
+            raise DRFValidationError({"detail": "La cotización no contiene partidas y no puede generar el PDF oficial."})
+
+        if quotation.client_id is None:
+            raise DRFValidationError({"detail": "La cotización aún no pertenece a un cliente convertido y no puede generar el PDF oficial."})
+
+        client = Client.objects.filter(id=quotation.client_id, is_deleted=False).first()
+        if client is None:
+            raise DRFValidationError({"detail": "No se encontró el cliente activo asociado a la cotización."})
+
+        contact = (
+            Contact.objects.filter(
+                client_id=client.id,
+                is_active=True,
+                is_deleted=False,
+            )
+            .order_by("-is_primary", "created_at")
+            .first()
+        )
+
+        service_catalog_ids = {item.service_catalog_id for item in items}
+        service_catalogs = {
+            catalog.id: catalog
+            for catalog in ServiceCatalog.objects.filter(
+                id__in=service_catalog_ids,
+                is_active=True,
+            )
+        }
+        missing_catalog_ids = service_catalog_ids - set(service_catalogs.keys())
+        if missing_catalog_ids:
+            raise DRFValidationError({"detail": "Una o más partidas de la cotización no tienen un servicio de catálogo activo."})
+
+        installation = (
+            client.installations
+            .filter(installation_type__isnull=False)
+            .select_related("installation_type")
+            .first()
+        )
+        installation_type_name = ""
+        if installation is not None and installation.installation_type is not None and installation.installation_type.name:
+            installation_type_name = installation.installation_type.name.strip()
+
+        partidas = []
+        service_names = []
+        for item in items:
+            catalog = service_catalogs[item.service_catalog_id]
+            if catalog.service_name:
+                service_names.append(catalog.service_name.strip())
+            partidas.append(
+                {
+                    "tipo_instalacion": installation_type_name or "",
+                    "norma_oficial": catalog.regulatory_basis or catalog.service_name or "",
+                    "cantidad": int(item.quantity) if item.quantity == int(item.quantity) else item.quantity,
+                    "precio_unitario": item.unit_price,
+                    "precio_total": item.line_total,
+                    "descripcion": item.description,
+                }
+            )
+
+        service_name = ", ".join(dict.fromkeys(name for name in service_names if name))
+        pdf = QuotationPDFService.generate(
+            quotation=quotation,
+            partidas=partidas,
+            client_name=client.business_name,
+            contact_name=contact.full_name if contact is not None else "",
+            service_name=service_name,
+            service_type="SERVICIO",
+            validity_days=(
+                (quotation.valid_until - quotation.issue_date.date()).days
+                if quotation.valid_until
+                else 30
+            ),
+            viaticos_incluidos=False,
+        )
+
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="cotizacion-{quotation.quotation_number}.pdf"'
         return response
 
 
