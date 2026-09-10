@@ -2,6 +2,10 @@ from .opportunity_service import (
     OpportunityCreateData,
     OpportunityService,
 )
+from .prospect_conversion_service import (
+    ProspectConversionResult,
+    ProspectConversionService,
+)
 from .prospect_service import (
     OptimisticLockError,
     ProspectCreateData,
@@ -23,6 +27,8 @@ __all__ = [
     "OptimisticLockError",
     "OpportunityCreateData",
     "OpportunityService",
+    "ProspectConversionResult",
+    "ProspectConversionService",
     "ProspectCreateData",
     "ProspectService",
     "QuotationCreateData",
