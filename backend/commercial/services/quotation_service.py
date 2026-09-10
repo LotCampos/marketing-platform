@@ -28,7 +28,7 @@ class QuotationItemCreateData:
 class QuotationCreateData:
     quotation_number: str
     opportunity_id: UUID
-    client_id: UUID
+    client_id: UUID | None
     issued_by: UUID | None
     valid_until: date | None = None
     currency: str = "MXN"
@@ -104,22 +104,13 @@ class QuotationService:
         except Opportunity.DoesNotExist as exc:
             raise ValidationError({"opportunity_id": "Opportunity does not exist."}) from exc
 
-        if opportunity.client_id is None:
-            raise ValidationError(
-                {
-                    "opportunity_id": (
-                        "The opportunity must have a client before a quotation can be created. "
-                        "Complete prospect conversion or assign the client first."
-                    )
-                }
-            )
+        if opportunity.client_id is not None and data.client_id is not None:
+            if opportunity.client_id != data.client_id:
+                raise ValidationError(
+                    {"client_id": "Quotation client must match the opportunity client."}
+                )
 
-        if opportunity.client_id != data.client_id:
-            raise ValidationError(
-                {
-                    "client_id": "Quotation client must match the opportunity client."
-                }
-            )
+        effective_client_id = data.client_id or opportunity.client_id
 
         if Quotation.objects.filter(quotation_number=quotation_number).exists():
             raise ValidationError({"quotation_number": "A quotation with this number already exists."})
@@ -135,7 +126,7 @@ class QuotationService:
         quotation = Quotation(
             quotation_number=quotation_number,
             opportunity_id=data.opportunity_id,
-            client_id=data.client_id,
+            client_id=effective_client_id,
             issued_by=data.issued_by,
             valid_until=data.valid_until,
             subtotal=subtotal,
