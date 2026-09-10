@@ -28,7 +28,7 @@ const STATUS_LABELS: Record<ProspectStatus, string> = {
   NEW: 'Nuevo',
   CONTACTED: 'Contactado',
   QUALIFIED: 'Calificado',
-  PROPOSAL: 'Propuesta',
+  QUOTED: 'Cotizado',
   WON: 'Ganado',
   LOST: 'Perdido',
   CONVERTED: 'Convertido',
@@ -66,6 +66,14 @@ export default function ProspectDetailPage() {
 
     await queryClient.invalidateQueries({
       queryKey: ['commercial', 'prospects'],
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ['commercial', 'opportunities'],
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ['commercial', 'quotations'],
     })
   }
 
@@ -135,7 +143,7 @@ export default function ProspectDetailPage() {
 
   const quotationEnabled =
     prospect.status === 'QUALIFIED' ||
-    prospect.status === 'PROPOSAL'
+    prospect.status === 'QUOTED'
 
   return (
     <div className="prospect-detail-page">
@@ -178,6 +186,13 @@ export default function ProspectDetailPage() {
             onChange={(status) => statusMutation.mutate(status)}
           />
         </header>
+
+        {statusMutation.isError && (
+          <div className="prospects-error" role="alert">
+            No fue posible cambiar el estado del prospecto. Verifica los datos
+            comerciales requeridos y vuelve a intentarlo.
+          </div>
+        )}
 
         <ProspectSummary
           prospect={prospect}
@@ -259,7 +274,7 @@ export default function ProspectDetailPage() {
             <span>
               <strong>Oportunidad</strong>
               <small>
-                La oportunidad se activa mediante el estado comercial.
+                Crear o consultar la oportunidad comercial del prospecto.
               </small>
             </span>
           </button>
@@ -273,7 +288,7 @@ export default function ProspectDetailPage() {
                 return
               }
 
-              setInstallationModalOpen(true)
+              setQuotationModalOpen(true)
             }}
           >
             <span className="prospect-action-icon" aria-hidden="true">
@@ -283,7 +298,7 @@ export default function ProspectDetailPage() {
             <span>
               <strong>Nueva cotización</strong>
               <small>
-                Abrir el espacio de cotización del expediente.
+                Preparar una cotización vinculada a una oportunidad.
               </small>
             </span>
           </button>
