@@ -7,7 +7,7 @@ import {
   createOpportunity,
   getOpportunities,
 } from '../../../infrastructure/api/commercialApi'
-import type { Opportunity, Prospect } from '../../commercial/types/commercial'
+import type { Opportunity, Prospect } from '../../types/commercial'
 
 interface ProspectOpportunityModalProps {
   prospect: Prospect
