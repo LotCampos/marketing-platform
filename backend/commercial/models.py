@@ -6,20 +6,7 @@ from core.models import UICadoBaseModel
 
 
 class CommercialBaseModel(UICadoBaseModel):
-    """
-    Abstract persistence foundation for COMMERCIAL entities.
-
-    Physical COMMERCIAL baseline:
-        id
-        created_at
-        version_lock
-
-    Schema resolution:
-        PostgreSQL search_path resolves COMMERCIAL tables.
-
-    COMMERCIAL does not inherit workflow state directly.
-    Workflow ownership remains in the workflow layer.
-    """
+    """Abstract persistence foundation for COMMERCIAL entities."""
 
     updated_at = None
 
@@ -90,7 +77,6 @@ class CapacityAssessment(CommercialBaseModel):
 
 class Opportunity(CommercialBaseModel):
     opportunity_number = models.CharField(max_length=50, db_column="opportunity_number")
-
     prospect = models.ForeignKey(
         "Prospect",
         on_delete=models.PROTECT,
@@ -99,19 +85,8 @@ class Opportunity(CommercialBaseModel):
         null=True,
         blank=True,
     )
-
-    service_request_id = models.UUIDField(
-        db_column="service_request_id",
-        null=True,
-        blank=True,
-    )
-
-    client_id = models.UUIDField(
-        db_column="client_id",
-        null=True,
-        blank=True,
-    )
-
+    service_request_id = models.UUIDField(db_column="service_request_id", null=True, blank=True)
+    client_id = models.UUIDField(db_column="client_id", null=True, blank=True)
     assigned_to = models.UUIDField(db_column="assigned_to", null=True, blank=True)
     title = models.CharField(max_length=255, db_column="title")
     description = models.TextField(db_column="description", null=True, blank=True)
@@ -133,7 +108,7 @@ class Opportunity(CommercialBaseModel):
 class Quotation(CommercialBaseModel):
     quotation_number = models.CharField(max_length=50, db_column="quotation_number")
     opportunity_id = models.UUIDField(db_column="opportunity_id")
-    client_id = models.UUIDField(db_column="client_id")
+    client_id = models.UUIDField(db_column="client_id", null=True, blank=True)
     issued_by = models.UUIDField(db_column="issued_by")
     issue_date = models.DateTimeField(db_column="issue_date", auto_now_add=True)
     valid_until = models.DateField(db_column="valid_until", null=True, blank=True)
@@ -202,7 +177,7 @@ class ProspectStatus(models.TextChoices):
     NEW = "NEW", "New"
     CONTACTED = "CONTACTED", "Contacted"
     QUALIFIED = "QUALIFIED", "Qualified"
-    PROPOSAL = "PROPOSAL", "Proposal"
+    QUOTED = "QUOTED", "Quoted"
     WON = "WON", "Won"
     LOST = "LOST", "Lost"
     CONVERTED = "CONVERTED", "Converted"
