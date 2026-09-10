@@ -28,25 +28,36 @@ class QuotationServiceConsistencyTests(SimpleTestCase):
         return QuotationCreateData(
             quotation_number="COT-TEST-0001",
             opportunity_id=self.opportunity_id,
-            client_id=client_id or self.client_id,
+            client_id=client_id,
             issued_by=uuid4(),
             items=(self.item,),
         )
 
     @patch("commercial.services.quotation_service.Opportunity")
-    def test_rejects_quotation_when_opportunity_has_no_client(self, opportunity_model):
+    @patch("commercial.services.quotation_service.Quotation")
+    def test_allows_quotation_for_prospect_opportunity_without_client(
+        self, quotation_model, opportunity_model
+    ):
         opportunity_model.objects.select_for_update.return_value.get.return_value = SimpleNamespace(
             id=self.opportunity_id,
             client_id=None,
         )
+        quotation_model.objects.filter.return_value.exists.return_value = False
 
-        with self.assertRaises(ValidationError) as context:
-            QuotationService(
-                repository=MagicMock(),
-                item_repository=MagicMock(),
-            ).create(self._data())
+        repository = MagicMock()
+        quotation = SimpleNamespace(id=uuid4(), client_id=None)
+        repository.add.return_value = quotation
+        item_repository = MagicMock()
 
-        self.assertIn("opportunity_id", context.exception.message_dict)
+        result = QuotationService(
+            repository=repository,
+            item_repository=item_repository,
+        ).create(self._data())
+
+        self.assertEqual(result, quotation)
+        self.assertIsNone(repository.add.call_args.args[0].client_id)
+        repository.add.assert_called_once()
+        item_repository.add.assert_called_once()
 
     @patch("commercial.services.quotation_service.Opportunity")
     def test_rejects_client_mismatch_with_opportunity(self, opportunity_model):
@@ -59,13 +70,13 @@ class QuotationServiceConsistencyTests(SimpleTestCase):
             QuotationService(
                 repository=MagicMock(),
                 item_repository=MagicMock(),
-            ).create(self._data())
+            ).create(self._data(self.client_id))
 
         self.assertIn("client_id", context.exception.message_dict)
 
     @patch("commercial.services.quotation_service.Opportunity")
     @patch("commercial.services.quotation_service.Quotation")
-    def test_accepts_matching_opportunity_client(self, quotation_model, opportunity_model):
+    def test_inherits_client_from_opportunity(self, quotation_model, opportunity_model):
         opportunity_model.objects.select_for_update.return_value.get.return_value = SimpleNamespace(
             id=self.opportunity_id,
             client_id=self.client_id,
@@ -73,15 +84,13 @@ class QuotationServiceConsistencyTests(SimpleTestCase):
         quotation_model.objects.filter.return_value.exists.return_value = False
 
         repository = MagicMock()
-        quotation = SimpleNamespace(id=uuid4())
+        quotation = SimpleNamespace(id=uuid4(), client_id=self.client_id)
         repository.add.return_value = quotation
-        item_repository = MagicMock()
 
         result = QuotationService(
             repository=repository,
-            item_repository=item_repository,
+            item_repository=MagicMock(),
         ).create(self._data())
 
         self.assertEqual(result, quotation)
-        repository.add.assert_called_once()
-        item_repository.add.assert_called_once()
+        self.assertEqual(repository.add.call_args.args[0].client_id, self.client_id)
