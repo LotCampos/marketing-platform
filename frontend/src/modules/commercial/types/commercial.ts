@@ -213,46 +213,35 @@ export interface CapacityAssessment {
 ========================================================= */
 
 export interface Opportunity {
-
   id: string
-
   created_at: string
-
   version_lock: number
 
   opportunity_number: string
 
+  prospect: string | null
   service_request_id: string | null
-
   client_id: string | null
 
   assigned_to: string | null
 
   title: string
-
   description: string | null
-
   estimated_value: string | null
-  prospect: string | null
-
 }
 
 export interface CreateOpportunityInput {
-
   opportunity_number: string
 
-  service_request_id: string
-
-  client_id: string
+  prospect_id?: string | null
+  service_request_id?: string | null
+  client_id?: string | null
 
   title: string
 
   assigned_to?: string | null
-
   description?: string | null
-
   estimated_value?: string | null
-
 }
 
 /* =========================================================
