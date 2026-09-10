@@ -230,10 +230,10 @@ class OpportunityViewSet(CommercialBaseViewSet):
         serializer.is_valid(raise_exception=True)
         data = OpportunityCreateData(
             opportunity_number=serializer.validated_data["opportunity_number"],
-            title=serializer.validated_data["title"],
-            prospect_id=serializer.validated_data.get("prospect_id"),
+            prospect_id=serializer.validated_data.get("prospect"),
             service_request_id=serializer.validated_data.get("service_request_id"),
             client_id=serializer.validated_data.get("client_id"),
+            title=serializer.validated_data["title"],
             assigned_to=serializer.validated_data.get("assigned_to"),
             description=serializer.validated_data.get("description"),
             estimated_value=serializer.validated_data.get("estimated_value"),
@@ -268,7 +268,7 @@ class QuotationViewSet(CommercialBaseViewSet):
         data = QuotationCreateData(
             quotation_number=validated_data["quotation_number"],
             opportunity_id=validated_data["opportunity_id"],
-            client_id=validated_data.get("client_id"),
+            client_id=validated_data["client_id"],
             issued_by=validated_data.get("issued_by") or self._authenticated_user_id(request),
             valid_until=validated_data.get("valid_until"),
             currency=validated_data.get("currency", "MXN"),
@@ -287,87 +287,55 @@ class QuotationViewSet(CommercialBaseViewSet):
     @action(detail=True, methods=["get"], url_path="pdf", url_name="pdf", renderer_classes=[PDFRenderer])
     def pdf(self, request, pk=None):
         quotation = self.get_object()
-
-        items = list(
-            QuotationItem.objects.filter(
-                quotation_id=quotation.id,
-            ).order_by("created_at")
-        )
+        items = list(QuotationItem.objects.filter(quotation_id=quotation.id).order_by("created_at"))
         if not items:
             raise DRFValidationError({"detail": "La cotización no contiene partidas y no puede generar el PDF oficial."})
-
-        if quotation.client_id is None:
-            raise DRFValidationError({"detail": "La cotización aún no pertenece a un cliente convertido y no puede generar el PDF oficial."})
-
         client = Client.objects.filter(id=quotation.client_id, is_deleted=False).first()
         if client is None:
             raise DRFValidationError({"detail": "No se encontró el cliente activo asociado a la cotización."})
-
-        contact = (
-            Contact.objects.filter(
-                client_id=client.id,
-                is_active=True,
-                is_deleted=False,
-            )
-            .order_by("-is_primary", "created_at")
-            .first()
-        )
-
+        contact = Contact.objects.filter(
+            client_id=client.id, is_active=True, is_deleted=False
+        ).order_by("-is_primary", "created_at").first()
         service_catalog_ids = {item.service_catalog_id for item in items}
         service_catalogs = {
             catalog.id: catalog
-            for catalog in ServiceCatalog.objects.filter(
-                id__in=service_catalog_ids,
-                is_active=True,
-            )
+            for catalog in ServiceCatalog.objects.filter(id__in=service_catalog_ids, is_active=True)
         }
         missing_catalog_ids = service_catalog_ids - set(service_catalogs.keys())
         if missing_catalog_ids:
             raise DRFValidationError({"detail": "Una o más partidas de la cotización no tienen un servicio de catálogo activo."})
-
         installation = (
-            client.installations
-            .filter(installation_type__isnull=False)
-            .select_related("installation_type")
-            .first()
+            client.installations.filter(installation_type__isnull=False)
+            .select_related("installation_type").first()
         )
         installation_type_name = ""
         if installation is not None and installation.installation_type is not None and installation.installation_type.name:
             installation_type_name = installation.installation_type.name.strip()
-
         partidas = []
         service_names = []
         for item in items:
             catalog = service_catalogs[item.service_catalog_id]
             if catalog.service_name:
                 service_names.append(catalog.service_name.strip())
-            partidas.append(
-                {
-                    "tipo_instalacion": installation_type_name or "",
-                    "norma_oficial": catalog.regulatory_basis or catalog.service_name or "",
-                    "cantidad": int(item.quantity) if item.quantity == int(item.quantity) else item.quantity,
-                    "precio_unitario": item.unit_price,
-                    "precio_total": item.line_total,
-                    "descripcion": item.description,
-                }
-            )
-
-        service_name = ", ".join(dict.fromkeys(name for name in service_names if name))
+            partidas.append({
+                "tipo_instalacion": installation_type_name or "",
+                "norma_oficial": catalog.regulatory_basis or catalog.service_name or "",
+                "cantidad": int(item.quantity) if item.quantity == int(item.quantity) else item.quantity,
+                "precio_unitario": item.unit_price,
+                "precio_total": item.line_total,
+                "descripcion": item.description,
+            })
+        service_names = list(dict.fromkeys(name for name in service_names if name))
         pdf = QuotationPDFService.generate(
             quotation=quotation,
             partidas=partidas,
             client_name=client.business_name,
             contact_name=contact.full_name if contact is not None else "",
-            service_name=service_name,
+            service_name=", ".join(service_names),
             service_type="SERVICIO",
-            validity_days=(
-                (quotation.valid_until - quotation.issue_date.date()).days
-                if quotation.valid_until
-                else 30
-            ),
+            validity_days=((quotation.valid_until - quotation.issue_date.date()).days if quotation.valid_until else 30),
             viaticos_incluidos=False,
         )
-
         response = HttpResponse(pdf, content_type="application/pdf")
         response["Content-Disposition"] = f'inline; filename="cotizacion-{quotation.quotation_number}.pdf"'
         return response
@@ -391,7 +359,7 @@ class AgreementViewSet(CommercialBaseViewSet):
             quotation_id=validated_data["quotation_id"],
             opportunity_id=validated_data["opportunity_id"],
             client_id=validated_data["client_id"],
-            status=validated_data.get("status", "DRAFT"),
+            status=validated_data["status"],
             signed_by=validated_data.get("signed_by"),
             signed_at=validated_data.get("signed_at"),
             effective_from=validated_data.get("effective_from"),
@@ -400,7 +368,7 @@ class AgreementViewSet(CommercialBaseViewSet):
             notes=validated_data.get("notes"),
         )
         try:
-            agreement = AgreementService.create(data)
+            agreement = AgreementService().create(data)
         except ApplicationValidationError as exc:
             raise DRFValidationError({"detail": exc.message_dict}) from exc
         response_serializer = self.get_serializer(agreement)
