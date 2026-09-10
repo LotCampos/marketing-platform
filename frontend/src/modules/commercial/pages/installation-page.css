@@ -1,0 +1,466 @@
+/* =========================================================
+   UI-CADO — INSTALLATIONS PAGE
+   Estilo: Dark Neumorphic 3D (Hardware Interface & LED Monitors)
+   ========================================================= */
+
+.installations-page {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* =========================================================
+   HERO PANEL (Chasis de hardware)
+   ========================================================= */
+
+.installations-hero {
+  position: relative;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+  padding: 40px 30px;
+  
+  /* Fondo oscuro y borde de hardware */
+  background: #1e2024;
+  border: 6px solid #2a2c30;
+  border-radius: 32px;
+  
+  /* Sombras pesadas para dar volumen */
+  box-shadow: 
+    inset 10px 10px 20px rgba(0, 0, 0, 0.8),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.04),
+    20px 25px 50px rgba(0, 0, 0, 0.7);
+    
+  overflow: hidden;
+}
+
+/* Textura granulada (Noise) */
+.installations-hero::before,
+.installations-panel::before,
+.installation-form-container::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+.installations-hero-content {
+  position: relative;
+  z-index: 1;
+  max-width: 760px;
+}
+
+.installations-hero-eyebrow,
+.installations-panel-header span,
+.installation-form-header span {
+  position: relative;
+  z-index: 1;
+  display: block;
+  margin-bottom: 8px;
+  
+  /* Acento LED Naranja */
+  color: #f36517; 
+  font-size: 11px;
+  font-weight: 850;
+  letter-spacing: 0.2em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(243, 101, 23, 0.4);
+}
+
+.installations-hero h2 {
+  position: relative;
+  z-index: 1;
+  margin: 0;
+  color: #ffffff;
+  font-size: 34px;
+  line-height: 1.1;
+  font-weight: 800;
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
+}
+
+.installations-hero p {
+  position: relative;
+  z-index: 1;
+  margin: 14px 0 0;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.6;
+}
+
+/* =========================================================
+   ACTIONS (Botones Físicos)
+   ========================================================= */
+
+.installations-hero > div:last-child {
+  position: relative;
+  z-index: 1;
+}
+
+.installations-primary-action,
+.installation-secondary-action {
+  border: 0;
+  border-radius: 16px;
+  padding: 14px 22px;
+  font: inherit;
+  font-weight: 800;
+  font-size: 13px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.installations-primary-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  color: #ffffff;
+  background: #f36517;
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.6);
+}
+
+.installations-primary-action span {
+  margin: 0;
+  color: inherit;
+  font-size: 20px;
+  line-height: 1;
+}
+
+.installations-primary-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 
+    8px 8px 20px rgba(0, 0, 0, 0.7),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
+}
+
+.installations-primary-action:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.6),
+    inset 4px 4px 8px rgba(139, 28, 0, 0.6);
+}
+
+.installation-secondary-action {
+  color: #94a3b8;
+  background: #2a2c30;
+  box-shadow: 
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.installation-secondary-action:hover:not(:disabled) {
+  transform: translateY(-2px);
+  color: #ffffff;
+  background: #313338;
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.installation-secondary-action:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.5);
+}
+
+.installations-primary-action:disabled,
+.installation-secondary-action:disabled {
+  cursor: not-allowed;
+  opacity: 0.4;
+  transform: none;
+}
+
+/* =========================================================
+   PANELS & CONTAINERS
+   ========================================================= */
+
+.installations-panel,
+.installation-form-container {
+  position: relative;
+  background: #1e2024;
+  border: 6px solid #2a2c30;
+  border-radius: 28px;
+  box-shadow: 
+    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
+    15px 20px 40px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.installations-panel-header,
+.installation-form-header {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 30px;
+  border-bottom: 2px solid #0a0a0a;
+  background: rgba(21, 23, 26, 0.6);
+  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
+}
+
+.installations-panel-header h3,
+.installation-form-header h3 {
+  margin: 0;
+  color: #ffffff;
+  font-size: 19px;
+  font-weight: 750;
+}
+
+.installations-panel-header strong {
+  padding: 8px 14px;
+  background: #111214;
+  border-radius: 999px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.9),
+    inset -1px -1px 3px rgba(255, 255, 255, 0.05);
+}
+
+/* =========================================================
+   TABLE
+   ========================================================= */
+
+.installations-table-wrapper {
+  position: relative;
+  z-index: 1;
+  overflow-x: auto;
+}
+
+.installations-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  min-width: 900px;
+}
+
+.installations-table th,
+.installations-table td {
+  padding: 16px 20px;
+  text-align: left;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+  font-size: 13px;
+}
+
+.installations-table th {
+  color: #f36517;
+  background: rgba(21, 23, 26, 0.8);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.installations-table td {
+  color: #94a3b8;
+  background: transparent;
+  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.02);
+}
+
+.installations-table tbody tr {
+  transition: all 200ms ease;
+}
+
+/* Hover de filas iluminado (Efecto Escáner) */
+.installations-table tbody tr:hover td {
+  background: #0d0e10;
+  color: #ffffff;
+  box-shadow: 
+    inset 0 1px 0 rgba(255, 255, 255, 0.02),
+    inset 0 -1px 0 rgba(243, 101, 23, 0.4); /* Resplandor naranja por debajo */
+}
+
+.installation-table-primary {
+  color: #ffffff !important;
+  font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+}
+
+.installations-empty-state {
+  position: relative;
+  z-index: 1;
+  padding: 60px 20px !important;
+  color: #64748b !important;
+  text-align: center !important;
+  font-weight: 600;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+}
+
+/* =========================================================
+   FORM (Consolas y Módulos LED)
+   ========================================================= */
+
+.installation-form {
+  position: relative;
+  z-index: 1;
+  padding-bottom: 22px;
+}
+
+.installation-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  padding: 28px;
+}
+
+.installation-form-grid label {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  cursor: pointer;
+}
+
+/* Etiquetas del Formulario con LED Integrado */
+.installation-form-grid label > span {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+  transition: color 200ms ease;
+}
+
+/* Foquito LED Apagado por defecto */
+.installation-form-grid label > span::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: #334155; 
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+  transition: all 200ms ease;
+}
+
+/* Enciende el LED y aclara el texto al enfocar o pasar el mouse */
+.installation-form-grid label:hover > span::before,
+.installation-form-grid label:focus-within > span::before {
+  background: #f36517;
+  box-shadow: 0 0 8px rgba(243, 101, 23, 0.8);
+}
+
+.installation-form-grid label:hover > span,
+.installation-form-grid label:focus-within > span {
+  color: #cbd5e1;
+}
+
+.installation-form-field-wide {
+  grid-column: 1 / -1;
+}
+
+/* Pantallas/Inputs hundidos (Apagados por defecto) */
+.installation-form-grid input,
+.installation-form-grid select,
+.installation-form-grid textarea {
+  width: 100%;
+  box-sizing: border-box;
+  
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.05); /* Borde sutil */
+  border-radius: 12px;
+  
+  color: #ffffff;
+  padding: 14px 16px;
+  font: inherit;
+  font-size: 13px;
+  outline: none;
+  
+  box-shadow: 
+    inset 4px 4px 10px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.02);
+  transition: all 160ms ease;
+}
+
+.installation-form-grid textarea {
+  resize: vertical;
+  min-height: 100px;
+}
+
+.installation-form-grid input::placeholder,
+.installation-form-grid textarea::placeholder {
+  color: #475569;
+}
+
+/* Enciende el input al hacer click */
+.installation-form-grid input:focus,
+.installation-form-grid select:focus,
+.installation-form-grid textarea:focus {
+  background: #050505;
+  border-color: rgba(243, 101, 23, 0.8);
+  box-shadow: 
+    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.02),
+    0 0 12px rgba(243, 101, 23, 0.3); /* Resplandor exterior naranja */
+}
+
+.installation-form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  padding: 0 28px;
+}
+
+/* =========================================================
+   ERROR PANELS (Luz de emergencia)
+   ========================================================= */
+
+.installation-form-error,
+.installations-error {
+  position: relative;
+  z-index: 1;
+  margin: 0 28px 20px;
+  padding: 16px 20px;
+  
+  background: #1a0f0f;
+  border: 1px solid #7f1d1d;
+  border-radius: 14px;
+  
+  color: #fca5a5;
+  font-size: 13px;
+  font-weight: 600;
+  
+  box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 800px) {
+  .installations-hero {
+    align-items: stretch;
+    flex-direction: column;
+    padding: 30px 24px;
+    border-radius: 24px;
+  }
+
+  .installation-form-grid {
+    grid-template-columns: 1fr;
+    padding: 20px;
+  }
+
+  .installation-form-field-wide {
+    grid-column: auto;
+  }
+}

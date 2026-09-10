@@ -1,6 +1,7 @@
 import {
   httpGet,
   httpGetBlob,
+  httpPatch,
   httpPost,
 } from './httpClient'
 
@@ -229,6 +230,57 @@ export function getInstallations() {
     Installation[] | CommercialCollection<Installation>
   >(
     '/master/installations/',
+  )
+}
+
+export function createInstallation(
+  data: {
+    client_id: string
+    installation_type_id?: string | null
+    address?: string | null
+    street?: string | null
+    street_number?: string | null
+    state?: string | null
+    municipality?: string | null
+    postal_code?: string | null
+    gps_lat?: string | null
+    gps_lng?: string | null
+    cre_asea_permit?: string | null
+  },
+) {
+  return httpPost<Installation>(
+    '/master/installations/',
+    data,
+  )
+}
+
+export function getInstallation(
+  installationId: string,
+) {
+  return httpGet<Installation>(
+    `/master/installations/${installationId}/`,
+  )
+}
+
+export function updateInstallation(
+  installationId: string,
+  data: {
+    client_id?: string | null
+    installation_type_id?: string | null
+    address?: string | null
+    street?: string | null
+    street_number?: string | null
+    state?: string | null
+    municipality?: string | null
+    postal_code?: string | null
+    gps_lat?: string | null
+    gps_lng?: string | null
+    cre_asea_permit?: string | null
+  },
+) {
+  return httpPatch<Installation>(
+    `/master/installations/${installationId}/`,
+    data,
   )
 }
 

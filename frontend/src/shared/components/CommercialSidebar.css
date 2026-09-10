@@ -1,45 +1,51 @@
 /* =========================================================
    UI-CADO
-   COMMERCIAL SIDEBAR
-   Enterprise Liquid Glass
+   COMMERCIAL SIDEBAR (3D Textured Style)
+   Inspirado en formas orgánicas y neumorfismo
    ========================================================= */
 
 .commercial-sidebar {
   position: fixed;
   inset: 0 auto 0 0;
-
   z-index: 100;
-
   width: var(--commercial-sidebar-width);
-
   display: flex;
   flex-direction: column;
-
   padding: 20px 16px;
-
   overflow-y: auto;
 
-  border-right:
-    1px solid rgba(148, 163, 184, 0.18);
+  background-color: #1e2024;
+  
+  border: 8px solid #2a2c30;
+  border-left: none; 
+  
+  border-radius: 0 60px 30px 0;
 
-  background:
-    radial-gradient(
-      circle at 0% 0%,
-      rgba(249, 115, 22, 0.14),
-      transparent 20rem
-    ),
-    linear-gradient(
-      180deg,
-      rgba(255, 255, 255, 0.94),
-      rgba(248, 250, 252, 0.82)
-    );
+  box-shadow: 
+    inset 12px 0 25px rgba(0, 0, 0, 0.8), 
+    inset -4px 0 10px rgba(255, 255, 255, 0.05), 
+    5px 0 10px rgba(0, 0, 0, 0.2); 
+}
 
-  box-shadow:
-    12px 0 45px rgba(15, 23, 42, 0.055),
-    inset -1px 0 0 rgba(255, 255, 255, 0.65);
 
-  backdrop-filter: blur(28px);
-  -webkit-backdrop-filter: blur(28px);
+.commercial-sidebar::before {
+  content: '';
+  position: fixed; 
+  inset: 0;
+  width: var(--commercial-sidebar-width);
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+.commercial-brand, 
+.commercial-module, 
+.commercial-navigation, 
+.commercial-sidebar-footer {
+  position: relative;
+  z-index: 1;
 }
 
 
@@ -51,41 +57,28 @@
   display: flex;
   align-items: center;
   gap: 12px;
-
   padding: 8px 8px 22px;
 }
 
 .commercial-brand-mark {
   width: 42px;
   height: 42px;
-
   display: grid;
   place-items: center;
-
   flex: 0 0 42px;
 
-  border:
-    1px solid rgba(249, 115, 22, 0.25);
-
-  border-radius: 13px;
-
-  background:
-    linear-gradient(
-      145deg,
-      #f97316,
-      #ea580c
-    );
-
+  border-radius: 14px;
+  background: #f36517;
   color: #ffffff;
-
-  font-size: 12px;
+  font-size: 14px;
   font-weight: 850;
-
   letter-spacing: -0.02em;
 
-  box-shadow:
-    0 9px 22px rgba(234, 88, 12, 0.23),
-    inset 0 1px 0 rgba(255, 255, 255, 0.3);
+  border: none;
+  box-shadow: 
+    4px 4px 12px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+    inset -3px -3px 6px rgba(139, 28, 0, 0.6);
 }
 
 .commercial-brand-copy {
@@ -94,170 +87,131 @@
 
 .commercial-brand-copy strong {
   display: block;
-
-  color: #172033;
-
-  font-size: 14px;
+  color: #ffffff; 
+  font-size: 15px;
   font-weight: 800;
-
   letter-spacing: 0.02em;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
 }
 
 .commercial-brand-copy span {
   display: block;
-
   margin-top: 2px;
-
-  color: #64748b;
-
-  font-size: 9px;
-  font-weight: 550;
-
+  color: #94a3b8;
+  font-size: 10px;
+  font-weight: 600;
   white-space: nowrap;
 }
 
 
 /* =========================================================
-   MODULE
+   MODULE (Efecto de hueco tallado/incrustado)
    ========================================================= */
 
 .commercial-module {
   margin: 0 6px 14px;
-  padding: 13px 13px;
-
-  border:
-    1px solid rgba(249, 115, 22, 0.12);
-
-  border-radius: 14px;
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(249, 115, 22, 0.08),
-      rgba(255, 255, 255, 0.52)
-    );
+  padding: 16px 14px;
+  
+  background: #15171a;
+  border-radius: 20px;
+  border: none;
+  
+  box-shadow: 
+    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.04);
 }
 
 .commercial-module-label {
   display: block;
-
-  margin-bottom: 3px;
-
-  color: #f97316;
-
-  font-size: 8px;
+  margin-bottom: 5px;
+  color: #f36517;
+  font-size: 9px;
   font-weight: 850;
-
   letter-spacing: 0.15em;
+  text-transform: uppercase;
 }
 
 .commercial-module strong {
-  color: #172033;
-
-  font-size: 13px;
+  color: #e2e8f0;
+  font-size: 14px;
   font-weight: 750;
 }
 
 
 /* =========================================================
-   NAVIGATION
+   NAVIGATION (Botones 3D)
    ========================================================= */
 
 .commercial-navigation {
   display: flex;
   flex-direction: column;
-  gap: 5px;
+  gap: 8px;
 }
 
 .commercial-navigation-link {
   position: relative;
-
   display: flex;
   align-items: center;
-  gap: 10px;
-
-  min-height: 45px;
-
-  padding: 0 12px;
-
-  border:
-    1px solid transparent;
-
-  border-radius: 12px;
-
-  color: #64748b;
-
-  font-size: 12px;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 14px;
+  
+  border-radius: 16px;
+  color: #94a3b8;
+  font-size: 13px;
   font-weight: 650;
+  
+  border: none;
+  background: transparent;
 
-  transition:
-    color 160ms ease,
-    background 160ms ease,
-    border-color 160ms ease,
-    box-shadow 160ms ease,
-    transform 160ms ease;
+  transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .commercial-navigation-link:hover {
-  transform: translateX(2px);
-
-  border-color:
-    rgba(249, 115, 22, 0.1);
-
-  background:
-    rgba(249, 115, 22, 0.045);
-
-  color: #172033;
+  transform: translateX(4px);
+  color: #ffffff;
+  background: #2a2c30;
+  box-shadow: 
+    4px 4px 10px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.05);
 }
 
 .commercial-navigation-link-active {
-  border-color:
-    rgba(249, 115, 22, 0.18);
-
-  background:
-    linear-gradient(
-      135deg,
-      rgba(249, 115, 22, 0.14),
-      rgba(249, 115, 22, 0.045)
-    );
-
-  color: #c2410c;
-
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.72),
-    0 7px 20px rgba(249, 115, 22, 0.055);
+  background: #f36517;
+  color: #ffffff;
+  
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
+    
+  transform: translateX(4px);
 }
 
 .commercial-navigation-indicator {
-  width: 5px;
-  height: 5px;
-
-  flex: 0 0 5px;
-
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
   border-radius: 50%;
-
   background: currentColor;
-
-  opacity: 0.4;
-
-  transition:
-    width 160ms ease,
-    height 160ms ease,
-    opacity 160ms ease;
+  opacity: 0.3;
+  transition: all 160ms ease;
+  
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
 }
 
-.commercial-navigation-link-active
-  .commercial-navigation-indicator {
-  width: 7px;
-  height: 7px;
-
-  flex-basis: 7px;
-
+.commercial-navigation-link-active .commercial-navigation-indicator {
+  width: 8px;
+  height: 8px;
+  flex-basis: 8px;
   opacity: 1;
+  background: #ffffff;
+  box-shadow: 0 0 8px rgba(255,255,255,0.8);
 }
 
 .commercial-navigation-label {
   min-width: 0;
+  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
 }
 
 
@@ -267,31 +221,22 @@
 
 .commercial-sidebar-footer {
   margin-top: auto;
-
-  padding: 18px 10px 5px;
-
-  border-top:
-    1px solid rgba(148, 163, 184, 0.13);
+  padding: 20px 10px 10px;
+  border-top: 2px solid rgba(255, 255, 255, 0.03);
 }
 
 .commercial-sidebar-footer span {
   display: block;
-
-  color: #64748b;
-
-  font-size: 9px;
+  color: #94a3b8;
+  font-size: 10px;
   font-weight: 800;
-
   letter-spacing: 0.08em;
 }
 
 .commercial-sidebar-footer small {
   display: block;
-
-  margin-top: 3px;
-
-  color: #94a3b8;
-
+  margin-top: 4px;
+  color: #64748b;
   font-size: 9px;
 }
 
@@ -303,25 +248,76 @@
 @media (max-width: 680px) {
   .commercial-sidebar {
     position: relative;
-
     width: 100%;
     height: auto;
     min-height: auto;
-
-    padding: 12px;
-
-    border-right: 0;
-    border-bottom:
-      1px solid rgba(148, 163, 184, 0.18);
+    padding: 16px;
+    
+    border-right: none;
+    border-left: none;
+    border-bottom: 8px solid #2a2c30;
+    border-radius: 0 0 40px 40px;
+    
+    box-shadow: 
+      inset 0 12px 25px rgba(0, 0, 0, 0.8),
+      inset 0 -4px 10px rgba(255, 255, 255, 0.05),
+      0 15px 40px rgba(0, 0, 0, 0.9);
+  }
+  
+  .commercial-sidebar::before {
+    position: absolute; 
   }
 
   .commercial-navigation {
     display: grid;
-    grid-template-columns:
-      repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 12px;
   }
 
   .commercial-sidebar-footer {
     display: none;
   }
+}
+
+/* =========================================================
+   UI-CADO — LOGOUT BUTTON (3D Mechanical Key)
+   ========================================================= */
+
+.commercial-logout-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: #2a2c30;
+  border: none;
+  border-radius: 14px;
+  color: #f36517;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.commercial-logout-button:hover {
+  transform: translateY(-2px);
+  background: #313338;
+  color: #ff8c42;
+  text-shadow: 0 0 10px rgba(243, 101, 23, 0.6);
+  box-shadow:
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.commercial-logout-button:active {
+  transform: translateY(2px);
+  box-shadow:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.7),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.05);
 }

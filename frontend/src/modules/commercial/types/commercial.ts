@@ -31,10 +31,16 @@ export interface Client {
 export interface Installation {
   id: string
 
-  client_id: string
+  client_id: string | null | null | null
   installation_type_id: string | null
 
-  address: string
+  address: string | null
+
+  street: string | null
+  street_number: string | null
+  state: string | null
+  municipality: string | null
+  postal_code: string | null
 
   gps_lat: string | null
   gps_lng: string | null
@@ -71,6 +77,8 @@ export interface ServiceCatalog {
   regulatory_basis: string | null
 
   is_active: boolean
+
+  installation_types: InstallationType[]
 }
 
 /* =========================================================
@@ -138,12 +146,11 @@ export interface Prospect {
 
   business_name: string
   rfc: string | null
-  installation_type: string | null
-  installation_type_detail: {
-    id: string
-    code: string
-    name: string
-  } | null
+
+  service_catalog_id: string | null
+  installation: string | null
+
+  installation_type_detail: InstallationType | null
 
   contact_name: string | null
   contact_email: string | null
@@ -164,7 +171,8 @@ export interface CreateProspectInput {
 
   rfc?: string | null
 
-  installation_type?: string | null
+  service_catalog_id: string
+  installation_type_id: string
 
   contact_name?: string | null
   contact_email?: string | null
@@ -186,7 +194,7 @@ export interface CapacityAssessment {
   created_at: string
   version_lock: number
 
-  service_request_id: string
+  service_request_id: string | null | null
 
   assessed_by: string
   assessed_at: string | null
@@ -214,9 +222,9 @@ export interface Opportunity {
 
   opportunity_number: string
 
-  service_request_id: string
+  service_request_id: string | null
 
-  client_id: string
+  client_id: string | null
 
   assigned_to: string | null
 
@@ -225,6 +233,7 @@ export interface Opportunity {
   description: string | null
 
   estimated_value: string | null
+  prospect: string | null
 
 }
 

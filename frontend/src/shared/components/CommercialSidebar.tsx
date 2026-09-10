@@ -1,6 +1,10 @@
 import "./CommercialSidebar.css"
 
-import { NavLink } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
+
+import { useContext } from 'react'
+
+import { AuthContext } from '../../app/auth/AuthContext'
 
 interface NavigationItem {
   label: string
@@ -24,9 +28,21 @@ const navigation: NavigationItem[] = [
     label: 'Cotizaciones',
     path: '/commercial/quotations',
   },
+
+  {
+    label: 'Instalaciones',
+    path: '/commercial/installations',
+  },
 ]
 
 export default function CommercialSidebar() {
+  const navigate = useNavigate()
+  const auth = useContext(AuthContext)
+
+  const handleLogout = () => {
+    auth?.logout()
+    navigate('/login')
+  }
   return (
     <aside className="commercial-sidebar">
       <div className="commercial-brand">
@@ -86,6 +102,13 @@ export default function CommercialSidebar() {
         <small>
           Enterprise Operations
         </small>
+        <button
+          type="button"
+          className="commercial-logout-button"
+          onClick={handleLogout}
+        >
+          Cerrar sesión
+        </button>
       </div>
     </aside>
   )

@@ -1,0 +1,328 @@
+/* =========================================================
+   UI CADO — LOGIN (3D Textured Style)
+   Inspirado en la imagen de formas orgánicas
+   ========================================================= */
+
+/* Base y fondo oscuro con textura granulada */
+.login-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  
+  /* Fondo negro profundo */
+  background-color: #0a0a0a;
+  /* Textura de ruido SVG generada en CSS */
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+}
+
+/* =========================================================
+   BRAND AREA (LADO IZQUIERDO - TEXTO)
+   Simulando la forma Naranja
+   ========================================================= */
+
+.login-brand {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 5vw, 80px);
+  
+  /* El color naranja vibrante */
+  background-color: #f36517;
+  
+  /* Borde redondeado asimétrico para la forma orgánica */
+  border-radius: 0 120px 200px 0;
+  
+  /* Efecto 3D de borde grueso */
+  border: 12px solid #ff7b30;
+  box-shadow: 
+    inset 15px 15px 30px rgba(139, 28, 0, 0.7), /* Sombra interna para hundir el centro */
+    inset -10px -10px 20px rgba(255, 255, 255, 0.4), /* Luz interna */
+    20px 0 50px rgba(0, 0, 0, 0.9); /* Sombra pesada sobre el fondo negro */
+}
+
+/* Textura granulada específica para la zona naranja */
+.login-brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.2' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.25'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.login-brand-content {
+  position: relative;
+  z-index: 2; /* Por encima de la textura */
+  max-width: 520px;
+  color: #ffffff; 
+  text-shadow: 0 4px 10px rgba(0,0,0,0.3); /* Legibilidad extra */
+}
+
+/* Tipografía de la marca */
+.login-brand-mark {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 36px;
+}
+
+.login-brand-mark::before {
+  content: '';
+  width: 12px;
+  height: 48px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.login-brand-name {
+  font-size: clamp(2.4rem, 4vw, 4.5rem);
+  font-weight: 800;
+  line-height: 0.95;
+  letter-spacing: -0.055em;
+}
+
+.login-brand-copy {
+  margin: 0;
+  color: rgba(255, 255, 255, 0.95);
+  font-size: clamp(1.00rem, 1.25vw, 1.15rem);
+  line-height: 1.75;
+}
+
+.login-brand-accent {
+  display: block;
+  width: 92px;
+  height: 4px;
+  margin-top: 30px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+}
+
+/* =========================================================
+   ACCESS AREA (LADO DERECHO - FORMULARIO)
+   ========================================================= */
+
+.login-access {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 5vw, 80px);
+}
+
+/* =========================================================
+   CARD (Simulando la forma Gris Oscura central)
+   ========================================================= */
+
+.login-card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: 50px 42px;
+  
+  /* Color gris oscuro de la imagen */
+  background-color: #1e2024;
+  
+  /* Curvas orgánicas asimétricas */
+  border-radius: 60px 30px 80px 40px;
+  
+  /* Efecto 3D de borde grueso plástico */
+  border: 8px solid #2a2c30;
+  box-shadow: 
+    inset 12px 12px 25px rgba(0, 0, 0, 0.9), /* Profundidad interna */
+    inset -6px -6px 15px rgba(255, 255, 255, 0.05), /* Ligero brillo interno */
+    15px 25px 40px rgba(0, 0, 0, 0.7); /* Sombra hacia afuera */
+}
+
+/* Textura granulada para la tarjeta gris */
+.login-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+/* =========================================================
+   CARD HEADER
+   ========================================================= */
+
+.login-card-header {
+  position: relative;
+  z-index: 1;
+  margin-bottom: 34px;
+}
+
+.login-card-eyebrow {
+  margin: 0 0 12px;
+  color: #f36517; /* Naranja vibrante para contrastar */
+  font-size: 0.76rem;
+  font-weight: 800;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+}
+
+.login-card-title {
+  margin: 0;
+  color: #ffffff; /* Texto blanco para resaltar en fondo oscuro */
+  font-size: clamp(1.9rem, 3vw, 2.45rem);
+  font-weight: 750;
+  line-height: 1.08;
+  letter-spacing: -0.04em;
+}
+
+.login-card-subtitle {
+  margin: 12px 0 0;
+  color: #94a3b8;
+}
+
+/* =========================================================
+   FORM (Adaptado al modo oscuro 3D)
+   ========================================================= */
+
+.login-form {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.login-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.login-label {
+  color: #cbd5e1;
+  font-size: 0.83rem;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Inputs simulando "huecos" tallados en el material */
+.login-input {
+  width: 100%;
+  height: 54px;
+  padding: 0 17px;
+  border: none;
+  border-radius: 18px;
+  outline: none;
+  
+  background: #15171a;
+  color: #ffffff;
+  
+  /* Sombra interna para crear la ilusión de profundidad (Neumorfismo) */
+  box-shadow: 
+    inset 4px 4px 8px rgba(0, 0, 0, 0.8),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.03);
+  transition: all 160ms ease;
+}
+
+.login-input::placeholder {
+  color: #475569;
+}
+
+.login-input:focus {
+  background: #111214;
+  box-shadow: 
+    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
+    inset -3px -3px 6px rgba(255, 255, 255, 0.05),
+    0 0 0 2px rgba(243, 101, 23, 0.5); /* Borde naranja sutil */
+}
+
+/* =========================================================
+   SUBMIT BUTTON (Botón saliente estilo 3D)
+   ========================================================= */
+
+.login-submit {
+  position: relative;
+  width: 100%;
+  height: 56px;
+  margin-top: 8px;
+  border: none;
+  border-radius: 20px;
+  background: #f36517;
+  color: #ffffff;
+  font-size: 0.96rem;
+  font-weight: 750;
+  letter-spacing: 0.02em;
+  
+  /* Sombra para hacerlo ver como un botón físico sobresaliente */
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
+    
+  transition: all 160ms ease;
+  cursor: pointer;
+}
+
+.login-submit:hover {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 
+    8px 8px 20px rgba(0, 0, 0, 0.7),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
+}
+
+.login-submit:active {
+  transform: translateY(2px);
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.6),
+    inset 4px 4px 8px rgba(139, 28, 0, 0.6);
+}
+
+/* =========================================================
+   CARD FOOTER
+   ========================================================= */
+
+.login-card-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 26px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+}
+
+/* =========================================================
+   RESPONSIVE
+   ========================================================= */
+
+@media (max-width: 900px) {
+  .login-page {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: 100%;
+  }
+
+  .login-brand {
+    min-height: auto;
+    border-radius: 0 0 60px 60px; /* Ajuste orgánico para móvil */
+    padding: 60px 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.8);
+  }
+
+  .login-access {
+    min-height: auto;
+    padding: 40px 24px;
+  }
+}

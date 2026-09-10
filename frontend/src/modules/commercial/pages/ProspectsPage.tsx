@@ -84,12 +84,9 @@ export default function ProspectsPage() {
 
   return (
     <div className="prospects-page">
-
       <header className="prospects-hero">
-
         <div className="prospects-hero-content">
-
-          <span className="prospects-hero-eyebrow">
+          <span>
             COMERCIAL / PROSPECTOS
           </span>
 
@@ -155,11 +152,8 @@ export default function ProspectsPage() {
       )}
 
       <section className="prospects-panel">
-
         <header className="prospects-panel-header">
-
           <div>
-
             <span>
               REGISTRO COMERCIAL
             </span>

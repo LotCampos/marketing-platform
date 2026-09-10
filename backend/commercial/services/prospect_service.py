@@ -13,6 +13,7 @@ from django.db.models import F
 from django.utils import timezone
 
 from commercial.models import Prospect, ProspectStatus
+from master.models import Installation, InstallationType, ServiceCatalog
 
 
 @dataclass(frozen=True)
@@ -26,7 +27,8 @@ class ProspectCreateData:
     assigned_to: Optional[UUID] = None
     interest_description: Optional[str] = None
     notes: Optional[str] = None
-    installation_type: Optional[UUID] = None
+    service_catalog_id: Optional[UUID] = None
+    installation_type_id: Optional[UUID] = None
 
 
 class OptimisticLockError(ValidationError):
@@ -110,11 +112,60 @@ class ProspectService:
 
         cls._validate_create_data(normalized)
 
+        service = ServiceCatalog.objects.filter(
+            id=normalized.service_catalog_id,
+            is_active=True,
+        ).first()
+
+        if service is None:
+            raise ValidationError(
+                {
+                    "service_catalog_id": (
+                        "Selected service does not exist or is inactive."
+                    )
+                }
+            )
+
+        installation_type = InstallationType.objects.filter(
+            id=normalized.installation_type_id,
+            is_active=True,
+        ).first()
+
+        if installation_type is None:
+            raise ValidationError(
+                {
+                    "installation_type_id": (
+                        "Selected installation type does not exist or is inactive."
+                    )
+                }
+            )
+
+        allowed = ServiceCatalog.objects.filter(
+            id=service.id,
+            installation_type_links__installation_type_id=installation_type.id,
+        ).exists()
+
+        if not allowed:
+            raise ValidationError(
+                {
+                    "installation_type_id": (
+                        "The selected installation type is not allowed "
+                        "for the selected service."
+                    )
+                }
+            )
+
+        installation = Installation.objects.create(
+            client=None,
+            installation_type=installation_type,
+        )
+
         prospect = Prospect.objects.create(
             prospect_number=cls._generate_prospect_number(),
             business_name=normalized.business_name,
             rfc=normalized.rfc,
-            installation_type_id=normalized.installation_type,
+            service_catalog_id=service.id,
+            installation=installation,
             contact_name=normalized.contact_name,
             contact_email=normalized.contact_email,
             contact_phone=normalized.contact_phone,
@@ -279,7 +330,8 @@ class ProspectService:
             notes=cls._clean_optional(
                 data.notes
             ),
-            installation_type=data.installation_type,
+            service_catalog_id=data.service_catalog_id,
+            installation_type_id=data.installation_type_id,
         )
 
     @classmethod
@@ -309,6 +361,16 @@ class ProspectService:
                 errors["contact_email"] = (
                     "Email format is invalid."
                 )
+
+        if not data.service_catalog_id:
+            errors["service_catalog_id"] = (
+                "Service catalog selection is required."
+            )
+
+        if not data.installation_type_id:
+            errors["installation_type_id"] = (
+                "Installation type selection is required."
+            )
 
         if errors:
             raise ValidationError(errors)

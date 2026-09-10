@@ -14,6 +14,8 @@ import ProspectDetailPage from '../modules/commercial/pages/ProspectDetailPage'
 import OpportunitiesPage from '../modules/commercial/pages/OpportunitiesPage'
 import QuotationsPage from '../modules/commercial/pages/QuotationsPage'
 
+import InstallationsPage from '../modules/commercial/pages/InstallationsPage'
+
 import LoginPage from '../modules/identity/pages/LoginPage'
 
 import ProtectedRoute from './auth/ProtectedRoute'
@@ -65,6 +67,12 @@ export default function AppRouter() {
               path="/commercial/quotations"
               element={
                 <QuotationsPage />
+              }
+            />
+            <Route
+              path="/commercial/installations"
+              element={
+                <InstallationsPage />
               }
             />
 

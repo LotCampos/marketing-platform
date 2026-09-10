@@ -178,6 +178,8 @@ class Installation(MasterBaseModel):
         on_delete=models.DO_NOTHING,
         db_column="client_id",
         related_name="installations",
+        null=True,
+        blank=True,
     )
 
     installation_type = models.ForeignKey(
@@ -190,7 +192,44 @@ class Installation(MasterBaseModel):
     )
 
     address = models.TextField(
+        blank=True,
+        null=True,
         db_column="address",
+    )
+
+    street = models.CharField(
+        max_length=255,
+        blank=True,
+        null=True,
+        db_column="street",
+    )
+
+    street_number = models.CharField(
+        max_length=50,
+        blank=True,
+        null=True,
+        db_column="street_number",
+    )
+
+    state = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_column="state",
+    )
+
+    municipality = models.CharField(
+        max_length=100,
+        blank=True,
+        null=True,
+        db_column="municipality",
+    )
+
+    postal_code = models.CharField(
+        max_length=10,
+        blank=True,
+        null=True,
+        db_column="postal_code",
     )
 
     gps_lat = models.DecimalField(

@@ -368,11 +368,10 @@ class AgreementTermSerializer(
 class ProspectSerializer(
     serializers.ModelSerializer
 ):
-    installation_type = serializers.PrimaryKeyRelatedField(
-        queryset=InstallationType.objects.all(),
-        write_only=True,
-        required=False,
-        allow_null=True,
+
+    service_catalog_id = serializers.UUIDField(
+        required=True,
+        allow_null=False,
     )
 
     installation_type_detail = serializers.SerializerMethodField(
@@ -380,14 +379,26 @@ class ProspectSerializer(
     )
 
     def get_installation_type_detail(self, obj):
-        if not obj.installation_type:
+        installation = getattr(obj, "installation", None)
+
+        if not installation or not installation.installation_type:
             return None
 
+        installation_type = installation.installation_type
+
         return {
-            "id": str(obj.installation_type.id),
-            "code": obj.installation_type.code,
-            "name": obj.installation_type.name,
+            "id": str(installation_type.id),
+            "code": installation_type.code,
+            "name": installation_type.name,
+            "is_active": installation_type.is_active,
         }
+
+    installation_type_id = serializers.PrimaryKeyRelatedField(
+        queryset=InstallationType.objects.filter(is_active=True),
+        required=True,
+        allow_null=False,
+        write_only=True,
+    )
 
     class Meta:
         model = Prospect
@@ -401,91 +412,5 @@ class ProspectSerializer(
             "converted_at",
             "converted_by",
             "created_at",
+            "installation_type_detail",
         )
-
-    def validate_business_name(
-        self,
-        value: str,
-    ) -> str:
-        value = " ".join(
-            value.strip().split()
-        )
-
-        if not value:
-            raise serializers.ValidationError(
-                "Business name is required."
-            )
-
-        return value
-
-    def validate_rfc(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = value.strip().upper()
-
-        return value or None
-
-    def validate_contact_email(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = value.strip().lower()
-
-        return value or None
-
-    def validate_contact_phone(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = value.strip()
-
-        return value or None
-
-    def validate_source(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = " ".join(
-            value.strip().split()
-        )
-
-        return value or None
-
-    def validate_interest_description(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = " ".join(
-            value.strip().split()
-        )
-
-        return value or None
-
-    def validate_notes(
-        self,
-        value: str | None,
-    ) -> str | None:
-        if value is None:
-            return None
-
-        value = " ".join(
-            value.strip().split()
-        )
-
-        return value or None

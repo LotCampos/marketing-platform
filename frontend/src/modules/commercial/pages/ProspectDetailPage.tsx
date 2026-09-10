@@ -1,16 +1,28 @@
 import { useMutation, useQuery, useQueryClient } from '@tanstack/react-query'
 import { useNavigate, useParams } from 'react-router-dom'
+import { useState } from 'react'
+
 import {
   assignProspect,
   changeProspectStatus,
   getIdentityUsers,
+  getInstallation,
   getProspect,
 } from '../../../infrastructure/api/commercialApi'
+
 import type {
   IdentityUser,
+  Installation,
   Prospect,
   ProspectStatus,
 } from '../types/commercial'
+
+import ProspectInstallationModal from '../components/prospect/ProspectInstallationModal'
+import ProspectQuotationModal from '../components/prospect/ProspectQuotationModal'
+import ProspectStatusButton from '../components/prospect/ProspectStatusButton'
+import ProspectSummary from '../components/prospect/ProspectSummary'
+
+import './prospects-page.css'
 
 const STATUS_LABELS: Record<ProspectStatus, string> = {
   NEW: 'Nuevo',
@@ -27,6 +39,18 @@ export default function ProspectDetailPage() {
   const queryClient = useQueryClient()
   const { prospectId } = useParams<{ prospectId: string }>()
 
+  const [installationModalOpen, setInstallationModalOpen] =
+    useState(false)
+
+  const [quotationModalOpen, setQuotationModalOpen] =
+    useState(false)
+
+  const query = useQuery<Prospect>({
+    queryKey: ['commercial', 'prospects', prospectId],
+    queryFn: () => getProspect(prospectId as string),
+    enabled: Boolean(prospectId),
+  })
+
   const usersQuery = useQuery<IdentityUser[]>({
     queryKey: ['identity', 'users'],
     queryFn: async () => {
@@ -35,20 +59,23 @@ export default function ProspectDetailPage() {
     },
   })
 
+  const invalidateProspect = async () => {
+    await queryClient.invalidateQueries({
+      queryKey: ['commercial', 'prospects', prospectId],
+    })
+
+    await queryClient.invalidateQueries({
+      queryKey: ['commercial', 'prospects'],
+    })
+  }
+
   const assignMutation = useMutation({
     mutationFn: (assignedTo: string) =>
       assignProspect(prospectId as string, {
         assigned_to: assignedTo,
         expected_version: query.data?.version_lock ?? 0,
       }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['commercial', 'prospects', prospectId],
-      })
-      await queryClient.invalidateQueries({
-        queryKey: ['commercial', 'prospects'],
-      })
-    },
+    onSuccess: invalidateProspect,
   })
 
   const statusMutation = useMutation({
@@ -57,20 +84,15 @@ export default function ProspectDetailPage() {
         status,
         expected_version: query.data?.version_lock ?? 0,
       }),
-    onSuccess: async () => {
-      await queryClient.invalidateQueries({
-        queryKey: ['commercial', 'prospects', prospectId],
-      })
-      await queryClient.invalidateQueries({
-        queryKey: ['commercial', 'prospects'],
-      })
-    },
+    onSuccess: invalidateProspect,
   })
 
-  const query = useQuery<Prospect>({
-    queryKey: ['commercial', 'prospects', prospectId],
-    queryFn: () => getProspect(prospectId as string),
-    enabled: Boolean(prospectId),
+  const installationId = query.data?.installation
+
+  const installationQuery = useQuery<Installation>({
+    queryKey: ['master', 'installations', installationId],
+    queryFn: () => getInstallation(installationId as string),
+    enabled: Boolean(installationId),
   })
 
   if (query.isLoading) {
@@ -107,146 +129,198 @@ export default function ProspectDetailPage() {
 
   const prospect = query.data
 
+  const opportunityEnabled =
+    prospect.status === 'CONTACTED' ||
+    prospect.status === 'QUALIFIED'
+
+  const quotationEnabled =
+    prospect.status === 'QUALIFIED' ||
+    prospect.status === 'PROPOSAL'
+
   return (
-    <div className="prospects-page">
+    <div className="prospect-detail-page">
       <header className="prospects-hero">
         <div className="prospects-hero-content">
           <span className="prospects-hero-eyebrow">
-            COMERCIAL / PROSPECTOS / DETALLE
+            COMERCIAL / PROSPECTOS / EXPEDIENTE
           </span>
 
           <h2>{prospect.prospect_number}</h2>
 
           <p>
-            Consulta del registro comercial y su información
-            operativa.
+            Expediente comercial de{' '}
+            {prospect.business_name || 'prospecto'}.
           </p>
         </div>
 
-        <button
-          type="button"
-          className="prospects-primary-action"
-          onClick={() => navigate('/commercial/prospects')}
-        >
-          Volver a prospectos
-        </button>
+        <div className="prospects-hero-actions">
+          <button
+            type="button"
+            className="prospects-primary-action"
+            onClick={() => navigate('/commercial/prospects')}
+          >
+            Volver a prospectos
+          </button>
+        </div>
       </header>
 
-      <section className="prospects-panel">
+      <section className="prospects-panel prospect-overview-panel">
         <header className="prospects-panel-header">
           <div>
-            <span>REGISTRO COMERCIAL</span>
-            <h3>Información del prospecto</h3>
+            <span>EXPEDIENTE COMERCIAL</span>
+            <h3>Información general</h3>
           </div>
 
-          <div>
-            <strong>
-              {STATUS_LABELS[prospect.status] ?? prospect.status}
-            </strong>
+          <ProspectStatusButton
+            status={prospect.status}
+            labels={STATUS_LABELS}
+            disabled={statusMutation.isPending}
+            onChange={(status) => statusMutation.mutate(status)}
+          />
+        </header>
 
-            <select
-              value={prospect.status}
-              disabled={statusMutation.isPending}
-              onChange={(event) =>
-                statusMutation.mutate(
-                  event.target.value as ProspectStatus,
-                )
+        <ProspectSummary
+          prospect={prospect}
+          installation={installationQuery.data ?? null}
+        />
+
+        <div className="prospect-responsible-control">
+          <strong>Responsable</strong>
+
+          <select
+            value={prospect.assigned_to ?? ''}
+            disabled={
+              usersQuery.isLoading ||
+              usersQuery.isError ||
+              assignMutation.isPending
+            }
+            onChange={(event) => {
+              const assignedTo = event.target.value
+
+              if (assignedTo) {
+                assignMutation.mutate(assignedTo)
               }
-              aria-label="Cambiar estado del prospecto"
-            >
-              {Object.entries(STATUS_LABELS).map(
-                ([value, label]) => (
-                  <option key={value} value={value}>
-                    {label}
-                  </option>
-                ),
-              )}
-            </select>
+            }}
+            aria-label="Asignar prospecto"
+          >
+            <option value="">Sin asignar</option>
+
+            {usersQuery.data?.map((user) => (
+              <option key={user.id} value={user.id}>
+                {user.full_name}
+              </option>
+            ))}
+          </select>
+        </div>
+      </section>
+
+      <section className="prospects-panel prospect-actions-panel">
+        <header className="prospects-panel-header">
+          <div>
+            <span>OPERACIÓN COMERCIAL</span>
+            <h3>Acciones del expediente</h3>
           </div>
         </header>
 
-        <div className="prospect-detail-grid">
-          <div>
-            <strong>Asignado a</strong>
-            <select
-              value={prospect.assigned_to ?? ''}
-              disabled={
-                usersQuery.isLoading ||
-                usersQuery.isError ||
-                assignMutation.isPending
+        <div className="prospect-action-grid">
+          <button
+            type="button"
+            className="prospect-action-card"
+            onClick={() => setInstallationModalOpen(true)}
+          >
+            <span className="prospect-action-icon" aria-hidden="true">
+              +
+            </span>
+
+            <span>
+              <strong>Nueva instalación</strong>
+              <small>
+                Consultar el proceso de incorporación de una instalación.
+              </small>
+            </span>
+          </button>
+
+          <button
+            type="button"
+            className="prospect-action-card"
+            disabled={!opportunityEnabled}
+            onClick={() => {
+              if (!opportunityEnabled) {
+                return
               }
-              onChange={(event) => {
-                const assignedTo = event.target.value
 
-                if (assignedTo) {
-                  assignMutation.mutate(assignedTo)
-                }
-              }}
-              aria-label="Asignar prospecto"
-            >
-              <option value="">Sin asignar</option>
+              navigate('/commercial/opportunities')
+            }}
+          >
+            <span className="prospect-action-icon" aria-hidden="true">
+              →
+            </span>
 
-              {usersQuery.data?.map((user) => (
-                <option key={user.id} value={user.id}>
-                  {user.full_name}
-                </option>
-              ))}
-            </select>
-          </div>
+            <span>
+              <strong>Oportunidad</strong>
+              <small>
+                La oportunidad se activa mediante el estado comercial.
+              </small>
+            </span>
+          </button>
 
-          <div>
-            <strong>Empresa</strong>
-            <p>{prospect.business_name || '—'}</p>
-          </div>
+          <button
+            type="button"
+            className="prospect-action-card"
+            disabled={!quotationEnabled}
+            onClick={() => {
+              if (!quotationEnabled) {
+                return
+              }
 
-          <div>
-            <strong>RFC</strong>
-            <p>{prospect.rfc || '—'}</p>
-          </div>
+              setInstallationModalOpen(true)
+            }}
+          >
+            <span className="prospect-action-icon" aria-hidden="true">
+              $
+            </span>
 
-          <div>
-            <strong>Contacto</strong>
-            <p>{prospect.contact_name || '—'}</p>
-          </div>
-
-          <div>
-            <strong>Correo electrónico</strong>
-            <p>{prospect.contact_email || '—'}</p>
-          </div>
-
-          <div>
-            <strong>Teléfono</strong>
-            <p>{prospect.contact_phone || '—'}</p>
-          </div>
-
-          <div>
-            <strong>Tipo de instalación</strong>
-            <p>
-              {prospect.installation_type_detail?.name || '—'}
-            </p>
-          </div>
-
-          <div>
-            <strong>Origen</strong>
-            <p>{prospect.source || '—'}</p>
-          </div>
-
-          <div>
-            <strong>Versión</strong>
-            <p>{prospect.version_lock}</p>
-          </div>
-
-          <div className="prospect-detail-full">
-            <strong>Interés</strong>
-            <p>{prospect.interest_description || '—'}</p>
-          </div>
-
-          <div className="prospect-detail-full">
-            <strong>Notas</strong>
-            <p>{prospect.notes || '—'}</p>
-          </div>
+            <span>
+              <strong>Nueva cotización</strong>
+              <small>
+                Abrir el espacio de cotización del expediente.
+              </small>
+            </span>
+          </button>
         </div>
       </section>
+
+      <section className="prospects-panel prospect-related-panel">
+        <header className="prospects-panel-header">
+          <div>
+            <span>EXPEDIENTE</span>
+            <h3>Información relacionada</h3>
+          </div>
+        </header>
+
+        <div className="prospect-related-empty">
+          <strong>
+            Sin información relacionada cargada todavía.
+          </strong>
+
+          <p>
+            Las entidades relacionadas aparecerán aquí conforme formen
+            parte del expediente comercial.
+          </p>
+        </div>
+      </section>
+
+      <ProspectInstallationModal
+        prospect={prospect}
+        open={installationModalOpen}
+        onClose={() => setInstallationModalOpen(false)}
+      />
+
+      <ProspectQuotationModal
+        prospect={prospect}
+        open={quotationModalOpen}
+        onClose={() => setQuotationModalOpen(false)}
+      />
     </div>
   )
 }

@@ -3,7 +3,7 @@ from decimal import Decimal
 from django.db import models
 
 from core.models import UICadoBaseModel
-from master.models import InstallationType
+from master.models import Installation
 
 
 class CommercialBaseModel(UICadoBaseModel):
@@ -456,6 +456,21 @@ class ProspectStatus(models.TextChoices):
 
 
 class Prospect(CommercialBaseModel):
+    installation = models.ForeignKey(
+        "master.Installation",
+        on_delete=models.PROTECT,
+        db_column="installation_id",
+        related_name="prospects",
+        null=True,
+        blank=True,
+    )
+
+    service_catalog_id = models.UUIDField(
+        db_column="service_catalog_id",
+        null=True,
+        blank=True,
+    )
+
     prospect_number = models.CharField(
         max_length=50,
         db_column="prospect_number",
@@ -469,15 +484,6 @@ class Prospect(CommercialBaseModel):
     rfc = models.CharField(
         max_length=13,
         db_column="rfc",
-        null=True,
-        blank=True,
-    )
-
-    installation_type = models.ForeignKey(
-        InstallationType,
-        on_delete=models.DO_NOTHING,
-        db_column="installation_type_id",
-        related_name="prospects",
         null=True,
         blank=True,
     )

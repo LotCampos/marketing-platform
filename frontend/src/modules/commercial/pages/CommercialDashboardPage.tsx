@@ -6,7 +6,7 @@ import './commercial-pages.css'
 import { useQueries } from '@tanstack/react-query'
 
 
-import CommercialHeader from '../../../shared/components/CommercialHeader'
+
 
 import CommercialKpiCard from '../../../shared/components/CommercialKpiCard'
 
@@ -66,8 +66,6 @@ export default function CommercialDashboardPage() {
       <CommercialSidebar />
 
       <div className="application-main">
-        <CommercialHeader title="Panel Comercial" />
-
         <main className="page-container dashboard-page">
           <header className="page-header">
             <div>
@@ -132,25 +130,27 @@ export default function CommercialDashboardPage() {
           </section>
 
           <section className="dashboard-panel">
-            <div className="panel-heading">
+            <header className="panel-heading">
               <div>
-                <span className="eyebrow">
+                <span>
                   PIPELINE
                 </span>
 
-                <h2>
+                <h3>
                   Oportunidades comerciales
-                </h2>
-              </div>
+                </h3>
 
-              <span className="record-count">
+              </div>
+              <strong>
                 {loading
                   ? 'Cargando...'
                   : `${
                       opportunities.data?.count ?? 0
                     } registros`}
-              </span>
-            </div>
+              </strong>
+       
+                    
+            </header>
 
             <CommercialTable
               headers={[

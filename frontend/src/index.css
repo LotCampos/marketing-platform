@@ -1,8 +1,7 @@
 /* =========================================================
-   UI CADO — GLOBAL FOUNDATION
+   UI CADO — GLOBAL FOUNDATION (Dark Neumorphic 3D)
    index.css
    ========================================================= */
-
 
 /* =========================================================
    GLOBAL TOKENS
@@ -18,79 +17,57 @@
     "Segoe UI",
     sans-serif;
 
-  color: #1f2937;
-  background: #f4f5f7;
+  color: #e2e8f0; /* Texto claro por defecto para fondo oscuro */
+  background: #0a0a0a; /* Base negra para todo el sistema */
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
-
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-
   /* -------------------------------------------------------
-     GLOBAL BRAND
+     GLOBAL BRAND (Naranja Vibrante 3D)
   ------------------------------------------------------- */
 
-  --orange-500: #f97316;
-  --orange-600: #ea580c;
-  --orange-700: #c2410c;
-
-
-  /* -------------------------------------------------------
-     SLATE
-  ------------------------------------------------------- */
-
-  --slate-950: #0f172a;
-  --slate-900: #172033;
-  --slate-800: #1e293b;
-  --slate-700: #334155;
-  --slate-600: #475569;
-  --slate-500: #64748b;
-  --slate-400: #94a3b8;
-  --slate-300: #cbd5e1;
-  --slate-200: #e2e8f0;
-  --slate-100: #f1f5f9;
-  --slate-50: #f8fafc;
-
+  --orange-500: #f36517; /* El naranja principal de tu nueva UI */
+  --orange-600: #ff7b30; /* Brillo / Hover */
+  --orange-700: #c2410c; /* Sombra / Hundido */
 
   /* -------------------------------------------------------
-     GLOBAL SURFACES
+     DARK HARDWARE SURFACES (Reemplaza a los Slate claros)
   ------------------------------------------------------- */
 
-  --surface: rgba(255, 255, 255, 0.78);
-  --surface-strong: rgba(255, 255, 255, 0.92);
-
+  --surface-base: #1e2024; /* Base de paneles y tarjetas */
+  --surface-sunken: #15171a; /* Huecos, inputs y selects */
+  --surface-raised: #2a2c30; /* Bordes gruesos y botones elevados */
+  --surface-highlight: #313338; /* Efectos Hover */
 
   /* -------------------------------------------------------
-     GLOBAL BORDERS
+     GLOBAL BORDERS & SHADOWS
   ------------------------------------------------------- */
 
-  --border: rgba(148, 163, 184, 0.22);
-  --border-strong: rgba(148, 163, 184, 0.34);
+  /* Borde grueso estándar para el efecto de placa 3D */
+  --border-3d: 6px solid var(--surface-raised);
+  
+  /* Sombra para paneles grandes (como Hero o Sidebar) */
+  --shadow-panel:
+    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
+    15px 20px 40px rgba(0, 0, 0, 0.7);
 
+  /* Sombra para botones y elementos interactivos */
+  --shadow-button:
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.6);
 
   /* -------------------------------------------------------
-     GLOBAL SHADOWS
+     GLOBAL TEXTURES
   ------------------------------------------------------- */
-
-  --shadow-soft:
-    0 10px 30px rgba(15, 23, 42, 0.06),
-    0 2px 8px rgba(15, 23, 42, 0.04);
-
-  --shadow-card:
-    0 18px 45px rgba(15, 23, 42, 0.07),
-    0 4px 12px rgba(15, 23, 42, 0.04);
-
-
-  /* -------------------------------------------------------
-     GLOBAL RADII
-  ------------------------------------------------------- */
-
-  --radius-lg: 18px;
-  --radius-md: 12px;
+  
+  /* Guardamos la textura SVG en una variable para reutilizarla fácilmente */
+  --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
 }
-
 
 /* =========================================================
    RESET
@@ -102,7 +79,6 @@
   box-sizing: border-box;
 }
 
-
 /* =========================================================
    DOCUMENT
    ========================================================= */
@@ -110,40 +86,30 @@
 html {
   min-width: 320px;
   min-height: 100%;
-
-  background: #f4f5f7;
-
+  background-color: #0a0a0a; /* Fondo ultra oscuro */
   scroll-behavior: smooth;
 }
 
-
 /* =========================================================
-   BODY
+   BODY (El tapete global)
    ========================================================= */
 
 body {
   margin: 0;
-
   min-width: 320px;
   min-height: 100vh;
+  
+  /* Color de fondo base */
+  background-color: #0a0a0a;
+  
+  /* Aplicamos la textura granulada A TODA la aplicación */
+  background-image: var(--noise-texture);
+  background-attachment: fixed; /* Mantiene la textura fija al hacer scroll */
+  background-blend-mode: overlay;
 
-  background:
-    radial-gradient(
-      circle at 75% 0%,
-      rgba(249, 115, 22, 0.045),
-      transparent 28rem
-    ),
-    linear-gradient(
-      135deg,
-      #f8fafc 0%,
-      #f3f4f6 100%
-    );
-
-  color: var(--slate-800);
-
+  color: #cbd5e1; /* Gris claro para lectura óptima */
   line-height: 1.5;
 }
-
 
 /* =========================================================
    FORM ELEMENTS
@@ -164,7 +130,6 @@ button:disabled {
   cursor: not-allowed;
 }
 
-
 /* =========================================================
    LINKS
    ========================================================= */
@@ -172,8 +137,12 @@ button:disabled {
 a {
   color: inherit;
   text-decoration: none;
+  transition: color 160ms ease;
 }
 
+a:hover {
+  color: var(--orange-500);
+}
 
 /* =========================================================
    ROOT APPLICATION
@@ -183,46 +152,52 @@ a {
   min-height: 100vh;
 }
 
-
 /* =========================================================
-   GLOBAL SCROLLBAR
+   GLOBAL SCROLLBAR (Adaptado a hardware 3D)
    ========================================================= */
 
 * {
   scrollbar-width: thin;
-  scrollbar-color:
-    rgba(148, 163, 184, 0.45)
-    transparent;
+  scrollbar-color: var(--surface-raised) var(--surface-sunken);
 }
 
 *::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 12px;
+  height: 12px;
 }
 
 *::-webkit-scrollbar-track {
-  background: transparent;
+  background: var(--surface-sunken);
+  /* Canal hundido para la barra de scroll */
+  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 *::-webkit-scrollbar-thumb {
-  background: rgba(148, 163, 184, 0.45);
+  background: var(--surface-raised);
   border-radius: 999px;
+  border: 3px solid var(--surface-sunken); /* Crea un espacio vacío alrededor (padding) */
+  /* Pequeño relieve 3D para el "pulgar" */
+  box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.05);
 }
 
 *::-webkit-scrollbar-thumb:hover {
-  background: rgba(100, 116, 139, 0.65);
+  background: var(--surface-highlight);
 }
 
+*::-webkit-scrollbar-thumb:active {
+  background: var(--orange-500); /* LED naranja al arrastrar la barra */
+}
 
 /* =========================================================
    ACCESSIBILITY
    ========================================================= */
 
 :focus-visible {
-  outline: 2px solid rgba(249, 115, 22, 0.45);
-  outline-offset: 2px;
+  /* Resplandor naranja estilo luz de sistema */
+  outline: 2px solid var(--orange-500);
+  outline-offset: 4px;
+  box-shadow: 0 0 15px rgba(243, 101, 23, 0.4);
 }
-
 
 /* =========================================================
    REDUCED MOTION

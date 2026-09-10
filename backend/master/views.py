@@ -1,4 +1,4 @@
-from rest_framework import viewsets
+from rest_framework import mixins, viewsets
 
 from .models import (
     Client,
@@ -30,11 +30,18 @@ class ClientViewSet(MasterBaseViewSet):
         )
 
 
-class InstallationViewSet(MasterBaseViewSet):
+class InstallationViewSet(
+    mixins.ListModelMixin,
+    mixins.RetrieveModelMixin,
+    mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    viewsets.GenericViewSet,
+):
 
     serializer_class = InstallationSerializer
 
     def get_queryset(self):
+
         queryset = (
             Installation.objects
             .filter(is_deleted=False)

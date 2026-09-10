@@ -271,15 +271,12 @@ class ProspectViewSet(CommercialBaseViewSet):
             notes=serializer.validated_data.get(
                 "notes"
             ),
-            installation_type=(
-                serializer.validated_data.get(
-                    "installation_type"
-                ).id
-                if serializer.validated_data.get(
-                    "installation_type"
-                )
-                else None
-            ),
+            service_catalog_id=serializer.validated_data[
+                "service_catalog_id"
+            ],
+            installation_type_id=serializer.validated_data[
+                "installation_type_id"
+            ].id,
         )
 
         try:

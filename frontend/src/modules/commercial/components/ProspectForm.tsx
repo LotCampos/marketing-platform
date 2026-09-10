@@ -11,7 +11,7 @@ import type {
 } from '../types/commercial'
 
 import {
-  getInstallationTypes,
+  getServiceCatalog,
 } from '../../../infrastructure/api/commercialApi'
 
 interface ProspectFormProps {
@@ -23,7 +23,8 @@ interface ProspectFormProps {
 const initialFormData: CreateProspectInput = {
   business_name: '',
   rfc: '',
-  installation_type: '',
+  service_catalog_id: '',
+  installation_type_id: '',
   contact_name: '',
   contact_email: '',
   contact_phone: '',
@@ -39,10 +40,10 @@ export default function ProspectForm({
   isPending,
 }: ProspectFormProps) {
 
-  const installationTypesQuery =
+  const serviceCatalogQuery =
     useQuery({
-      queryKey: ['master', 'installation-types'],
-      queryFn: getInstallationTypes,
+      queryKey: ['master', 'service-catalog'],
+      queryFn: getServiceCatalog,
       staleTime: 5 * 60 * 1000,
     })
 
@@ -63,10 +64,20 @@ export default function ProspectForm({
       value,
     } = event.target
 
-    setFormData((previous) => ({
-      ...previous,
-      [name]: value,
-    }))
+    setFormData((previous) => {
+      if (name === 'service_catalog_id') {
+        return {
+          ...previous,
+          service_catalog_id: value,
+          installation_type_id: '',
+        }
+      }
+
+      return {
+        ...previous,
+        [name]: value,
+      }
+    })
   }
 
   const handleSubmit = (
@@ -80,8 +91,10 @@ export default function ProspectForm({
 
       rfc:
         formData.rfc?.trim() || null,
-      installation_type:
-        formData.installation_type?.trim() || null,
+      service_catalog_id:
+        formData.service_catalog_id,
+      installation_type_id:
+        formData.installation_type_id,
 
       contact_name:
         formData.contact_name?.trim() || null,
@@ -109,7 +122,9 @@ export default function ProspectForm({
   const canSubmit =
     !isPending &&
     Boolean(
-      formData.business_name.trim(),
+      formData.business_name.trim() &&
+      formData.service_catalog_id &&
+      formData.installation_type_id,
     )
 
   return (
@@ -229,43 +244,88 @@ export default function ProspectForm({
             />
           </div>
 
-          <div className="form-field">
-            <label htmlFor="installation_type">
-              Tipo de instalación
-              <em>opcional</em>
+                    <div className="form-field">
+            <label htmlFor="service_catalog_id">
+              Servicio
+              <span>*</span>
             </label>
-
             <select
-              id="installation_type"
-              name="installation_type"
-              value={
-                formData.installation_type ?? ''
-              }
+              id="service_catalog_id"
+              name="service_catalog_id"
+              required
+              value={formData.service_catalog_id}
               onChange={handleChange}
               disabled={
                 isPending ||
-                installationTypesQuery.isLoading
+                serviceCatalogQuery.isLoading
               }
             >
               <option value="">
-                Seleccione un tipo de instalación
+                Seleccione un servicio
               </option>
-
-              {installationTypesQuery.data &&
+              {serviceCatalogQuery.data &&
                 (
                   Array.isArray(
-                    installationTypesQuery.data,
+                    serviceCatalogQuery.data,
                   )
-                    ? installationTypesQuery.data
-                    : installationTypesQuery.data.results
-                ).map((installationType) => (
+                    ? serviceCatalogQuery.data
+                    : serviceCatalogQuery.data.results
+                ).map((service) => (
                   <option
-                    key={installationType.id}
-                    value={installationType.id}
+                    key={service.id}
+                    value={service.id}
                   >
-                    {installationType.name}
+                    {service.service_name}
                   </option>
                 ))}
+            </select>
+          </div>
+
+          <div className="form-field">
+            <label htmlFor="installation_type_id">
+              Tipo de instalación
+              <span>*</span>
+            </label>
+            <select
+              id="installation_type_id"
+              name="installation_type_id"
+              required
+              value={formData.installation_type_id}
+              onChange={handleChange}
+              disabled={
+                isPending ||
+                serviceCatalogQuery.isLoading ||
+                !formData.service_catalog_id
+              }
+            >
+              <option value="">
+                {formData.service_catalog_id
+                  ? 'Seleccione un tipo de instalación'
+                  : 'Seleccione primero un servicio'}
+              </option>
+              {serviceCatalogQuery.data &&
+                (
+                  Array.isArray(
+                    serviceCatalogQuery.data,
+                  )
+                    ? serviceCatalogQuery.data
+                    : serviceCatalogQuery.data.results
+                )
+                  .find(
+                    (service) =>
+                      service.id ===
+                      formData.service_catalog_id,
+                  )
+                  ?.installation_types.map(
+                    (installationType) => (
+                      <option
+                        key={installationType.id}
+                        value={installationType.id}
+                      >
+                        {installationType.name}
+                      </option>
+                    ),
+                  )}
             </select>
           </div>
         </div>
@@ -501,102 +561,27 @@ export default function ProspectForm({
       </section>
 
       {/* =====================================================
-          ESTADO INICIAL
-      ====================================================== */}
-
-      <section className="form-status">
-        <div>
-          <span className="form-status-label">
-            ESTADO INICIAL
-          </span>
-
-          <strong>
-            NEW
-          </strong>
-        </div>
-
-        <p>
-          El prospecto se registra inicialmente como
-          <strong> NEW</strong>. Los cambios de estado
-          deberán realizarse mediante la operación de
-          workflow correspondiente.
-        </p>
-      </section>
-
-      {/* =====================================================
           ACTIONS
       ====================================================== */}
 
-      <div className="form-actions">
+      <section className="form-actions">
         <div className="form-required">
           <span>*</span>
           Campos obligatorios
         </div>
 
-        <div className="form-action-buttons">
-          <button
-            type="button"
-            onClick={onCancel}
-            disabled={isPending}
-            className="form-cancel"
+          <button type="button" className="form-secondary-action" onClick={onCancel} disabled={isPending}
           >
             Cancelar
           </button>
 
-          <button
-            type="submit"
-            disabled={!canSubmit}
-            className="form-submit"
+          <button type="button" className="form-primary-action" disabled={!canSubmit || isPending} aria-live="polite"
           >
             {isPending ? (
-              <>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  aria-hidden="true"
-                  className="form-spinner"
-                >
-                  <circle
-                    cx="12"
-                    cy="12"
-                    r="9"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    opacity="0.3"
-                  />
-
-                  <path
-                    d="M21 12a9 9 0 0 0-9-9"
-                    stroke="currentColor"
-                    strokeWidth="3"
-                    strokeLinecap="round"
-                  />
-                </svg>
-
-                Registrando...
-              </>
-            ) : (
-              <>
-                <svg
-                  viewBox="0 0 24 24"
-                  fill="none"
-                  stroke="currentColor"
-                  strokeWidth="1.8"
-                  aria-hidden="true"
-                >
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M12 5v14m7-7H5"
-                  />
-                </svg>
-
-                Crear prospecto
-              </>
-            )}
+              <> Registrando...</>) : (<>Crear prospecto</>)}
           </button>
-        </div>
-      </div>
+
+      </section>
     </form>
   )
 }

@@ -6,7 +6,7 @@ import {
   useQueryClient,
 } from '@tanstack/react-query'
 
-import './commercial-pages.css'
+import './quotations-page.css'
 
 import {
   createQuotation,
@@ -246,7 +246,7 @@ export default function QuotationsPage() {
     )
 
     if (opportunity) {
-      setClientId(opportunity.client_id)
+      setClientId(opportunity.client_id ?? '')
     } else {
       setClientId('')
     }
@@ -367,7 +367,7 @@ export default function QuotationsPage() {
         >
           {isFormOpen
             ? 'Cerrar'
-            : 'Nueva cotización'}
+            : '+ Nueva cotización'}
         </button>
       </header>
 
@@ -375,8 +375,11 @@ export default function QuotationsPage() {
         <section className="dashboard-panel">
           <div className="panel-heading">
             <div>
+              <p className="eyebrow">
+                NUEVA COTIZACIÓN
+             </p>
               <h2>
-                Nueva cotización
+                Formulario de cotización
               </h2>
 
               <p>
@@ -681,9 +684,9 @@ export default function QuotationsPage() {
                   </div>
 
                   <div>
-                    <strong>
+                    <label>
                       Importe
-                    </strong>
+                    </label>
 
                     <span>
                       {(
@@ -751,14 +754,16 @@ export default function QuotationsPage() {
       <section className="dashboard-panel">
         <div className="panel-heading">
           <div>
+            <p className="eyebrow">
+              VISTA COMERCIAL
+            </p>
             <h2>
               Cotizaciones registradas
-            </h2>
-
+              </h2>
             <p>
-              Consulta las propuestas económicas
-              registradas en el sistema.
-            </p>
+              Listado general de cotizaciones registradas en el sistema
+              </p>
+  
           </div>
         </div>
 
