@@ -7,10 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 
 from ..models import Opportunity, Quotation, QuotationItem
-from ..repositories import (
-    QuotationItemRepository,
-    QuotationRepository,
-)
+from ..repositories import QuotationItemRepository, QuotationRepository
 
 
 MONEY_QUANTUM = Decimal("0.01")
@@ -57,10 +54,7 @@ class QuotationService:
     @classmethod
     def _calculate_subtotal(cls, items: tuple[QuotationItemCreateData, ...]) -> Decimal:
         return cls._money(
-            sum(
-                (cls._calculate_item_total(item.quantity, item.unit_price) for item in items),
-                Decimal("0"),
-            )
+            sum((cls._calculate_item_total(item.quantity, item.unit_price) for item in items), Decimal("0"))
         )
 
     @classmethod
@@ -78,16 +72,12 @@ class QuotationService:
 
         if not quotation_number:
             raise ValidationError({"quotation_number": "Quotation number is required."})
-
         if not currency:
             raise ValidationError({"currency": "Currency is required."})
-
         if len(currency) != 3:
             raise ValidationError({"currency": "Currency must contain exactly 3 characters."})
-
         if not data.items:
             raise ValidationError({"items": "At least one quotation item is required."})
-
         if data.tax_percentage < 0:
             raise ValidationError({"tax_percentage": "Tax percentage cannot be negative."})
 
@@ -104,13 +94,18 @@ class QuotationService:
         except Opportunity.DoesNotExist as exc:
             raise ValidationError({"opportunity_id": "Opportunity does not exist."}) from exc
 
+        # A prospect-origin opportunity may receive a quotation before conversion.
+        # Until WON performs the conversion, the quotation must remain without a client.
+        if opportunity.client_id is None and data.client_id is not None:
+            raise ValidationError(
+                {"client_id": "A quotation for an unconverted prospect cannot have a client."}
+            )
+
         if opportunity.client_id is not None and data.client_id is not None:
             if opportunity.client_id != data.client_id:
-                raise ValidationError(
-                    {"client_id": "Quotation client must match the opportunity client."}
-                )
+                raise ValidationError({"client_id": "Quotation client must match the opportunity client."})
 
-        effective_client_id = data.client_id or opportunity.client_id
+        effective_client_id = opportunity.client_id
 
         if Quotation.objects.filter(quotation_number=quotation_number).exists():
             raise ValidationError({"quotation_number": "A quotation with this number already exists."})
@@ -118,7 +113,6 @@ class QuotationService:
         subtotal = self._calculate_subtotal(data.items)
         tax_amount = self._calculate_tax(subtotal, data.tax_percentage)
         total_amount = self._calculate_total(subtotal, tax_amount)
-
         notes = data.notes.strip() if data.notes is not None else None
         if notes == "":
             notes = None
@@ -136,20 +130,19 @@ class QuotationService:
             notes=notes,
             version_lock=1,
         )
-
         quotation = self.repository.add(quotation)
 
         for item in data.items:
-            line_total = self._calculate_item_total(item.quantity, item.unit_price)
-            quotation_item = QuotationItem(
-                quotation_id=quotation.id,
-                service_catalog_id=item.service_catalog_id,
-                description=item.description.strip(),
-                quantity=item.quantity,
-                unit_price=item.unit_price,
-                line_total=line_total,
-                version_lock=1,
+            self.item_repository.add(
+                QuotationItem(
+                    quotation_id=quotation.id,
+                    service_catalog_id=item.service_catalog_id,
+                    description=item.description.strip(),
+                    quantity=item.quantity,
+                    unit_price=item.unit_price,
+                    line_total=self._calculate_item_total(item.quantity, item.unit_price),
+                    version_lock=1,
+                )
             )
-            self.item_repository.add(quotation_item)
 
         return quotation
