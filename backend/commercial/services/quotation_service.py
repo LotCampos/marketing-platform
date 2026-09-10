@@ -5,8 +5,9 @@ from uuid import UUID
 
 from django.core.exceptions import ValidationError
 from django.db import transaction
+from django.db.models import F
 
-from ..models import Opportunity, Quotation, QuotationItem
+from ..models import Opportunity, Prospect, ProspectStatus, Quotation, QuotationItem
 from ..repositories import QuotationItemRepository, QuotationRepository
 
 
@@ -35,11 +36,7 @@ class QuotationCreateData:
 
 
 class QuotationService:
-    def __init__(
-        self,
-        repository: QuotationRepository | None = None,
-        item_repository: QuotationItemRepository | None = None,
-    ) -> None:
+    def __init__(self, repository: QuotationRepository | None = None, item_repository: QuotationItemRepository | None = None) -> None:
         self.repository = repository or QuotationRepository()
         self.item_repository = item_repository or QuotationItemRepository()
 
@@ -53,9 +50,7 @@ class QuotationService:
 
     @classmethod
     def _calculate_subtotal(cls, items: tuple[QuotationItemCreateData, ...]) -> Decimal:
-        return cls._money(
-            sum((cls._calculate_item_total(item.quantity, item.unit_price) for item in items), Decimal("0"))
-        )
+        return cls._money(sum((cls._calculate_item_total(item.quantity, item.unit_price) for item in items), Decimal("0")))
 
     @classmethod
     def _calculate_tax(cls, subtotal: Decimal, tax_percentage: Decimal) -> Decimal:
@@ -94,16 +89,23 @@ class QuotationService:
         except Opportunity.DoesNotExist as exc:
             raise ValidationError({"opportunity_id": "Opportunity does not exist."}) from exc
 
+        prospect = None
+        if opportunity.prospect_id is not None:
+            try:
+                prospect = Prospect.objects.select_for_update().get(id=opportunity.prospect_id)
+            except Prospect.DoesNotExist as exc:
+                raise ValidationError({"opportunity_id": "Opportunity references a prospect that does not exist."}) from exc
+
+            if prospect.status not in {ProspectStatus.QUALIFIED, ProspectStatus.QUOTED}:
+                raise ValidationError({"opportunity_id": "A prospect must be qualified before receiving a quotation."})
+
         # A prospect-origin opportunity may receive a quotation before conversion.
         # Until WON performs the conversion, the quotation must remain without a client.
         if opportunity.client_id is None and data.client_id is not None:
-            raise ValidationError(
-                {"client_id": "A quotation for an unconverted prospect cannot have a client."}
-            )
+            raise ValidationError({"client_id": "A quotation for an unconverted prospect cannot have a client."})
 
-        if opportunity.client_id is not None and data.client_id is not None:
-            if opportunity.client_id != data.client_id:
-                raise ValidationError({"client_id": "Quotation client must match the opportunity client."})
+        if opportunity.client_id is not None and data.client_id is not None and opportunity.client_id != data.client_id:
+            raise ValidationError({"client_id": "Quotation client must match the opportunity client."})
 
         effective_client_id = opportunity.client_id
 
@@ -117,7 +119,7 @@ class QuotationService:
         if notes == "":
             notes = None
 
-        quotation = Quotation(
+        quotation = self.repository.add(Quotation(
             quotation_number=quotation_number,
             opportunity_id=data.opportunity_id,
             client_id=effective_client_id,
@@ -129,20 +131,23 @@ class QuotationService:
             currency=currency,
             notes=notes,
             version_lock=1,
-        )
-        quotation = self.repository.add(quotation)
+        ))
 
         for item in data.items:
-            self.item_repository.add(
-                QuotationItem(
-                    quotation_id=quotation.id,
-                    service_catalog_id=item.service_catalog_id,
-                    description=item.description.strip(),
-                    quantity=item.quantity,
-                    unit_price=item.unit_price,
-                    line_total=self._calculate_item_total(item.quantity, item.unit_price),
-                    version_lock=1,
-                )
+            self.item_repository.add(QuotationItem(
+                quotation_id=quotation.id,
+                service_catalog_id=item.service_catalog_id,
+                description=item.description.strip(),
+                quantity=item.quantity,
+                unit_price=item.unit_price,
+                line_total=self._calculate_item_total(item.quantity, item.unit_price),
+                version_lock=1,
+            ))
+
+        if prospect is not None and prospect.status == ProspectStatus.QUALIFIED:
+            Prospect.objects.filter(id=prospect.id, version_lock=prospect.version_lock).update(
+                status=ProspectStatus.QUOTED,
+                version_lock=F("version_lock") + 1,
             )
 
         return quotation
