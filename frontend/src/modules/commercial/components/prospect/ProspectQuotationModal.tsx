@@ -51,8 +51,8 @@ export default function ProspectQuotationModal({
 
         <div className="prospect-modal-body">
           <p className="prospect-modal-notice">
-            La cotización utiliza el dominio comercial existente y
-            requiere una oportunidad y un cliente válidos.
+            La cotización puede emitirse antes de convertir el prospecto en
+            cliente, pero debe quedar vinculada a una oportunidad comercial.
           </p>
 
           <p>
@@ -60,11 +60,19 @@ export default function ProspectQuotationModal({
           </p>
 
           <p>
-            El formulario de cotización se integrará aquí cuando el
-            expediente disponga de las referencias comerciales
-            necesarias, reutilizando el servicio de cotizaciones
-            existente.
+            El siguiente paso del expediente es seleccionar o crear la
+            oportunidad y capturar los conceptos de la cotización. Mientras
+            el prospecto no se convierta en cliente, la cotización conservará
+            <strong> cliente = nulo</strong>.
           </p>
+
+          <button
+            type="button"
+            className="prospects-primary-action"
+            onClick={onClose}
+          >
+            Cerrar
+          </button>
         </div>
       </section>
     </div>
