@@ -82,3 +82,4 @@ class ServiceCatalogViewSet(MasterBaseViewSet):
             .filter(is_active=True)
             .order_by("service_name")
         )
+        

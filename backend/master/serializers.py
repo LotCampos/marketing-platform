@@ -100,3 +100,4 @@ class ServiceCatalogSerializer(serializers.ModelSerializer):
             "is_active",
             "installation_types",
         )
+        

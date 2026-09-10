@@ -6,10 +6,7 @@
 .commercial-page {
   display: flex;
   flex-direction: column;
-  gap: 28px;
-  width: 100%;
-  max-width: 1680px;
-  margin: 0 auto;
+  gap: 24px;
 }
 
 /* =========================================================

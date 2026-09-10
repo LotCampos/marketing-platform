@@ -12,9 +12,10 @@ from ..repositories import OpportunityRepository
 @dataclass(frozen=True)
 class OpportunityCreateData:
     opportunity_number: str
-    service_request_id: UUID
-    client_id: UUID
     title: str
+    prospect_id: UUID | None = None
+    service_request_id: UUID | None = None
+    client_id: UUID | None = None
     assigned_to: UUID | None = None
     description: str | None = None
     estimated_value: Decimal | None = None
@@ -45,6 +46,22 @@ class OpportunityService:
                 {"title": "Title is required."}
             )
 
+        if not any(
+            (
+                data.prospect_id,
+                data.service_request_id,
+                data.client_id,
+            )
+        ):
+            raise ValidationError(
+                {
+                    "origin": (
+                        "At least one origin is required: "
+                        "prospect, service request, or client."
+                    )
+                }
+            )
+
         if Opportunity.objects.filter(
             opportunity_number=opportunity_number,
         ).exists():
@@ -58,6 +75,7 @@ class OpportunityService:
 
         opportunity = Opportunity(
             opportunity_number=opportunity_number,
+            prospect_id=data.prospect_id,
             service_request_id=data.service_request_id,
             client_id=data.client_id,
             assigned_to=data.assigned_to,

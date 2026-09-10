@@ -144,6 +144,8 @@ WSGI_APPLICATION = 'config.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.2/ref/settings/#databases
 
+UI_CADO_DB_ROLE = os.getenv("UI_CADO_DB_ROLE")
+
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
@@ -164,6 +166,7 @@ DATABASES = {
                 "workflow,"
                 "audit,"
                 "sync"
+                + (f" -c role={UI_CADO_DB_ROLE}" if UI_CADO_DB_ROLE else "")
             ),
         },
         "TEST": {
