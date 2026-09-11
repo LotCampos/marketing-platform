@@ -54,6 +54,18 @@ export interface ServiceCatalog {
   installation_types: InstallationType[]
 }
 
+export interface IdentityUserSummary {
+  id: string
+  email: string
+  employee_number: string
+  full_name: string
+  system_role: string
+  is_active: boolean
+  version_lock: number
+}
+
+export type IdentityUsersCollection = CommercialCollection<IdentityUserSummary>
+
 export interface ServiceRequest {
   id: string
   created_at: string
