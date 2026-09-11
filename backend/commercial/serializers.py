@@ -81,8 +81,8 @@ class QuotationItemSerializer(serializers.ModelSerializer):
 class QuotationItemInputSerializer(serializers.Serializer):
     service_catalog_id = serializers.UUIDField()
     description = serializers.CharField(max_length=500, allow_blank=False, trim_whitespace=True)
-    quantity = serializers.DecimalField(max_digits=12, decimal_places=3, min_value=Decimal("0.001"))
-    unit_price = serializers.DecimalField(max_digits=14, decimal_places=2, min_value=Decimal("0.00"))
+    quantity = serializers.IntegerField(min_value=1)
+    unit_price = serializers.IntegerField(min_value=0)
 
     def validate_description(self, value: str) -> str:
         value = " ".join(value.strip().split())
@@ -95,17 +95,13 @@ class QuotationSerializer(serializers.ModelSerializer):
     items = QuotationItemInputSerializer(many=True, required=True, write_only=True)
     client_id = serializers.UUIDField(required=False, allow_null=True, default=None)
     issued_by = serializers.UUIDField(required=False, allow_null=True, default=None)
-    tax_percentage = serializers.DecimalField(
-        max_digits=7, decimal_places=2, min_value=Decimal("0.00"),
-        max_value=Decimal("100.00"), required=False, default=Decimal("16.00"), write_only=True,
-    )
 
     class Meta:
         model = Quotation
         fields = (
             "id", "quotation_number", "opportunity_id", "client_id", "issued_by",
             "valid_until", "subtotal", "tax_amount", "total_amount", "currency",
-            "notes", "version_lock", "created_at", "items", "tax_percentage",
+            "notes", "version_lock", "created_at", "items",
         )
         read_only_fields = ("id", "subtotal", "tax_amount", "total_amount", "version_lock", "created_at")
 
@@ -119,8 +115,8 @@ class QuotationSerializer(serializers.ModelSerializer):
         value = value.strip().upper()
         if not value:
             raise serializers.ValidationError("Currency is required.")
-        if len(value) != 3:
-            raise serializers.ValidationError("Currency must contain exactly 3 characters.")
+        if value != "MXN":
+            raise serializers.ValidationError("Currency must be MXN.")
         return value
 
     def validate_notes(self, value: str | None) -> str | None:

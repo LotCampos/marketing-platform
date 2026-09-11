@@ -37,8 +37,8 @@ function createEmptyItem(): DraftItem {
     key: crypto.randomUUID(),
     service_catalog_id: '',
     description: '',
-    quantity: '1',
-    unit_price: '0.00',
+    quantity: 1,
+    unit_price: 0,
   }
 }
 
@@ -70,7 +70,6 @@ export default function QuotationsPage() {
   const [clientId, setClientId] = useState('')
   const [validUntil, setValidUntil] = useState('')
   const [currency, setCurrency] = useState('MXN')
-  const [taxPercentage, setTaxPercentage] = useState('16.00')
   const [notes, setNotes] = useState('')
 
   const [items, setItems] = useState<DraftItem[]>([
@@ -180,10 +179,8 @@ export default function QuotationsPage() {
   )
 
   const tax = useMemo(
-    () =>
-      subtotal *
-      (Number(taxPercentage || 0) / 100),
-    [subtotal, taxPercentage],
+    () => subtotal * 0.16,
+    [subtotal],
   )
 
   const total = subtotal + tax
@@ -194,7 +191,6 @@ export default function QuotationsPage() {
     setClientId('')
     setValidUntil('')
     setCurrency('MXN')
-    setTaxPercentage('16.00')
     setNotes('')
     setItems([createEmptyItem()])
     setIsFormOpen(false)
@@ -314,8 +310,6 @@ export default function QuotationsPage() {
       notes:
         notes.trim() || null,
 
-      tax_percentage:
-        taxPercentage,
 
       items: items.map((item) => {
         const { key, ...quotationItem } = item
@@ -345,9 +339,9 @@ export default function QuotationsPage() {
     <main className="page-container commercial-page">
       <header className="page-header">
         <div>
-          <p className="eyebrow">
+          <span className="eyebrow">
             COMERCIAL / COTIZACIONES
-          </p>
+          </span>
 
           <h1>
             Cotizaciones comerciales
@@ -530,22 +524,14 @@ export default function QuotationsPage() {
 
             <div>
               <label htmlFor="tax">
-                IVA %
+                IVA
               </label>
-
               <input
                 id="tax"
-                type="number"
-                min="0"
-                max="100"
-                step="0.01"
-                value={taxPercentage}
-                onChange={(event) =>
-                  setTaxPercentage(
-                    event.target.value,
-                  )
-                }
-                required
+                type="text"
+                value="16%"
+                readOnly
+                aria-readonly="true"
               />
             </div>
 
@@ -648,8 +634,8 @@ export default function QuotationsPage() {
 
                     <input
                       type="number"
-                      min="0.0001"
-                      step="0.0001"
+                      min="1"
+                      step="1"
                       value={item.quantity}
                       onChange={(event) =>
                         updateItem(
@@ -670,7 +656,7 @@ export default function QuotationsPage() {
                     <input
                       type="number"
                       min="0"
-                      step="0.01"
+                      step="1"
                       value={item.unit_price}
                       onChange={(event) =>
                         updateItem(
@@ -690,8 +676,8 @@ export default function QuotationsPage() {
 
                     <span>
                       {(
-                        Number(item.quantity || 0) *
-                        Number(item.unit_price || 0)
+                        item.quantity *
+                        item.unit_price
                       ).toFixed(2)}
                     </span>
                   </div>

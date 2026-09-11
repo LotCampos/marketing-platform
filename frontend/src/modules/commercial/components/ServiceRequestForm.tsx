@@ -35,10 +35,21 @@ interface ServiceRequestFormProps {
   isPending: boolean
 }
 
-type ServiceRequestFormData =
-  CreateServiceRequestInput & {
-    installation_type_id: string
-  }
+type ServiceRequestFormData = Omit<
+  CreateServiceRequestInput,
+  | 'installation_id'
+  | 'requested_by_name'
+  | 'requested_by_email'
+  | 'requested_by_phone'
+  | 'request_description'
+> & {
+  installation_id: string
+  installation_type_id: string
+  requested_by_name: string
+  requested_by_email: string
+  requested_by_phone: string
+  request_description: string
+}
 
 const initialFormData: ServiceRequestFormData = {
   client_id: '',

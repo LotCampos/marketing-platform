@@ -150,7 +150,7 @@ class ProspectViewSet(CommercialBaseViewSet):
             interest_description=serializer.validated_data.get("interest_description"),
             notes=serializer.validated_data.get("notes"),
             service_catalog_id=serializer.validated_data.get("service_catalog_id"),
-            installation_type_id=serializer.validated_data.get("installation_type_id"),
+            installation_type_id=serializer.validated_data["installation_type_id"].id,
         )
         try:
             prospect = ProspectService.create(data)
@@ -230,7 +230,7 @@ class OpportunityViewSet(CommercialBaseViewSet):
         serializer.is_valid(raise_exception=True)
         data = OpportunityCreateData(
             opportunity_number=serializer.validated_data["opportunity_number"],
-            prospect_id=serializer.validated_data.get("prospect"),
+            prospect_id=serializer.validated_data["prospect"].id if serializer.validated_data.get("prospect") else None,
             service_request_id=serializer.validated_data.get("service_request_id"),
             client_id=serializer.validated_data.get("client_id"),
             title=serializer.validated_data["title"],
@@ -273,7 +273,6 @@ class QuotationViewSet(CommercialBaseViewSet):
             valid_until=validated_data.get("valid_until"),
             currency=validated_data.get("currency", "MXN"),
             notes=validated_data.get("notes"),
-            tax_percentage=validated_data.get("tax_percentage", Decimal("16.00")),
             items=item_data,
         )
         try:
@@ -290,12 +289,40 @@ class QuotationViewSet(CommercialBaseViewSet):
         items = list(QuotationItem.objects.filter(quotation_id=quotation.id).order_by("created_at"))
         if not items:
             raise DRFValidationError({"detail": "La cotización no contiene partidas y no puede generar el PDF oficial."})
-        client = Client.objects.filter(id=quotation.client_id, is_deleted=False).first()
-        if client is None:
-            raise DRFValidationError({"detail": "No se encontró el cliente activo asociado a la cotización."})
-        contact = Contact.objects.filter(
-            client_id=client.id, is_active=True, is_deleted=False
-        ).order_by("-is_primary", "created_at").first()
+        client = None
+        prospect = None
+        contact = None
+
+        if quotation.client_id:
+            client = Client.objects.filter(
+                id=quotation.client_id,
+                is_deleted=False,
+            ).first()
+
+            if client is None:
+                raise DRFValidationError(
+                    {"detail": "No se encontró el cliente activo asociado a la cotización."}
+                )
+
+            contact = Contact.objects.filter(
+                client_id=client.id,
+                is_active=True,
+                is_deleted=False,
+            ).order_by("-is_primary", "created_at").first()
+        else:
+            opportunity = Opportunity.objects.filter(
+                id=quotation.opportunity_id,
+            ).first()
+
+            if opportunity is not None and opportunity.prospect_id:
+                prospect = Prospect.objects.filter(
+                    id=opportunity.prospect_id,
+                ).first()
+
+            if prospect is None:
+                raise DRFValidationError(
+                    {"detail": "La cotización no tiene un Cliente ni un Prospecto válido asociado."}
+                )
         service_catalog_ids = {item.service_catalog_id for item in items}
         service_catalogs = {
             catalog.id: catalog
@@ -304,10 +331,22 @@ class QuotationViewSet(CommercialBaseViewSet):
         missing_catalog_ids = service_catalog_ids - set(service_catalogs.keys())
         if missing_catalog_ids:
             raise DRFValidationError({"detail": "Una o más partidas de la cotización no tienen un servicio de catálogo activo."})
-        installation = (
-            client.installations.filter(installation_type__isnull=False)
-            .select_related("installation_type").first()
-        )
+        installation = None
+
+        if client is not None:
+            installation = (
+                client.installations.filter(installation_type__isnull=False)
+                .select_related("installation_type").first()
+            )
+        elif prospect is not None and prospect.installation_id:
+            installation = (
+                prospect.installation.__class__.objects.filter(
+                    id=prospect.installation_id,
+                    installation_type__isnull=False,
+                )
+                .select_related("installation_type")
+                .first()
+            )
         installation_type_name = ""
         if installation is not None and installation.installation_type is not None and installation.installation_type.name:
             installation_type_name = installation.installation_type.name.strip()
@@ -329,8 +368,16 @@ class QuotationViewSet(CommercialBaseViewSet):
         pdf = QuotationPDFService.generate(
             quotation=quotation,
             partidas=partidas,
-            client_name=client.business_name,
-            contact_name=contact.full_name if contact is not None else "",
+            client_name=(
+                client.business_name
+                if client is not None
+                else prospect.business_name
+            ),
+            contact_name=(
+                contact.full_name
+                if contact is not None
+                else prospect.contact_name
+            ),
             service_name=", ".join(service_names),
             service_type="SERVICIO",
             validity_days=((quotation.valid_until - quotation.issue_date.date()).days if quotation.valid_until else 30),

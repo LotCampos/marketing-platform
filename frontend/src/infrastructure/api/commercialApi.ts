@@ -5,6 +5,8 @@ import {
   httpPost,
 } from './httpClient'
 
+import type { IdentityUser } from './identity/identityApi'
+
 import type {
   Agreement,
   AgreementTerm,
@@ -17,7 +19,6 @@ import type {
   CreateServiceRequestInput,
   Installation,
   InstallationType,
-  IdentityUsersCollection,
   Opportunity,
   Prospect,
   ProspectStatus,
@@ -33,7 +34,7 @@ const identityPath = '/identity'
 
 
 export function getIdentityUsers() {
-  return httpGet<IdentityUsersCollection>(
+  return httpGet<CommercialCollection<IdentityUser>>(
     `${identityPath}/users/`,
   )
 }

@@ -6,7 +6,7 @@
 .commercial-page {
   display: flex;
   flex-direction: column;
-  gap: 28px;
+  gap: 24px;
   width: 100%;
   max-width: 1680px;
   margin: 0 auto;
@@ -21,8 +21,9 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
-  padding: 40px 32px;
+  gap: 28px;
+  margin-bottom: 24px;
+  padding: 40px 30px;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 32px;
@@ -33,7 +34,8 @@
   overflow: hidden;
 }
 
-.commercial-page .page-header::before {
+.commercial-page .page-header::before,
+.dashboard-panel::before  {
   content: '';
   position: absolute;
   inset: 0;
@@ -52,7 +54,7 @@
 .commercial-page .eyebrow {
   display: block;
   margin-bottom: 10px;
-  color: #f36517; /* Luz LED Naranja */
+  color: #f36517;
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.2em;
@@ -64,8 +66,8 @@
   margin: 0;
   color: #ffffff;
   font-size: clamp(26px, 3vw, 36px);
-  line-height: 1.1;
   font-weight: 800;
+  line-height: 1.1;
   letter-spacing: -0.035em;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
@@ -85,6 +87,7 @@
 .dashboard-panel {
   position: relative;
   overflow: hidden;
+  margin-bottom: 24px;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 28px;
@@ -94,19 +97,7 @@
     15px 20px 40px rgba(0, 0, 0, 0.6);
 }
 
-.dashboard-panel::before {
-  content: '';
-  position: absolute;
-  inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
-  pointer-events: none;
-  mix-blend-mode: overlay;
-  z-index: 0;
-}
-
 .panel-heading {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -119,9 +110,8 @@
 .panel-heading h2, .panel-heading h3 {
   margin: 0;
   color: #ffffff;
-  font-size: 20px;
+  font-size: 18px;
   font-weight: 800;
-  line-height: 1.1;
 }
 
 .panel-heading p {
@@ -182,7 +172,6 @@
   cursor: pointer;
 }
 
-/* LED Apagado por defecto */
 .commercial-page form label::before {
   content: '';
   display: block;

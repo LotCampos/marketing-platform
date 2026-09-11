@@ -46,7 +46,7 @@ export default function ProspectOpportunityModal({ prospect, open, onClose }: Pr
   const createMutation = useMutation({
     mutationFn: () => createOpportunity({
       opportunity_number: opportunityNumber.trim(),
-      prospect_id: prospect.id,
+      prospect: prospect.id,
       assigned_to: user?.id ?? null,
       title: title.trim(),
       description: description.trim() || null,

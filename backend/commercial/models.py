@@ -129,8 +129,8 @@ class QuotationItem(CommercialBaseModel):
     quotation_id = models.UUIDField(db_column="quotation_id")
     service_catalog_id = models.UUIDField(db_column="service_catalog_id")
     description = models.CharField(max_length=500, db_column="description")
-    quantity = models.DecimalField(max_digits=12, decimal_places=3, db_column="quantity", default=Decimal("1"))
-    unit_price = models.DecimalField(max_digits=14, decimal_places=2, db_column="unit_price", default=Decimal("0"))
+    quantity = models.IntegerField(db_column="quantity", default=1)
+    unit_price = models.IntegerField(db_column="unit_price", default=0)
     line_total = models.DecimalField(max_digits=14, decimal_places=2, db_column="line_total", default=Decimal("0"))
 
     class Meta:

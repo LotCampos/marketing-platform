@@ -1,5 +1,6 @@
 /* =========================================================
    UI-CADO — PROSPECTS PAGE (Dark Neumorphic 3D)
+   Archivo completo y definitivo
    ========================================================= */
 
 .prospects-page,
@@ -22,21 +23,18 @@
   align-items: flex-end;
   justify-content: space-between;
   gap: 28px;
-  padding: 40px 32px;
-
-  /* Fondo oscuro y chasis de hardware pesado */
+  margin-bottom: 24px;
+  padding: 40px 30px;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 32px;
-
-  box-shadow: 
+  box-shadow:
     inset 10px 10px 20px rgba(0, 0, 0, 0.8),
     inset -4px -4px 10px rgba(255, 255, 255, 0.04),
     20px 25px 50px rgba(0, 0, 0, 0.7);
   overflow: hidden;
 }
 
-/* Textura granulada para los contenedores principales */
 .prospects-hero::before,
 .prospects-panel::before,
 .prospect-modal::before {
@@ -102,7 +100,7 @@
   background: #111214;
   border-radius: 18px;
   border: none;
-  box-shadow: 
+  box-shadow:
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -3px -3px 6px rgba(255, 255, 255, 0.04);
 }
@@ -144,7 +142,7 @@
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  box-shadow: 
+  box-shadow:
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 2px 2px 5px rgba(255, 255, 255, 0.4),
     inset -3px -3px 5px rgba(139, 28, 0, 0.6);
@@ -152,18 +150,18 @@
   cursor: pointer;
 }
 
-.prospects-primary-action:hover {
+.prospects-primary-action:hover:not(:disabled) {
   transform: translateY(-2px);
   filter: brightness(1.1);
-  box-shadow: 
+  box-shadow:
     8px 8px 20px rgba(0, 0, 0, 0.7),
     inset 2px 2px 5px rgba(255, 255, 255, 0.5),
     inset -3px -3px 5px rgba(139, 28, 0, 0.5);
 }
 
-.prospects-primary-action:active {
+.prospects-primary-action:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: 
+  box-shadow:
     2px 2px 5px rgba(0, 0, 0, 0.6),
     inset 4px 4px 8px rgba(139, 28, 0, 0.6);
 }
@@ -182,29 +180,27 @@
    PANELS & CONTAINERS
    ========================================================= */
 
+.prospects-panel,
 .prospects-form-container {
-  margin-bottom: 24px;
-}
-
-.prospects-panel {
   position: relative;
   overflow: hidden;
+  margin-bottom: 24px;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 28px;
-  box-shadow: 
+  box-shadow:
     inset 8px 8px 20px rgba(0, 0, 0, 0.8),
     inset -4px -4px 10px rgba(255, 255, 255, 0.03),
     15px 20px 40px rgba(0, 0, 0, 0.6);
 }
 
-.prospects-panel-header, 
-.prospect-detail-grid, 
+.prospects-panel-header,
+.prospect-detail-grid,
 .prospect-related-panel,
 .prospect-overview-panel,
 .prospect-actions-panel {
   position: relative;
-  z-index: 1; 
+  z-index: 1;
 }
 
 .prospects-panel-header {
@@ -242,7 +238,7 @@
   color: #94a3b8;
   font-size: 11px;
   font-weight: 700;
-  box-shadow: 
+  box-shadow:
     inset 3px 3px 6px rgba(0, 0, 0, 0.9),
     inset -1px -1px 3px rgba(255, 255, 255, 0.05);
 }
@@ -258,7 +254,7 @@
 
 .prospect-row:hover {
   background: rgba(42, 44, 48, 0.5);
-  box-shadow: inset 0 -1px 0 rgba(243, 101, 23, 0.2); 
+  box-shadow: inset 0 -1px 0 rgba(243, 101, 23, 0.2);
 }
 
 .prospect-detail-grid,
@@ -277,26 +273,24 @@
 .prospect-detail-grid > div,
 .prospect-detail-full > div {
   min-width: 0;
-  background: #111214; 
+  background: #111214;
   padding: 18px 20px;
   border-radius: 16px;
-  border: 1px solid rgba(0, 0, 0, 0.5); 
-  
-  box-shadow: 
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow:
     inset 4px 4px 10px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.04);
-    
   transition: all 200ms ease;
 }
 
 .prospect-detail-grid > div:hover,
 .prospect-detail-full > div:hover {
   background: #0d0e10;
-  box-shadow: 
+  box-shadow:
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.04),
-    0 0 0 1px rgba(243, 101, 23, 0.3); 
-  }
+    0 0 0 1px rgba(243, 101, 23, 0.3);
+}
 
 .prospect-detail-grid strong,
 .prospect-detail-full strong {
@@ -304,7 +298,7 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 8px;
-  color: #64748b; 
+  color: #64748b;
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.15em;
@@ -325,7 +319,7 @@
 
 .prospect-detail-grid > div:hover strong::before,
 .prospect-detail-full > div:hover strong::before {
-  background: #f36517; 
+  background: #f36517;
   box-shadow: 0 0 8px rgba(243, 101, 23, 0.8);
 }
 
@@ -336,7 +330,7 @@
   font-size: 14px;
   font-weight: 500;
   line-height: 1.6;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8); 
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
 }
 
 .prospect-detail-full {
@@ -369,7 +363,7 @@
   background: #111214;
   border: none;
   border-radius: 14px;
-  box-shadow: 
+  box-shadow:
     inset 4px 4px 8px rgba(0, 0, 0, 0.8),
     inset -2px -2px 4px rgba(255, 255, 255, 0.05);
   outline: none;
@@ -380,7 +374,7 @@
 .prospect-status-control select:focus,
 .prospect-responsible-control select:focus {
   background: #0a0a0a;
-  box-shadow: 
+  box-shadow:
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -2px -2px 4px rgba(255, 255, 255, 0.05),
     0 0 0 2px rgba(243, 101, 23, 0.4);
@@ -434,15 +428,15 @@
   align-items: flex-start;
   gap: 20px;
   width: 100%;
-  min-height: 120px;
-  padding: 24px;
+  min-height: 96px;
+  padding: 18px 20px;
   background: #2a2c30;
   border: none;
   border-radius: 20px;
   color: #94a3b8;
   text-align: left;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 2px 2px 4px rgba(255, 255, 255, 0.08),
     inset -3px -3px 5px rgba(0, 0, 0, 0.4);
@@ -453,7 +447,7 @@
   transform: translateY(-4px);
   color: #ffffff;
   background: #313338;
-  box-shadow: 
+  box-shadow:
     8px 12px 24px rgba(0, 0, 0, 0.7),
     inset 1px 1px 3px rgba(255, 255, 255, 0.15);
 }
@@ -479,7 +473,7 @@
   background: #111214;
   color: #f36517;
   font-size: 24px;
-  box-shadow: 
+  box-shadow:
     inset 4px 4px 8px rgba(0, 0, 0, 0.9),
     inset -2px -2px 4px rgba(255, 255, 255, 0.05);
   transition: all 160ms ease;
@@ -553,7 +547,7 @@
 }
 
 /* =========================================================
-   MODAL (Ventana flotante)
+   MODALES (Estructura base)
    ========================================================= */
 
 .prospect-modal-backdrop {
@@ -562,27 +556,23 @@
   z-index: 1000;
   display: grid;
   place-items: center;
-  padding: 32px;
+  padding: 30px;
   background: rgba(0, 0, 0, 0.7);
   backdrop-filter: blur(10px);
 }
 
 .prospect-modal {
   position: relative;
-  width: min(620px, 100%);
+  width: min(720px, 100%);
   max-height: calc(100vh - 64px);
   overflow: auto;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 32px;
-  box-shadow: 
+  box-shadow:
     inset 8px 8px 20px rgba(0, 0, 0, 0.6),
     inset -4px -4px 10px rgba(255, 255, 255, 0.03),
     0 40px 100px rgba(0, 0, 0, 0.9);
-}
-
-.prospect-modal-large {
-  width: min(900px, 100%);
 }
 
 .prospect-modal-header,
@@ -596,24 +586,28 @@
   align-items: flex-start;
   justify-content: space-between;
   gap: 24px;
-  padding: 28px 32px;
+  padding: 24px 30px;
   border-bottom: 2px solid #0a0a0a;
   background: rgba(21, 23, 26, 0.6);
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
 }
 
 .prospect-modal-header span {
+  display: block;
+  margin-bottom: 6px;
   font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
+  font-weight: 850;
+  letter-spacing: 0.15em;
   color: #f36517;
   text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(243, 101, 23, 0.4);
 }
 
 .prospect-modal-header h3 {
-  margin: 8px 0 0;
+  margin: 0;
   color: #ffffff;
   font-size: 22px;
+  font-weight: 750;
 }
 
 .prospect-modal-close {
@@ -623,9 +617,10 @@
   border-radius: 50%;
   background: #2a2c30;
   color: #94a3b8;
-  font-size: 20px;
+  font-size: 24px;
+  line-height: 1;
   cursor: pointer;
-  box-shadow: 
+  box-shadow:
     4px 4px 10px rgba(0, 0, 0, 0.5),
     inset 1px 1px 3px rgba(255, 255, 255, 0.1),
     inset -2px -2px 4px rgba(0, 0, 0, 0.4);
@@ -635,22 +630,31 @@
 .prospect-modal-close:hover {
   background: #ef4444;
   color: #ffffff;
-  box-shadow: 
+  box-shadow:
     4px 4px 12px rgba(239, 68, 68, 0.4),
     inset 1px 1px 3px rgba(255, 255, 255, 0.3);
 }
 
 .prospect-modal-close:active {
   transform: scale(0.95);
-  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.4);
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.4);
 }
+
+/* =========================================================
+   MODAL ESTÁNDAR (Instalaciones a 2 columnas)
+   ========================================================= */
 
 .prospect-modal-body {
-  padding: 30px;
+  padding: 30px 32px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
 }
 
+/* Alertas/Avisos abarcan todo el ancho */
 .prospect-modal-notice {
-  margin: 0 0 24px;
+  grid-column: 1 / -1;
+  margin: 0;
   padding: 16px 20px;
   background: #1f140d;
   border-left: 4px solid #f36517;
@@ -659,6 +663,490 @@
   font-size: 13px;
   line-height: 1.5;
   box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.6);
+}
+
+.prospect-modal-notice:has(text:contains("Error")) {
+  background: #1a0f0f;
+  border-left-color: #7f1d1d;
+  color: #fca5a5;
+}
+
+.prospect-modal-notice:empty {
+  display: none;
+}
+
+/* Hacemos que el primer campo abarque todo el ancho */
+.prospect-modal-body > label:first-of-type {
+  grid-column: 1 / -1;
+}
+
+/* Hacemos que el div que envuelve Latitud y Longitud abarque todo el ancho y se subdivida */
+.prospect-modal-body > div:not(:last-child):not(.prospect-modal-notice) {
+  grid-column: 1 / -1;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+/* Estilos de las etiquetas de los inputs */
+.prospect-modal-body label {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #cbd5e1;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Inputs y Selects */
+.prospect-modal-body input,
+.prospect-modal-body select {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: #111214;
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-shadow:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+  transition: all 160ms ease;
+}
+
+.prospect-modal-body input:focus,
+.prospect-modal-body select:focus {
+  background: #0a0a0a;
+  box-shadow:
+    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05),
+    0 0 0 2px rgba(243, 101, 23, 0.4);
+}
+
+.prospect-modal-body input:disabled,
+.prospect-modal-body select:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Footer del modal normal abarca todo el ancho */
+.prospect-modal-body > div:last-child {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 12px;
+  padding-top: 24px;
+  border-top: 2px solid #0a0a0a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+.prospect-modal-body button {
+  min-height: 46px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.prospect-modal-body button[type="button"]:not(.prospect-modal-close) {
+  background: #2a2c30;
+  color: #94a3b8;
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.prospect-modal-body button[type="button"]:not(.prospect-modal-close):hover:not(:disabled) {
+  transform: translateY(-2px);
+  color: #ffffff;
+  background: #313338;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.6), inset 1px 1px 3px rgba(255, 255, 255, 0.15);
+}
+
+.prospect-modal-body button[type="button"]:not(.prospect-modal-close):active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+.prospect-modal-body button[type="submit"] {
+  background: #f36517;
+  color: #ffffff;
+  box-shadow:
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.6);
+}
+
+.prospect-modal-body button[type="submit"]:hover:not(:disabled) {
+  transform: translateY(-2px);
+  background: #ff7b30;
+  box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.7), inset 2px 2px 5px rgba(255, 255, 255, 0.5);
+}
+
+.prospect-modal-body button[type="submit"]:active:not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.6), inset 4px 4px 8px rgba(139, 28, 0, 0.6);
+}
+
+.prospect-modal-body button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none;
+}
+
+/* =========================================================
+   MODAL GRANDE (Nueva Oportunidad - Adaptado al componente)
+   ========================================================= */
+
+.prospect-modal-large {
+  width: min(900px, 100%);
+}
+
+.prospect-modal-large .prospect-modal-body {
+  padding: 24px 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* El texto explicativo ("La oportunidad conservará...") */
+.prospect-modal-large .prospect-modal-body > p {
+  margin: 0;
+  color: #94a3b8;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+/* El contenedor del Formulario */
+.prospect-modal-large .prospect-modal-body form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px; /* Separación amplia entre cada campo */
+}
+
+/* Los divs que envuelven el Label + Input */
+.prospect-modal-large .prospect-modal-body form > div:not(.prospect-modal-actions):not(.prospects-error) {
+  display: flex;
+  flex-direction: column;
+  gap: 12px; /* Separación perfecta entre título y la caja negra */
+}
+
+/* El texto de las etiquetas (NÚMERO DE OPORTUNIDAD, TÍTULO) */
+.prospect-modal-large .prospect-modal-body form label {
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+/* Los inputs y textareas (Pantallas hundidas estilo Hardware) */
+.prospect-modal-large .prospect-modal-body form input,
+.prospect-modal-large .prospect-modal-body form textarea {
+  width: 100%;
+  min-height: 48px;
+  padding: 12px 16px;
+  background: #111214;
+  border: none;
+  border-radius: 14px;
+  color: #ffffff;
+  font-size: 13px;
+  font-family: inherit;
+  outline: none;
+  box-shadow:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+  transition: all 160ms ease;
+}
+
+.prospect-modal-large .prospect-modal-body form textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+/* Efecto de encendido (LED) al hacer click en el input */
+.prospect-modal-large .prospect-modal-body form input:focus,
+.prospect-modal-large .prospect-modal-body form textarea:focus {
+  background: #0a0a0a;
+  box-shadow:
+    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05),
+    0 0 0 2px rgba(243, 101, 23, 0.4);
+}
+
+/* Botones de acción del Modal Grande */
+.prospect-modal-actions {
+  display: flex;
+  justify-content: flex-start; /* Botones alineados a la izquierda */
+  align-items: center;
+  gap: 20px;
+  padding-top: 30px;
+  border-top: 2px solid #0a0a0a;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.02);
+}
+
+/* Botón Cancelar (Tecla gris) */
+.prospect-modal-actions button[type="button"] {
+  min-height: 46px;
+  padding: 0 24px;
+  border: none;
+  border-radius: 14px;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  cursor: pointer;
+  background: #2a2c30;
+  color: #94a3b8;
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+  transition: all 160ms ease;
+}
+
+.prospect-modal-actions button[type="button"]:hover {
+  transform: translateY(-2px);
+  color: #ffffff;
+  background: #313338;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.6), inset 1px 1px 3px rgba(255, 255, 255, 0.15);
+}
+
+.prospect-modal-actions button[type="button"]:active {
+  transform: translateY(2px);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5);
+}
+
+/* =========================================================
+   NUEVA COTIZACIÓN (Solo agregar al final - No unificar)
+   Estilo Monitor LED Interactivo exclusivo para Cotizaciones
+   ========================================================= */
+
+/* Ensanchar el modal para la tabla de conceptos */
+.prospect-modal-large:has(#prospect-quotation-modal-title) {
+  width: min(1000px, 100%);
+}
+
+/* Grid General a 2 columnas */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+}
+
+/* Elementos a ancho completo */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospect-modal-notice,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospect-modal-actions,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospects-error,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div:has(textarea) {
+  grid-column: 1 / -1;
+}
+
+/* Inputs LED */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form input,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form select,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form textarea {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  min-height: 48px;
+  padding: 12px 16px;
+  color: #ffffff;
+  width: 100%;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.9), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form input:focus,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form select:focus,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form textarea:focus {
+  background: #050505;
+  border-color: rgba(243, 101, 23, 0.8);
+  outline: none;
+  box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.9), inset -2px -2px 5px rgba(255, 255, 255, 0.02), 0 0 12px rgba(243, 101, 23, 0.3);
+}
+
+/* Foco LED Naranja en Etiquetas */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form label {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  color: #94a3b8;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 8px;
+  transition: color 200ms ease;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form label::before {
+  content: '';
+  display: block;
+  width: 6px;
+  height: 6px;
+  flex: 0 0 6px;
+  border-radius: 50%;
+  background: #334155;
+  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+  transition: all 200ms ease;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form div:hover > label::before,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form div:focus-within > label::before {
+  background: #f36517;
+  box-shadow: 0 0 8px rgba(243, 101, 23, 0.8);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form div:hover > label,
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form div:focus-within > label {
+  color: #cbd5e1;
+}
+
+/* Tarjetas de Conceptos (Dinámicos) */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .panel-heading {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding-bottom: 16px;
+  border-bottom: 2px solid rgba(0,0,0,0.4);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .panel-heading h4 {
+  margin: 0;
+  color: #f36517;
+  font-size: 14px;
+  text-transform: uppercase;
+  letter-spacing: 0.15em;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .panel-heading button {
+  min-height: 36px;
+  padding: 0 16px;
+  background: #111214;
+  border: 1px solid #2a2c30;
+  border-radius: 10px;
+  color: #cbd5e1;
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: 2px 2px 6px rgba(0,0,0,0.6), inset 1px 1px 2px rgba(255,255,255,0.05);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div:not(.panel-heading) {
+  background: #1e2024;
+  border: 2px solid #2a2c30;
+  border-radius: 20px;
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 20px;
+  align-items: end;
+  box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.4), inset 1px 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > strong:first-child {
+  grid-column: 1 / -1;
+  color: #f36517;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  padding-bottom: 8px;
+  border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(1),
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(2) {
+  grid-column: 1 / -1;
+}
+
+/* Pantalla Digital de Importe (Verde) */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(5) {
+  background: #0a0a0c;
+  padding: 10px 16px;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.9);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  min-height: 48px;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(5) label::before {
+  display: none;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(5) span {
+  color: #01b478;
+  font-weight: 800;
+  font-size: 15px;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > button {
+  grid-column: 1 / -1;
+  justify-self: end;
+  min-height: 36px;
+  padding: 0 16px;
+  background: transparent;
+  border: none;
+  color: #ad0000;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+/* Totales (Display Final Verde) */
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospect-modal-notice {
+  background: #0a0a0c;
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 20px;
+  padding: 24px 32px;
+  margin-top: 10px;
+  text-align: right;
+  box-shadow: inset 6px 6px 15px rgba(0, 0, 0, 0.9), inset -2px -2px 5px rgba(255, 255, 255, 0.02);
+  color: #94a3b8;
+  font-size: 13px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-left: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospect-modal-notice strong {
+  color: #ffffff;
+  font-size: 15px;
+  margin-left: 6px;
+  margin-right: 12px;
+}
+
+.prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > div.prospect-modal-notice strong:last-child {
+  color: #01b478;
+  font-size: 18px;
+  margin-right: 0;
+  text-shadow: 0 0 10px rgba(1, 180, 120, 0.4);
 }
 
 /* =========================================================
@@ -672,12 +1160,12 @@
     border-radius: 24px;
     padding: 30px 24px;
   }
-  
+
   .prospect-action-grid,
   .prospect-detail-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .prospect-detail-full {
     grid-column: auto;
   }
@@ -706,8 +1194,239 @@
     padding: 24px;
   }
 
+  .prospect-modal-body,
+  .prospect-modal-body > div:not(:last-child):not(.prospect-modal-notice) {
+    grid-template-columns: 1fr;
+  }
+
   .prospects-panel-header {
     flex-direction: column;
     align-items: flex-start;
   }
+}
+/* =========================================================
+   PROSPECT DETAIL — COTIZACIONES
+   ========================================================= */
+
+.prospect-quotations-list {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  padding: 30px;
+}
+
+.prospect-quotation-card {
+  padding: 24px;
+  background: #111214;
+  border-radius: 20px;
+  border: 1px solid rgba(0, 0, 0, 0.5);
+  box-shadow:
+    inset 4px 4px 10px rgba(0, 0, 0, 0.9),
+    inset -2px -2px 5px rgba(255, 255, 255, 0.04);
+}
+
+.prospect-quotation-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 18px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.prospect-quotation-header > div {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.prospect-quotation-number {
+  color: #ffffff;
+  font-size: 17px;
+  font-weight: 800;
+}
+
+.prospect-quotation-header strong {
+  padding: 6px 10px;
+  border-radius: 999px;
+  background: rgba(34, 197, 94, 0.12);
+  color: #86efac;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+}
+
+.prospect-quotation-pdf {
+  min-height: 40px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 12px;
+  background: #f36517;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.3);
+  transition: all 160ms ease;
+}
+
+.prospect-quotation-pdf:hover:not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.08);
+}
+
+.prospect-quotation-pdf:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.prospect-quotation-meta {
+  margin-top: 14px;
+  color: #64748b;
+  font-size: 12px;
+}
+
+.prospect-quotation-items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 20px;
+}
+
+.prospect-quotation-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 12px 14px;
+  background: #1e2024;
+  border-radius: 12px;
+}
+
+.prospect-quotation-item > span {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #e2e8f0;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.prospect-quotation-item small {
+  color: #64748b;
+  font-size: 11px;
+  font-weight: 500;
+}
+
+.prospect-quotation-item > strong {
+  color: #ffffff;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.prospect-quotation-totals {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid rgba(255, 255, 255, 0.04);
+}
+
+.prospect-quotation-totals > div {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 30px;
+  min-width: 280px;
+}
+
+.prospect-quotation-totals span {
+  color: #64748b;
+  font-size: 12px;
+}
+
+.prospect-quotation-totals strong {
+  min-width: 120px;
+  color: #e2e8f0;
+  font-size: 13px;
+  text-align: right;
+}
+
+.prospect-quotation-totals .prospect-quotation-total {
+  margin-top: 6px;
+  padding-top: 10px;
+  border-top: 1px solid rgba(243, 101, 23, 0.3);
+}
+
+.prospect-quotation-total span,
+.prospect-quotation-total strong {
+  color: #ffffff;
+  font-size: 16px;
+  font-weight: 800;
+}
+
+@media (max-width: 900px) {
+  .prospect-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .prospect-action-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .prospect-quotation-header {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .prospect-quotation-item {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .prospect-quotation-totals > div {
+    width: 100%;
+    min-width: 0;
+  }
+}
+
+/* =========================================================
+   PROSPECT DETAIL — ORDEN DEL EXPEDIENTE
+   ========================================================= */
+
+.prospect-detail-page {
+  display: flex;
+  flex-direction: column;
+}
+
+.prospect-detail-page > .prospects-hero {
+  order: 1;
+}
+
+.prospect-detail-page > .prospect-actions-panel {
+  order: 2;
+}
+
+.prospect-detail-page > .prospect-overview-panel {
+  order: 3;
+}
+
+.prospect-detail-page > .prospect-related-panel {
+  order: 4;
+}
+
+.prospect-detail-page > .prospect-actions-panel .prospects-panel-header,
+.prospect-detail-page > .prospect-overview-panel .prospects-panel-header,
+.prospect-detail-page > .prospect-related-panel .prospects-panel-header {
+  min-height: 88px;
 }

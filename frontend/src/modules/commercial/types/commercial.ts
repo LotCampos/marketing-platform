@@ -158,7 +158,7 @@ export interface Opportunity {
 
 export interface CreateOpportunityInput {
   opportunity_number: string
-  prospect_id?: string | null
+  prospect?: string | null
   service_request_id?: string | null
   client_id?: string | null
   title: string
@@ -170,8 +170,8 @@ export interface CreateOpportunityInput {
 export interface CreateQuotationItemInput {
   service_catalog_id: string
   description: string
-  quantity: string
-  unit_price: string
+  quantity: number
+  unit_price: number
 }
 
 export interface CreateQuotationInput {
@@ -182,7 +182,6 @@ export interface CreateQuotationInput {
   valid_until?: string | null
   currency?: string
   notes?: string | null
-  tax_percentage?: string
   items: CreateQuotationItemInput[]
 }
 
@@ -191,8 +190,8 @@ export interface QuotationItem {
   quotation_id: string
   service_catalog_id: string
   description: string
-  quantity: string
-  unit_price: string
+  quantity: number
+  unit_price: number
   line_total: string
   version_lock: number
   created_at: string

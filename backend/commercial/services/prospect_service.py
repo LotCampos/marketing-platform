@@ -55,7 +55,6 @@ class ProspectService:
         },
         ProspectStatus.QUALIFIED: {
             ProspectStatus.QUOTED,
-            ProspectStatus.WON,
             ProspectStatus.LOST,
         },
         ProspectStatus.QUOTED: {

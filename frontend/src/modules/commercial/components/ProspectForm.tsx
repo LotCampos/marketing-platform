@@ -575,7 +575,7 @@ export default function ProspectForm({
             Cancelar
           </button>
 
-          <button type="button" className="form-primary-action" disabled={!canSubmit || isPending} aria-live="polite"
+          <button type="submit" className="form-primary-action" disabled={!canSubmit || isPending} aria-live="polite"
           >
             {isPending ? (
               <> Registrando...</>) : (<>Crear prospecto</>)}

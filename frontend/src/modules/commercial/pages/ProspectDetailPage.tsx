@@ -7,15 +7,20 @@ import {
   changeProspectStatus,
   getIdentityUsers,
   getInstallation,
+  getOpportunities,
   getProspect,
+  getQuotationPdf,
+  getQuotations,
 } from '../../../infrastructure/api/commercialApi'
 
 import type {
-  IdentityUser,
   Installation,
+  Opportunity,
   Prospect,
   ProspectStatus,
+  Quotation,
 } from '../types/commercial'
+import type { IdentityUser } from '../../../infrastructure/api/identity/identityApi'
 
 import ProspectInstallationModal from '../components/prospect/ProspectInstallationModal'
 import ProspectOpportunityModal from '../components/prospect/ProspectOpportunityModal'
@@ -55,6 +60,29 @@ export default function ProspectDetailPage() {
     queryFn: async () => {
       const response = await getIdentityUsers()
       return response.results
+    },
+  })
+
+  const opportunitiesQuery = useQuery({
+    queryKey: ['commercial', 'opportunities'],
+    queryFn: getOpportunities,
+  })
+
+  const quotationsQuery = useQuery({
+    queryKey: ['commercial', 'quotations'],
+    queryFn: getQuotations,
+  })
+
+  const pdfMutation = useMutation({
+    mutationFn: (quotationId: string) => getQuotationPdf(quotationId),
+    onSuccess: (blob) => {
+      const objectUrl = URL.createObjectURL(blob)
+      const link = document.createElement('a')
+      link.href = objectUrl
+      link.target = '_blank'
+      link.rel = 'noopener noreferrer'
+      link.click()
+      window.setTimeout(() => URL.revokeObjectURL(objectUrl), 60_000)
     },
   })
 
@@ -110,6 +138,26 @@ export default function ProspectDetailPage() {
   const prospect = query.data
   const opportunityEnabled = prospect.status === 'CONTACTED' || prospect.status === 'QUALIFIED'
   const quotationEnabled = prospect.status === 'QUALIFIED' || prospect.status === 'QUOTED'
+
+  const opportunities: Opportunity[] = opportunitiesQuery.data?.results ?? []
+  const quotations: Quotation[] = quotationsQuery.data?.results ?? []
+
+  const prospectOpportunities = opportunities.filter(
+    (opportunity) => opportunity.prospect === prospect.id,
+  )
+
+  const prospectOpportunityIds = new Set(
+    prospectOpportunities.map((opportunity) => opportunity.id),
+  )
+
+  const prospectQuotations = quotations
+    .filter((quotation) => prospectOpportunityIds.has(quotation.opportunity_id))
+    .sort(
+      (a, b) =>
+        new Date(b.created_at).getTime() -
+        new Date(a.created_at).getTime(),
+    )
+
 
   return (
     <div className="prospect-detail-page">
@@ -178,7 +226,7 @@ export default function ProspectDetailPage() {
             onClick={() => opportunityEnabled && setOpportunityModalOpen(true)}
           >
             <span className="prospect-action-icon" aria-hidden="true">→</span>
-            <span><strong>Oportunidad</strong><small>Crear o consultar la oportunidad comercial del prospecto.</small></span>
+            <span><strong>Nueva oportunidad</strong><small>Crear o consultar la oportunidad comercial del prospecto.</small></span>
           </button>
 
           <button
@@ -195,12 +243,92 @@ export default function ProspectDetailPage() {
 
       <section className="prospects-panel prospect-related-panel">
         <header className="prospects-panel-header">
-          <div><span>EXPEDIENTE</span><h3>Información relacionada</h3></div>
+          <div><span>EXPEDIENTE COMERCIAL</span><h3>Cotizaciones</h3></div>
         </header>
-        <div className="prospect-related-empty">
-          <strong>Sin información relacionada cargada todavía.</strong>
-          <p>Las entidades relacionadas aparecerán aquí conforme formen parte del expediente comercial.</p>
-        </div>
+
+        {quotationsQuery.isLoading || opportunitiesQuery.isLoading ? (
+          <div className="prospect-related-empty">
+            <strong>Cargando cotizaciones...</strong>
+            <p>Consultando las cotizaciones vinculadas al expediente comercial.</p>
+          </div>
+        ) : quotationsQuery.isError || opportunitiesQuery.isError ? (
+          <div className="prospects-error" role="alert">
+            No fue posible cargar las cotizaciones del prospecto.
+          </div>
+        ) : prospectQuotations.length === 0 ? (
+          <div className="prospect-related-empty">
+            <strong>Sin cotizaciones</strong>
+            <p>Las cotizaciones creadas para este prospecto aparecerán aquí.</p>
+          </div>
+        ) : (
+          <div className="prospect-quotations-list">
+            {prospectQuotations.map((quotation) => (
+              <article key={quotation.id} className="prospect-quotation-card">
+                <div className="prospect-quotation-header">
+                  <div>
+                    <span className="prospect-quotation-number">
+                      {quotation.quotation_number}
+                    </span>
+                    <strong>EMITIDA</strong>
+                  </div>
+                  <button
+                    type="button"
+                    className="prospect-quotation-pdf"
+                    disabled={pdfMutation.isPending}
+                    onClick={() => pdfMutation.mutate(quotation.id)}
+                  >
+                    {pdfMutation.isPending ? 'Generando PDF...' : 'Ver PDF'}
+                  </button>
+                </div>
+
+                <div className="prospect-quotation-meta">
+                  Creada: {new Date(quotation.created_at).toLocaleDateString('es-MX')}
+                </div>
+
+                <div className="prospect-quotation-items">
+                  {quotation.items.map((item) => (
+                    <div key={item.id} className="prospect-quotation-item">
+                      <span>
+                        {item.description}
+                        <small>
+                          {item.quantity} × ${Number(item.unit_price).toLocaleString('es-MX')}
+                        </small>
+                      </span>
+                      <strong>${Number(item.line_total).toLocaleString('es-MX', {
+                        minimumFractionDigits: 2,
+                        maximumFractionDigits: 2,
+                      })}</strong>
+                    </div>
+                  ))}
+                </div>
+
+                <div className="prospect-quotation-totals">
+                  <div>
+                    <span>Subtotal</span>
+                    <strong>${Number(quotation.subtotal).toLocaleString('es-MX', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}</strong>
+                  </div>
+                  <div>
+                    <span>IVA 16%</span>
+                    <strong>${Number(quotation.tax_amount).toLocaleString('es-MX', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}</strong>
+                  </div>
+                  <div className="prospect-quotation-total">
+                    <span>Total</span>
+                    <strong>${Number(quotation.total_amount).toLocaleString('es-MX', {
+                      minimumFractionDigits: 2,
+                      maximumFractionDigits: 2,
+                    })}</strong>
+                  </div>
+                </div>
+              </article>
+            ))}
+          </div>
+        )}
       </section>
 
       <ProspectInstallationModal prospect={prospect} open={installationModalOpen} onClose={() => setInstallationModalOpen(false)} />

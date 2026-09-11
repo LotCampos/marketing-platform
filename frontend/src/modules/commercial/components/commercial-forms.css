@@ -18,7 +18,6 @@
 
 .app-form {
   position: relative;
-  margin: 35px auto;
   background: var(--form-surface);
   border: 6px solid #2a2c30;
     border-radius: 32px;

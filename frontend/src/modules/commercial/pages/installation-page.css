@@ -7,6 +7,9 @@
   display: flex;
   flex-direction: column;
   gap: 24px;
+  width: 100%;
+  max-width: 1680px;
+  margin: 0 auto;
 }
 
 /* =========================================================
@@ -18,24 +21,19 @@
   display: flex;
   align-items: flex-end;
   justify-content: space-between;
-  gap: 24px;
+  gap: 28px;
+  margin-bottom: 24px;
   padding: 40px 30px;
-  
-  /* Fondo oscuro y borde de hardware */
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 32px;
-  
-  /* Sombras pesadas para dar volumen */
-  box-shadow: 
+  box-shadow:
     inset 10px 10px 20px rgba(0, 0, 0, 0.8),
     inset -4px -4px 10px rgba(255, 255, 255, 0.04),
     20px 25px 50px rgba(0, 0, 0, 0.7);
-    
   overflow: hidden;
 }
 
-/* Textura granulada (Noise) */
 .installations-hero::before,
 .installations-panel::before,
 .installation-form-container::before {
@@ -51,19 +49,14 @@
 .installations-hero-content {
   position: relative;
   z-index: 1;
-  max-width: 760px;
 }
 
 .installations-hero-eyebrow,
 .installations-panel-header span,
 .installation-form-header span {
-  position: relative;
-  z-index: 1;
   display: block;
-  margin-bottom: 8px;
-  
-  /* Acento LED Naranja */
-  color: #f36517; 
+  margin-bottom: 10px;
+  color: #f36517;
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.2em;
@@ -72,23 +65,21 @@
 }
 
 .installations-hero h2 {
-  position: relative;
-  z-index: 1;
   margin: 0;
   color: #ffffff;
-  font-size: 34px;
-  line-height: 1.1;
+  font-size: clamp(26px, 3vw, 36px);
   font-weight: 800;
+  line-height: 1.1;
+  letter-spacing: -0.035em;
   text-shadow: 0 4px 10px rgba(0, 0, 0, 0.5);
 }
 
 .installations-hero p {
-  position: relative;
-  z-index: 1;
+  max-width: 720px;
   margin: 14px 0 0;
   color: #94a3b8;
   font-size: 14px;
-  line-height: 1.6;
+  line-height: 1.7;
 }
 
 /* =========================================================
@@ -121,7 +112,7 @@
   gap: 10px;
   color: #ffffff;
   background: #f36517;
-  box-shadow: 
+  box-shadow:
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 2px 2px 5px rgba(255, 255, 255, 0.4),
     inset -3px -3px 5px rgba(139, 28, 0, 0.6);
@@ -137,7 +128,7 @@
 .installations-primary-action:hover:not(:disabled) {
   transform: translateY(-2px);
   filter: brightness(1.1);
-  box-shadow: 
+  box-shadow:
     8px 8px 20px rgba(0, 0, 0, 0.7),
     inset 2px 2px 5px rgba(255, 255, 255, 0.5),
     inset -3px -3px 5px rgba(139, 28, 0, 0.5);
@@ -145,7 +136,7 @@
 
 .installations-primary-action:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: 
+  box-shadow:
     2px 2px 5px rgba(0, 0, 0, 0.6),
     inset 4px 4px 8px rgba(139, 28, 0, 0.6);
 }
@@ -153,7 +144,7 @@
 .installation-secondary-action {
   color: #94a3b8;
   background: #2a2c30;
-  box-shadow: 
+  box-shadow:
     4px 4px 10px rgba(0, 0, 0, 0.5),
     inset 1px 1px 3px rgba(255, 255, 255, 0.1),
     inset -2px -2px 4px rgba(0, 0, 0, 0.4);
@@ -163,7 +154,7 @@
   transform: translateY(-2px);
   color: #ffffff;
   background: #313338;
-  box-shadow: 
+  box-shadow:
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 1px 1px 3px rgba(255, 255, 255, 0.15),
     inset -2px -2px 4px rgba(0, 0, 0, 0.4);
@@ -188,24 +179,22 @@
 .installations-panel,
 .installation-form-container {
   position: relative;
+  overflow: hidden;
+  margin-bottom: 24px;
   background: #1e2024;
   border: 6px solid #2a2c30;
   border-radius: 28px;
-  box-shadow: 
+  box-shadow:
     inset 8px 8px 20px rgba(0, 0, 0, 0.8),
     inset -4px -4px 10px rgba(255, 255, 255, 0.03),
     15px 20px 40px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .installations-panel-header,
 .installation-form-header {
-  position: relative;
-  z-index: 1;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 20px;
   padding: 24px 30px;
   border-bottom: 2px solid #0a0a0a;
   background: rgba(21, 23, 26, 0.6);
@@ -227,7 +216,7 @@
   color: #94a3b8;
   font-size: 11px;
   font-weight: 700;
-  box-shadow: 
+  box-shadow:
     inset 3px 3px 6px rgba(0, 0, 0, 0.9),
     inset -1px -1px 3px rgba(255, 255, 255, 0.05);
 }
@@ -240,6 +229,7 @@
   position: relative;
   z-index: 1;
   overflow-x: auto;
+  padding: 0;
 }
 
 .installations-table {
@@ -282,7 +272,7 @@
 .installations-table tbody tr:hover td {
   background: #0d0e10;
   color: #ffffff;
-  box-shadow: 
+  box-shadow:
     inset 0 1px 0 rgba(255, 255, 255, 0.02),
     inset 0 -1px 0 rgba(243, 101, 23, 0.4); /* Resplandor naranja por debajo */
 }
@@ -348,7 +338,7 @@
   height: 6px;
   flex: 0 0 6px;
   border-radius: 50%;
-  background: #334155; 
+  background: #334155;
   box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
   transition: all 200ms ease;
 }
@@ -375,18 +365,18 @@
 .installation-form-grid textarea {
   width: 100%;
   box-sizing: border-box;
-  
+
   background: #0a0a0c;
   border: 1px solid rgba(255, 255, 255, 0.05); /* Borde sutil */
   border-radius: 12px;
-  
+
   color: #ffffff;
   padding: 14px 16px;
   font: inherit;
   font-size: 13px;
   outline: none;
-  
-  box-shadow: 
+
+  box-shadow:
     inset 4px 4px 10px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.02);
   transition: all 160ms ease;
@@ -408,7 +398,7 @@
 .installation-form-grid textarea:focus {
   background: #050505;
   border-color: rgba(243, 101, 23, 0.8);
-  box-shadow: 
+  box-shadow:
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.02),
     0 0 12px rgba(243, 101, 23, 0.3); /* Resplandor exterior naranja */
@@ -431,15 +421,15 @@
   z-index: 1;
   margin: 0 28px 20px;
   padding: 16px 20px;
-  
+
   background: #1a0f0f;
   border: 1px solid #7f1d1d;
   border-radius: 14px;
-  
+
   color: #fca5a5;
   font-size: 13px;
   font-weight: 600;
-  
+
   box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
 }
 

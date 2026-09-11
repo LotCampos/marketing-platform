@@ -28,7 +28,7 @@ const STATUS_LABELS: Record<ProspectStatus, string> = {
   NEW: 'Nuevo',
   CONTACTED: 'Contactado',
   QUALIFIED: 'Calificado',
-  PROPOSAL: 'Propuesta',
+  QUOTED: 'Cotizado',
   WON: 'Ganado',
   LOST: 'Perdido',
   CONVERTED: 'Convertido',

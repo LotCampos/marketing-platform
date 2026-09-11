@@ -21,17 +21,16 @@ const navigation: NavigationItem[] = [
     path: '/commercial/prospects',
   },
   {
+    label: 'Instalaciones',
+    path: '/commercial/installations',
+  },
+  {
     label: 'Oportunidades',
     path: '/commercial/opportunities',
   },
   {
     label: 'Cotizaciones',
     path: '/commercial/quotations',
-  },
-
-  {
-    label: 'Instalaciones',
-    path: '/commercial/installations',
   },
 ]
 

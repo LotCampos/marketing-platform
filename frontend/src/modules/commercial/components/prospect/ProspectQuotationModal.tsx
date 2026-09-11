@@ -19,7 +19,7 @@ interface ProspectQuotationModalProps {
 interface DraftItem extends CreateQuotationItemInput { key: string }
 
 function createEmptyItem(): DraftItem {
-  return { key: crypto.randomUUID(), service_catalog_id: '', description: '', quantity: '1', unit_price: '0.00' }
+  return { key: crypto.randomUUID(), service_catalog_id: '', description: '', quantity: 1, unit_price: 0 }
 }
 
 function collectionResults<T>(data: T[] | { results: T[] } | undefined): T[] {
@@ -38,7 +38,6 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
   const [opportunityId, setOpportunityId] = useState('')
   const [validUntil, setValidUntil] = useState('')
   const [currency, setCurrency] = useState('MXN')
-  const [taxPercentage, setTaxPercentage] = useState('16.00')
   const [notes, setNotes] = useState('')
   const [items, setItems] = useState<DraftItem[]>([createEmptyItem()])
 
@@ -51,8 +50,8 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
   )
   const serviceCatalog = useMemo(() => collectionResults<ServiceCatalog>(serviceCatalogQuery.data), [serviceCatalogQuery.data])
   const selectedOpportunity = opportunities.find((item) => item.id === opportunityId)
-  const subtotal = useMemo(() => items.reduce((sum, item) => sum + Number(item.quantity || 0) * Number(item.unit_price || 0), 0), [items])
-  const tax = subtotal * (Number(taxPercentage || 0) / 100)
+  const subtotal = useMemo(() => items.reduce((sum, item) => sum + item.quantity * item.unit_price, 0), [items])
+  const tax = subtotal * 0.16
   const total = subtotal + tax
 
   const createMutation = useMutation({
@@ -70,7 +69,6 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
     setOpportunityId('')
     setValidUntil('')
     setCurrency('MXN')
-    setTaxPercentage('16.00')
     setNotes('')
     setItems([createEmptyItem()])
   }
@@ -96,7 +94,6 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
       valid_until: validUntil || null,
       currency: currency.trim().toUpperCase(),
       notes: notes.trim() || null,
-      tax_percentage: taxPercentage,
       items: items.map(({ key, ...item }) => { void key; return item }),
     }
     createMutation.mutate(payload)
@@ -124,7 +121,7 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
               <div><label htmlFor="prospect-quotation-opportunity">Oportunidad</label><select id="prospect-quotation-opportunity" value={opportunityId} onChange={(event) => setOpportunityId(event.target.value)} required><option value="">Seleccionar oportunidad</option>{opportunities.map((opportunity) => <option key={opportunity.id} value={opportunity.id}>{opportunity.opportunity_number} — {opportunity.title}</option>)}</select></div>
               <div><label htmlFor="prospect-quotation-valid-until">Vigencia</label><input id="prospect-quotation-valid-until" type="date" value={validUntil} onChange={(event) => setValidUntil(event.target.value)} /></div>
               <div><label htmlFor="prospect-quotation-currency">Moneda</label><input id="prospect-quotation-currency" value={currency} maxLength={3} onChange={(event) => setCurrency(event.target.value.toUpperCase())} required /></div>
-              <div><label htmlFor="prospect-quotation-tax">IVA %</label><input id="prospect-quotation-tax" type="number" min="0" max="100" step="0.01" value={taxPercentage} onChange={(event) => setTaxPercentage(event.target.value)} required /></div>
+              <div><label htmlFor="prospect-quotation-tax">IVA %</label><input id="prospect-quotation-tax" type="number" value="16" readOnly aria-readonly="true" /></div>
               <div><label htmlFor="prospect-quotation-notes">Notas</label><textarea id="prospect-quotation-notes" value={notes} onChange={(event) => setNotes(event.target.value)} /></div>
 
               <section>
@@ -134,9 +131,9 @@ export default function ProspectQuotationModal({ prospect, open, onClose }: Pros
                     <strong>Concepto {index + 1}</strong>
                     <div><label>Servicio</label><select value={item.service_catalog_id} onChange={(event) => handleServiceChange(item.key, event.target.value)} required><option value="">Seleccionar servicio</option>{serviceCatalog.map((service) => <option key={service.id} value={service.id}>{service.service_code} — {service.service_name}</option>)}</select></div>
                     <div><label>Descripción</label><input value={item.description} onChange={(event) => updateItem(item.key, 'description', event.target.value)} required /></div>
-                    <div><label>Cantidad</label><input type="number" min="0.0001" step="0.001" value={item.quantity} onChange={(event) => updateItem(item.key, 'quantity', event.target.value)} required /></div>
-                    <div><label>Precio unitario</label><input type="number" min="0" step="0.01" value={item.unit_price} onChange={(event) => updateItem(item.key, 'unit_price', event.target.value)} required /></div>
-                    <div><label>Importe</label><span>{(Number(item.quantity || 0) * Number(item.unit_price || 0)).toFixed(2)}</span></div>
+                    <div><label>Cantidad</label><input type="number" min="1" step="1" value={item.quantity} onChange={(event) => updateItem(item.key, 'quantity', event.target.value)} required /></div>
+                    <div><label>Precio unitario</label><input type="number" min="0" step="1" value={item.unit_price} onChange={(event) => updateItem(item.key, 'unit_price', event.target.value)} required /></div>
+                    <div><label>Importe</label><span>{(item.quantity * item.unit_price).toFixed(2)}</span></div>
                     <button type="button" onClick={() => setItems((current) => current.length === 1 ? current : current.filter((entry) => entry.key !== item.key))} disabled={items.length === 1}>Eliminar</button>
                   </div>
                 ))}

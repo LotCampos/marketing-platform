@@ -12,14 +12,15 @@ from ..repositories import QuotationItemRepository, QuotationRepository
 
 
 MONEY_QUANTUM = Decimal("0.01")
+IVA_PERCENTAGE = Decimal("16.00")
 
 
 @dataclass(frozen=True)
 class QuotationItemCreateData:
     service_catalog_id: UUID
     description: str
-    quantity: Decimal
-    unit_price: Decimal
+    quantity: int
+    unit_price: int
 
 
 @dataclass(frozen=True)
@@ -31,7 +32,6 @@ class QuotationCreateData:
     valid_until: date | None = None
     currency: str = "MXN"
     notes: str | None = None
-    tax_percentage: Decimal = Decimal("16.00")
     items: tuple[QuotationItemCreateData, ...] = ()
 
 
@@ -45,16 +45,16 @@ class QuotationService:
         return value.quantize(MONEY_QUANTUM, rounding=ROUND_HALF_UP)
 
     @classmethod
-    def _calculate_item_total(cls, quantity: Decimal, unit_price: Decimal) -> Decimal:
-        return cls._money(quantity * unit_price)
+    def _calculate_item_total(cls, quantity: int, unit_price: int) -> Decimal:
+        return cls._money(Decimal(quantity) * Decimal(unit_price))
 
     @classmethod
     def _calculate_subtotal(cls, items: tuple[QuotationItemCreateData, ...]) -> Decimal:
         return cls._money(sum((cls._calculate_item_total(item.quantity, item.unit_price) for item in items), Decimal("0")))
 
     @classmethod
-    def _calculate_tax(cls, subtotal: Decimal, tax_percentage: Decimal) -> Decimal:
-        return cls._money(subtotal * tax_percentage / Decimal("100"))
+    def _calculate_tax(cls, subtotal: Decimal) -> Decimal:
+        return cls._money(subtotal * IVA_PERCENTAGE / Decimal("100"))
 
     @classmethod
     def _calculate_total(cls, subtotal: Decimal, tax_amount: Decimal) -> Decimal:
@@ -69,13 +69,10 @@ class QuotationService:
             raise ValidationError({"quotation_number": "Quotation number is required."})
         if not currency:
             raise ValidationError({"currency": "Currency is required."})
-        if len(currency) != 3:
-            raise ValidationError({"currency": "Currency must contain exactly 3 characters."})
+        if currency != "MXN":
+            raise ValidationError({"currency": "Currency must be MXN."})
         if not data.items:
             raise ValidationError({"items": "At least one quotation item is required."})
-        if data.tax_percentage < 0:
-            raise ValidationError({"tax_percentage": "Tax percentage cannot be negative."})
-
         for index, item in enumerate(data.items):
             if item.quantity <= 0:
                 raise ValidationError({f"items[{index}].quantity": "Quantity must be greater than zero."})
@@ -113,7 +110,7 @@ class QuotationService:
             raise ValidationError({"quotation_number": "A quotation with this number already exists."})
 
         subtotal = self._calculate_subtotal(data.items)
-        tax_amount = self._calculate_tax(subtotal, data.tax_percentage)
+        tax_amount = self._calculate_tax(subtotal)
         total_amount = self._calculate_total(subtotal, tax_amount)
         notes = data.notes.strip() if data.notes is not None else None
         if notes == "":
