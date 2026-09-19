@@ -140,6 +140,160 @@ class QuotationItem(CommercialBaseModel):
         return self.description
 
 
+class CommercialComponentType(UICadoBaseModel):
+    updated_at = None
+    code = models.CharField(max_length=50, db_column="code")
+    name = models.CharField(max_length=150, db_column="name")
+    description = models.TextField(db_column="description", null=True, blank=True)
+    is_active = models.BooleanField(db_column="is_active", default=True)
+
+    class Meta:
+        db_table = "commercial_component_types"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["code"],
+                name="commercial_component_types_code_uk",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return self.name
+
+
+class CommercialClauseTemplate(UICadoBaseModel):
+    updated_at = None
+    code = models.CharField(max_length=100, db_column="code")
+    name = models.CharField(max_length=200, db_column="name")
+    version = models.PositiveIntegerField(db_column="version")
+    component_type = models.ForeignKey(
+        CommercialComponentType,
+        on_delete=models.PROTECT,
+        db_column="component_type_id",
+        related_name="clause_templates",
+    )
+    treatment = models.CharField(max_length=30, db_column="treatment")
+    template_text = models.TextField(db_column="template_text")
+    is_active = models.BooleanField(db_column="is_active", default=True)
+    effective_from = models.DateTimeField(
+        db_column="effective_from",
+        auto_now_add=False,
+    )
+    effective_until = models.DateTimeField(
+        db_column="effective_until",
+        null=True,
+        blank=True,
+    )
+    content_hash = models.CharField(max_length=64, db_column="content_hash")
+    created_by = models.UUIDField(
+        db_column="created_by",
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        db_table = "commercial_clause_templates"
+        constraints = [
+            models.UniqueConstraint(
+                fields=["code", "version"],
+                name="commercial_clause_templates_code_version_uk",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    treatment__in=[
+                        "INCLUDED",
+                        "ADDITIONAL",
+                        "INFORMATIVE",
+                    ]
+                ),
+                name="commercial_clause_templates_treatment_ck",
+            ),
+            models.CheckConstraint(
+                check=models.Q(version__gte=1),
+                name="commercial_clause_templates_version_ck",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return f"{self.code} v{self.version}"
+
+
+class QuotationComponent(CommercialBaseModel):
+    quotation_id = models.UUIDField(db_column="quotation_id")
+    component_type = models.ForeignKey(
+        CommercialComponentType,
+        on_delete=models.PROTECT,
+        db_column="component_type_id",
+        related_name="quotation_components",
+    )
+    treatment = models.CharField(max_length=30, db_column="treatment")
+    amount = models.DecimalField(
+        max_digits=14,
+        decimal_places=2,
+        db_column="amount",
+        default=Decimal("0"),
+    )
+    display_mode = models.CharField(max_length=30, db_column="display_mode")
+    clause_template = models.ForeignKey(
+        CommercialClauseTemplate,
+        on_delete=models.PROTECT,
+        db_column="clause_template_id",
+        related_name="quotation_components",
+        null=True,
+        blank=True,
+    )
+    clause_version = models.PositiveIntegerField(
+        db_column="clause_version",
+        null=True,
+        blank=True,
+    )
+    clause_text_snapshot = models.TextField(
+        db_column="clause_text_snapshot",
+        null=True,
+        blank=True,
+    )
+
+    class Meta:
+        db_table = "quotation_components"
+        constraints = [
+            models.CheckConstraint(
+                check=models.Q(
+                    treatment__in=[
+                        "INCLUDED",
+                        "ADDITIONAL",
+                        "INFORMATIVE",
+                    ]
+                ),
+                name="quotation_components_treatment_ck",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    display_mode__in=[
+                        "LINE_ITEM",
+                        "CLAUSE",
+                        "HIDDEN",
+                    ]
+                ),
+                name="quotation_components_display_mode_ck",
+            ),
+            models.CheckConstraint(
+                check=models.Q(amount__gte=0),
+                name="quotation_components_amount_ck",
+            ),
+            models.CheckConstraint(
+                check=models.Q(
+                    display_mode="CLAUSE",
+                    clause_template__isnull=False,
+                    clause_version__isnull=False,
+                    clause_text_snapshot__isnull=False,
+                ) | ~models.Q(display_mode="CLAUSE"),
+                name="quotation_components_clause_consistency_ck",
+            ),
+        ]
+
+    def __str__(self) -> str:
+        return str(self.id)
+
+
 class Agreement(CommercialBaseModel):
     agreement_number = models.CharField(max_length=50, db_column="agreement_number")
     quotation_id = models.UUIDField(db_column="quotation_id")

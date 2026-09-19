@@ -1,7 +1,11 @@
 from django.urls import include, path
+
 from rest_framework.routers import DefaultRouter
 
 from .views import (
+    CommercialDashboardView,
+    CommercialComponentTypeViewSet,
+    CommercialClauseTemplateViewSet,
     AgreementTermViewSet,
     AgreementViewSet,
     CapacityAssessmentViewSet,
@@ -14,6 +18,18 @@ from .views import (
 
 
 router = DefaultRouter()
+
+router.register(
+    "component-types",
+    CommercialComponentTypeViewSet,
+    basename="commercial-component-type",
+)
+
+router.register(
+    "clause-templates",
+    CommercialClauseTemplateViewSet,
+    basename="commercial-clause-template",
+)
 
 router.register(
     "service-requests",
@@ -65,5 +81,6 @@ router.register(
 
 
 urlpatterns = [
+    path("dashboard/", CommercialDashboardView.as_view()),
     path("", include(router.urls)),
 ]

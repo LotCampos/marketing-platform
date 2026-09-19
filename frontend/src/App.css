@@ -1,5 +1,6 @@
 /* =========================================================
    UI-CADO — APPLICATION SHELL
+   App.css
    ========================================================= */
 
 .application-shell {
@@ -7,26 +8,29 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-
-  background:
+  background-color: #0a0a0a;
+  background-image:
     radial-gradient(
       circle at 90% 5%,
-      rgba(249, 115, 22, 0.035),
+      rgba(243, 101, 23, 0.04),
       transparent 28rem
     ),
-    linear-gradient(
-      135deg,
-      #f8fafc 0%,
-      #f3f4f6 100%
-    );
-
-  color: var(--slate-800);
+    var(--noise-texture);
+  background-attachment: fixed;
+  background-blend-mode: overlay;
+  color: #cbd5e1;
 }
+
+/* =========================================================
+   CONTENT & MAIN LAYOUT
+   ========================================================= */
 
 .application-content {
   width: 100%;
   min-width: 0;
   flex: 1;
+  display: flex;
+  flex-direction: column;
 }
 
 .application-main {

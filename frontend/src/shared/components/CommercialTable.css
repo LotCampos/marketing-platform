@@ -1,158 +1,147 @@
 /* =========================================================
    CommercialTable (3D Textured / Dark Neumorphic)
-   Shared table component for Commercial module
+   CommercialTable.css
    ========================================================= */
 
 .table-container {
   position: relative;
   width: 100%;
   overflow-x: auto;
-  
-  /* Fondo oscuro como el resto de la UI */
-  background-color: #1e2024;
-  
-  /* Borde grueso de material físico */
-  border: 6px solid #2a2c30;
-  border-radius: 30px;
-  
-  /* Efecto de placa profunda y pesada */
-  box-shadow: 
-    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
-    15px 20px 40px rgba(0, 0, 0, 0.6);
+  background: var(--surface-base);
+  border: var(--border-card-3d);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-panel-standard);
 }
 
-/* Textura granulada (Noise) para el contenedor de la tabla */
 .table-container::before {
   content: '';
   position: absolute;
-  /* Usamos min-width para que la textura cubra todo aunque la tabla haga scroll */
-  min-width: 100%;
-  height: 100%;
-  top: 0;
-  left: 0;
-  border-radius: 22px; /* Un poco menos que el contenedor por el borde */
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--noise-texture);
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 0;
 }
 
-.commercial-table {
+.commercial-table,
+.installations-table,
+.opportunities-table,
+.prospects-panel table {
   position: relative;
-  z-index: 1; /* Por encima de la textura */
+  z-index: 1;
   width: 100%;
   min-width: 760px;
-  border-collapse: separate;
+  border-collapse: collapse;
   border-spacing: 0;
   font-size: 13px;
-  color: #94a3b8; /* Texto gris claro para leer en fondo oscuro */
+  color: #94a3b8; 
 }
 
 /* =========================================================
-   HEADERS (Efecto hundido/grabado)
+   ENCABEZADOS LIMPIOS Y CONTINUOS (SIN BLOQUES SEPARADOS)
    ========================================================= */
-.commercial-table thead th {
-  padding: 18px 16px;
-  
-  /* Fondo más oscuro para el header (ahuecado) */
-  background: rgba(21, 23, 26, 0.8);
-  
-  /* Línea divisoria oscura simulando un corte en el material */
+
+.commercial-table thead,
+.installations-table thead,
+.opportunities-table thead,
+.prospects-panel table thead {
+  background: rgba(15, 16, 18, 0.6);
   border-bottom: 2px solid #0a0a0a;
-  
-  color: #f36517; /* Acento naranja */
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-  
-  /* Sombra interna para separar el header del cuerpo y sombra de texto */
-  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
+}
+
+.commercial-table thead th,
+.installations-table th,
+.opportunities-table th,
+.prospects-panel table th {
+  padding: 16px 20px !important;
+  background: transparent !important;
+  border: none !important;
+  border-bottom: 2px solid #0a0a0a !important;  
+  color: var(--orange-500) !important; 
+  font-size: 11px !important;
+  font-weight: 850 !important;
+  letter-spacing: 0.15em !important;
+  text-align: left !important;
+  text-transform: uppercase !important;
+  white-space: nowrap !important;
+  box-shadow: none !important;
+  text-shadow: 0 0 8px rgba(243, 101, 23, 0.3) !important;
 }
 
 /* =========================================================
-   BODY CELLS
+   CELDAS Y FILAS HOMOGÉNEAS
    ========================================================= */
-.commercial-table tbody td {
-  padding: 16px 16px;
-  
-  /* Línea muy sutil para separar filas, como una ranura en el plástico */
-  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
+
+.commercial-table tbody td,
+.installations-table td,
+.opportunities-table td,
+.prospects-panel table td {
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.5);
   background: transparent;
   vertical-align: middle;
-  
-  /* Luz sutil debajo de la ranura para dar volumen 3D a cada fila */
-  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.02);
+  color: #cbd5e1;
+  font-size: 13px;
 }
 
-.commercial-table tbody tr:last-child td {
+.commercial-table tbody tr:last-child td,
+.installations-table tbody tr:last-child td,
+.opportunities-table tbody tr:last-child td,
+.prospects-panel table tbody tr:last-child td {
   border-bottom: 0;
-  box-shadow: none;
 }
 
-.commercial-table tbody tr {
-  transition: all 200ms ease;
+.commercial-table tbody tr,
+.installations-table tbody tr,
+.opportunities-table tbody tr,
+.prospects-panel table tbody tr {
+  transition: background-color 160ms ease, color 160ms ease;
 }
 
-/* Efecto Hover: Las filas se "iluminan" o se elevan ligeramente */
-.commercial-table tbody tr:hover td {
-  background: rgba(42, 44, 48, 0.5); /* Gris un poco más claro */
-  color: #ffffff;
-  /* Resplandor sutil naranja */
-  box-shadow: 
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(243, 101, 23, 0.2); 
+/* HOVER UNIFORME Y ELEGANTE */
+.commercial-table tbody tr:hover td,
+.installations-table tbody tr:hover td,
+.opportunities-table tbody tr:hover td,
+.prospects-panel table tbody tr:hover td {
+  background: rgba(255, 255, 255, 0.03) !important;
+  color: #ffffff !important;
 }
 
 /* =========================================================
-   TYPOGRAPHY & ELEMENTS
+   ELEMENTOS DE TABLA
    ========================================================= */
-.commercial-table .table-primary {
+
+.table-primary {
   font-size: 13px;
   font-weight: 700;
-  color: #ffffff; /* Blanco brillante para destacar */
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.6);
+  color: #ffffff !important;
 }
 
-/* Status Badge convertido en un "botón/píldora" 3D */
 .status-badge {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 6px 12px;
+  padding: 6px 14px;
   border: none;
   border-radius: 999px;
-  
-  /* Color base de la píldora */
-  background: #2a2c30;
-  color: #f36517; /* Por defecto naranja si es activo/positivo */
-  
+  background: var(--surface-sunken);
+  color: var(--orange-500);
   font-size: 10px;
-  font-weight: 800;
+  font-weight: 850;
   letter-spacing: 0.08em;
   line-height: 1;
   text-transform: uppercase;
   white-space: nowrap;
-  
-  /* Magia 3D para la píldora */
   box-shadow: 
-    4px 4px 8px rgba(0, 0, 0, 0.6), /* Sombra exterior */
-    inset 1px 1px 2px rgba(255, 255, 255, 0.1), /* Brillo superior */
-    inset -2px -2px 4px rgba(0, 0, 0, 0.5); /* Sombra inferior interna */
+    inset 2px 2px 5px rgba(0, 0, 0, 0.8),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.03);
 }
 
-/* Variación neutral del Badge (luces apagadas) */
 .status-neutral {
-  background: #1e2024;
+  background: var(--surface-base);
   color: #64748b;
-  /* Hundido en lugar de sobresaliente */
-  box-shadow: 
-    inset 3px 3px 6px rgba(0, 0, 0, 0.8),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.03);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8);
 }
 
 .empty-state {
@@ -162,20 +151,16 @@
   color: #64748b;
   text-align: center;
   font-weight: 600;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.5);
 }
 
 /* =========================================================
    RESPONSIVE
    ========================================================= */
+
 @media (max-width: 900px) {
   .table-container {
     border-radius: 20px;
     border-width: 4px;
-  }
-  
-  .table-container::before {
-    border-radius: 16px;
   }
 
   .commercial-table {
@@ -184,6 +169,6 @@
 
   .commercial-table thead th,
   .commercial-table tbody td {
-    padding: 14px 12px;
+    padding: 14px 12px !important;
   }
 }

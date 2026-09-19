@@ -1,6 +1,5 @@
 /* =========================================================
-   UI-CADO
-   OPPORTUNITIES PAGE (3D Textured / Dark Neumorphic)
+   UI-CADO — OPPORTUNITIES PAGE
    ========================================================= */
 
 .opportunities-page {
@@ -8,12 +7,12 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  max-width: 1680px;
+  max-width: var(--layout-max-width);
   margin: 0 auto;
 }
 
 /* =========================================================
-   HERO (Chasis Principal)
+   HERO BANNER
    ========================================================= */
 
 .opportunities-hero {
@@ -23,14 +22,11 @@
   justify-content: space-between;
   gap: 28px;
   margin-bottom: 24px;
-  padding: 40px 30px;
-  background: #1e2024;
-  border: 6px solid #2a2c30;
+  padding: 40px 32px;
+  background: var(--surface-base);
+  border: var(--border-panel-3d);
   border-radius: 32px;
-  box-shadow:
-    inset 10px 10px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.04),
-    20px 25px 50px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--shadow-panel-hero);
   overflow: hidden;
 }
 
@@ -39,7 +35,7 @@
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  background-image: var(--noise-texture);
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 0;
@@ -53,7 +49,7 @@
 .opportunities-hero > div:first-child > span {
   display: block;
   margin-bottom: 10px;
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.2em;
@@ -80,18 +76,16 @@
 }
 
 /* =========================================================
-   SUMMARY (Pantalla digital hundida)
+   SUMMARY DISPLAY
    ========================================================= */
 
 .opportunities-summary {
   min-width: 115px;
   padding: 16px;
-  background: #111214;
+  background: var(--surface-sunken);
   border-radius: 18px;
   border: none;
-  box-shadow:
-    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
-    inset -3px -3px 6px rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow-input-sunken);
 }
 
 .opportunities-summary small {
@@ -113,27 +107,17 @@
 }
 
 /* =========================================================
-   PANEL (Contenedor de tabla)
+   PANELS & HEADINGS
    ========================================================= */
 
 .opportunities-panel {
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
-  background: #1e2024;
-  border: 6px solid #2a2c30;
-  border-radius: 28px;
-  box-shadow:
-    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
-    15px 20px 40px rgba(0, 0, 0, 0.6);
-}
-
-.opportunities-panel-header,
-.opportunity-detail-grid,
-.opportunity-related-panel {
-  position: relative;
-  z-index: 1; /* Sobre la textura */
+  background: var(--surface-base);
+  border: var(--border-panel-3d);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel-standard);
 }
 
 .opportunities-panel-header {
@@ -149,7 +133,7 @@
 .opportunities-panel-header span {
   display: block;
   margin-bottom: 6px;
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 10px;
   font-weight: 850;
   letter-spacing: 0.15em;
@@ -165,7 +149,7 @@
 
 .opportunities-count {
   padding: 8px 14px;
-  background: #111214;
+  background: var(--surface-sunken);
   border: none;
   border-radius: 999px;
   color: #94a3b8;
@@ -186,7 +170,7 @@
 }
 
 /* =========================================================
-   TABLE
+   TABLE DATA
    ========================================================= */
 
 .opportunities-table-wrapper {
@@ -196,81 +180,23 @@
   padding: 0;
 }
 
-.opportunities-table {
-  width: 100%;
-  border-collapse: separate;
-  border-spacing: 0;
-  min-width: 900px;
-}
-
-.opportunities-table th {
-  padding: 18px 24px;
-  background: rgba(21, 23, 26, 0.8);
-  border-bottom: 2px solid #0a0a0a;
-  color: #f36517;
-  font-size: 11px;
-  font-weight: 800;
-  letter-spacing: 0.1em;
-  text-align: left;
-  text-transform: uppercase;
-  white-space: nowrap;
-  box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.8);
-}
-
-.opportunities-table td {
-  padding: 16px 24px;
-  text-align: left;
-  border-bottom: 1px solid rgba(0, 0, 0, 0.6);
-  font-size: 13px;
-  color: #94a3b8;
-  background: transparent;
-  box-shadow: inset 0 -1px 1px rgba(255, 255, 255, 0.02);
-}
-
-.opportunities-table tbody tr {
-  transition: all 200ms ease;
-}
-
-.opportunities-table tbody tr:hover td {
-  background: rgba(42, 44, 48, 0.5);
-  color: #ffffff;
-  box-shadow:
-    inset 0 1px 0 rgba(255, 255, 255, 0.05),
-    inset 0 -1px 0 rgba(243, 101, 23, 0.2);
-}
 
 /* =========================================================
-   ERROR (Luz de emergencia)
+   ERRORS & NOTICES
    ========================================================= */
 
 .opportunities-error {
   position: relative;
   z-index: 1;
-  /* Panel de error ahuecado estilo luz de emergencia */
   margin-bottom: 24px;
   padding: 16px 20px;
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   background: #1a0f0f;
   border: 1px solid #7f1d1d;
   color: #fca5a5;
   font-size: 13px;
   font-weight: 600;
   box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
-}
-
-.prospect-modal-notice {
-  position: relative;
-  z-index: 1;
-  margin-bottom: 24px;
-  padding: 16px 20px;
-  border-radius: 10px;
-  background: #1f140d;
-  border-left: 4px solid #f36517;
-  color: #fdba74;
-  font-size: 13px;
-  line-height: 1.5;
-  box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.6);
 }
 
 /* =========================================================

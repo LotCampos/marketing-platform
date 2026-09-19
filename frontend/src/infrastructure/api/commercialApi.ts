@@ -16,6 +16,8 @@ import type {
   CreateOpportunityInput,
   CreateProspectInput,
   CreateQuotationInput,
+  CommercialComponentType,
+  CommercialClauseTemplate,
   CreateServiceRequestInput,
   Installation,
   InstallationType,
@@ -170,6 +172,23 @@ export function createQuotation(
   )
 }
 
+export function getCommercialComponentTypes() {
+  return httpGet<
+    CommercialComponentType[] | CommercialCollection<CommercialComponentType>
+  >(
+    `${commercialPath}/component-types/`,
+  )
+}
+
+export function getCommercialClauseTemplates() {
+  return httpGet<
+    CommercialClauseTemplate[] | CommercialCollection<CommercialClauseTemplate>
+  >(
+    `${commercialPath}/clause-templates/`,
+  )
+}
+
+
 export function getQuotationPdf(
   quotationId: string,
 ): Promise<Blob> {
@@ -187,6 +206,72 @@ export function getQuotationItems() {
     CommercialCollection<QuotationItem>
   >(
     `${commercialPath}/quotation-items/`,
+  )
+}
+
+/* =========================================================
+   COMMERCIAL DASHBOARD
+========================================================= */
+
+export interface CommercialDashboard {
+  kpis: {
+    prospects: number
+    opportunities: number
+    quotations: number
+    agreements: number
+    pipeline_opportunities: number
+    pipeline_estimated_value: number
+  }
+  funnel: {
+    prospects: number
+    opportunities: number
+    quotations: number
+    agreements: number
+  }
+  prospect_status: Array<{
+    status: string
+    total: number
+  }>
+  agreement_status: Array<{
+    status: string
+    total: number
+  }>
+  pipeline_by_service: Array<{
+    service_id: string
+    service_code: string | null
+    service_name: string
+    opportunities: number
+    estimated_value: number
+  }>
+  pipeline_by_responsible: Array<{
+    responsible_id: string | null
+    responsible_name: string
+    opportunities: number
+    estimated_value: number
+  }>
+  evolution: {
+    prospects: Array<{
+      period: string
+      total: number
+    }>
+    opportunities: Array<{
+      period: string
+      total: number
+    }>
+    quotations: Array<{
+      period: string
+      total: number
+    }>
+    agreements: Array<{
+      period: string
+      total: number
+    }>
+  }
+}
+
+export function getCommercialDashboard() {
+  return httpGet<CommercialDashboard>(
+    `${commercialPath}/dashboard/`,
   )
 }
 

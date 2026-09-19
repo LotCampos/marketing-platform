@@ -1,6 +1,5 @@
 /* =========================================================
-   UI-CADO
-   QUOTATIONS PAGE (Estilo Monitor LED Interactivo)
+   UI-CADO — QUOTATIONS PAGE
    ========================================================= */
 
 .commercial-page {
@@ -8,12 +7,12 @@
   flex-direction: column;
   gap: 24px;
   width: 100%;
-  max-width: 1680px;
+  max-width: var(--layout-max-width);
   margin: 0 auto;
 }
 
 /* =========================================================
-   PAGE HEADER (Módulo de Mando Superior)
+   PAGE HEADER
    ========================================================= */
 
 .commercial-page .page-header {
@@ -23,23 +22,20 @@
   justify-content: space-between;
   gap: 28px;
   margin-bottom: 24px;
-  padding: 40px 30px;
-  background: #1e2024;
-  border: 6px solid #2a2c30;
+  padding: 40px 32px;
+  background: var(--surface-base);
+  border: var(--border-panel-3d);
   border-radius: 32px;
-  box-shadow: 
-    inset 10px 10px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.04),
-    20px 25px 50px rgba(0, 0, 0, 0.7);
+  box-shadow: var(--shadow-panel-hero);
   overflow: hidden;
 }
 
 .commercial-page .page-header::before,
-.dashboard-panel::before  {
+.dashboard-panel::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  background-image: var(--noise-texture);
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 0;
@@ -54,7 +50,7 @@
 .commercial-page .eyebrow {
   display: block;
   margin-bottom: 10px;
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 11px;
   font-weight: 850;
   letter-spacing: 0.2em;
@@ -81,43 +77,54 @@
 }
 
 /* =========================================================
-   PANELS (Contenedores de Formulario y Listas)
+   PANELS & HEADINGS
    ========================================================= */
 
 .dashboard-panel {
   position: relative;
   overflow: hidden;
   margin-bottom: 24px;
-  background: #1e2024;
-  border: 6px solid #2a2c30;
-  border-radius: 28px;
-  box-shadow: 
-    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
-    15px 20px 40px rgba(0, 0, 0, 0.6);
+  background: var(--surface-base);
+  border: var(--border-panel-3d);
+  border-radius: var(--radius-panel);
+  box-shadow: var(--shadow-panel-standard);
 }
 
 .panel-heading {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
+  gap: 24px;
   padding: 24px 30px;
   border-bottom: 2px solid #0a0a0a;
   background: rgba(21, 23, 26, 0.6);
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
 }
 
-.panel-heading h2, .panel-heading h3 {
+.panel-heading h2, 
+.panel-heading h3 {
   margin: 0;
   color: #ffffff;
   font-size: 18px;
   font-weight: 800;
+  letter-spacing: -0.02em;
 }
 
 .panel-heading p {
   margin: 6px 0 0;
   color: #94a3b8;
   font-size: 13px;
+}
+
+.panel-heading .eyebrow {
+  display: block;
+  margin-bottom: 6px;
+  color: var(--orange-500);
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  text-shadow: 0 0 8px rgba(243, 101, 23, 0.3);
 }
 
 .dashboard-panel > p:not(.panel-heading p) {
@@ -130,7 +137,7 @@
 }
 
 /* =========================================================
-   FORM GRID (Estación de Captura)
+   FORM GRID & LABELS
    ========================================================= */
 
 .commercial-page form {
@@ -142,7 +149,6 @@
   gap: 20px;
 }
 
-/* Contenedor de cada input */
 .commercial-page form > div,
 .commercial-page form section:nth-of-type(1) > div > div {
   display: flex;
@@ -154,10 +160,6 @@
 .commercial-page form > div:has(textarea) {
   grid-column: 1 / -1;
 }
-
-/* =========================================================
-   LABELS (Etiquetas con Foco LED)
-   ========================================================= */
 
 .commercial-page form label {
   display: flex;
@@ -184,12 +186,11 @@
   transition: all 200ms ease;
 }
 
-/* LED Encendido al pasar el mouse o enfocar */
 .commercial-page form > div:hover label::before,
 .commercial-page form > div:focus-within label::before,
 .commercial-page form section:nth-of-type(1) > div > div:hover label::before,
 .commercial-page form section:nth-of-type(1) > div > div:focus-within label::before {
-  background: #f36517;
+  background: var(--orange-500);
   box-shadow: 0 0 8px rgba(243, 101, 23, 0.8);
 }
 
@@ -201,7 +202,7 @@
 }
 
 /* =========================================================
-   INPUTS (Pantallas hundidas Interactivas)
+   INPUTS & DISPLAYS
    ========================================================= */
 
 .commercial-page form input,
@@ -210,29 +211,20 @@
   width: 100%;
   min-height: 48px;
   padding: 12px 16px;
-  
-  /* Fondo casi negro, apagado */
-  background: #0a0a0c;
-  
-  /* Borde oscuro muy tenue */
+  background: var(--surface-sunken);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  
+  border-radius: var(--radius-input);
   color: #ffffff;
   font-size: 13px;
   font-family: inherit;
   outline: none;
-  
-  /* Hueco profundo */
-  box-shadow: 
-    inset 4px 4px 10px rgba(0, 0, 0, 0.9),
-    inset -2px -2px 5px rgba(255, 255, 255, 0.02);
+  box-shadow: var(--shadow-input-sunken);
   transition: all 160ms ease;
 }
 
 .commercial-page form input[readonly] {
   color: #64748b;
-  background: #111214;
+  background: var(--surface-sunken);
   box-shadow: inset 6px 6px 12px rgba(0, 0, 0, 0.9);
   border-color: transparent;
   cursor: not-allowed;
@@ -243,7 +235,6 @@
   resize: vertical;
 }
 
-/* Input Encendido (Focus) */
 .commercial-page form input:focus:not([readonly]),
 .commercial-page form select:focus,
 .commercial-page form textarea:focus {
@@ -252,18 +243,17 @@
   box-shadow: 
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.02),
-    0 0 12px rgba(243, 101, 23, 0.3); /* Resplandor exterior */
+    0 0 12px rgba(243, 101, 23, 0.3);
 }
 
 /* =========================================================
-   CONCEPTOS (Items Dinámicos)
+   DYNAMIC CONCEPT SECTIONS
    ========================================================= */
 
 .commercial-page form > section {
   grid-column: 1 / -1;
 }
 
-/* Wrapper de la lista de conceptos */
 .commercial-page form section:nth-of-type(1) {
   margin-top: 10px;
   display: flex;
@@ -275,22 +265,19 @@
   padding: 0 0 16px;
   background: transparent;
   box-shadow: none;
-  border-bottom: 2px solid rgba(0,0,0,0.4);
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
   margin-bottom: 8px;
 }
 
-/* Tarjeta individual de concepto */
 .commercial-page form section:nth-of-type(1) > div {
-  background: #1e2024;
-  border: 2px solid #2a2c30;
-  border-radius: 20px;
+  background: var(--surface-base);
+  border: 2px solid var(--surface-raised);
+  border-radius: var(--radius-card);
   padding: 24px;
-  
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   gap: 16px;
   align-items: end;
-  
   box-shadow: 
     6px 6px 15px rgba(0, 0, 0, 0.4),
     inset 1px 1px 2px rgba(255, 255, 255, 0.05);
@@ -298,7 +285,7 @@
 
 .commercial-page form section:nth-of-type(1) > div > strong:first-child {
   grid-column: 1 / -1;
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 11px;
   font-weight: 800;
   letter-spacing: 0.15em;
@@ -306,42 +293,35 @@
   margin-bottom: 4px;
 }
 
-/* El bloque de Importe como display digital */
 .commercial-page form section:nth-of-type(1) > div > div:nth-last-child(2) {
-  background: #0a0a0c;
+  background: var(--surface-sunken);
   padding: 10px 16px;
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
+  border-radius: var(--radius-input);
   box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.9);
   display: flex;
   flex-direction: column;
   justify-content: center;
   min-height: 48px;
-  cursor: default; /* Quita el puntero para este display */
+  cursor: default;
 }
 
 .commercial-page form section:nth-of-type(1) > div > div:nth-last-child(2) span {
-  color: #01b478; /* Verde LED para dinero */
+  color: #01b478;
   font-weight: 800;
   font-size: 15px;
 }
 
-/* =========================================================
-   TOTALES (Display final)
-   ========================================================= */
-
 .commercial-page form section:nth-of-type(2) {
-  background: #0a0a0c;
+  background: var(--surface-sunken);
   border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 20px;
+  border-radius: var(--radius-card);
   padding: 24px 32px;
   margin-top: 10px;
-  
   display: flex;
   justify-content: flex-end;
   align-items: center;
   gap: 32px;
-  
   box-shadow: 
     inset 6px 6px 15px rgba(0, 0, 0, 0.9),
     inset -2px -2px 5px rgba(255, 255, 255, 0.02);
@@ -359,38 +339,34 @@
 }
 
 .commercial-page form section:nth-of-type(2) p:last-child {
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 15px;
 }
 
 /* =========================================================
-   BOTONES Y ACCIONES
+   BUTTONS & ACTIONS
    ========================================================= */
 
 .commercial-page button {
   min-height: 48px;
   padding: 0 24px;
-  background: #2a2c30;
+  background: var(--surface-raised);
   color: #94a3b8;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
   letter-spacing: 0.05em;
   cursor: pointer;
-  
-  box-shadow: 
-    4px 4px 10px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+  box-shadow: var(--shadow-button-secondary);
   transition: all 160ms ease;
 }
 
 .commercial-page button:hover:not(:disabled) {
   transform: translateY(-2px);
   color: #ffffff;
-  background: #313338;
+  background: var(--surface-highlight);
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.6), inset 1px 1px 3px rgba(255, 255, 255, 0.15);
 }
 
@@ -399,15 +375,11 @@
   box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5);
 }
 
-/* Botones principales (Submit, Nueva Cotización) */
 .commercial-page .page-header button,
 .commercial-page form > button[type="submit"] {
-  background: #f36517;
+  background: var(--orange-500);
   color: #ffffff;
-  box-shadow: 
-    6px 6px 15px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
-    inset -3px -3px 5px rgba(139, 28, 0, 0.6);
+  box-shadow: var(--shadow-button-primary);
 }
 
 .commercial-page form > button[type="submit"] {
@@ -417,7 +389,7 @@
 
 .commercial-page .page-header button:hover,
 .commercial-page form > button[type="submit"]:hover {
-  background: #ff7b30;
+  background: var(--orange-600);
   box-shadow: 8px 8px 20px rgba(0, 0, 0, 0.7), inset 2px 2px 5px rgba(255, 255, 255, 0.5);
 }
 
@@ -427,17 +399,17 @@
   transform: none;
 }
 
-/* Botón Eliminar en rojo */
 .commercial-page form section:nth-of-type(1) > div button {
   color: #ad0000;
 }
+
 .commercial-page form section:nth-of-type(1) > div button:hover:not(:disabled) {
   background: #ad0000;
   color: #ffffff;
 }
 
 /* =========================================================
-   LISTA DE COTIZACIONES (Tarjetas)
+   LIST & CARDS
    ========================================================= */
 
 .dashboard-panel > div:last-child {
@@ -454,11 +426,9 @@
   align-items: center;
   justify-content: space-between;
   gap: 20px;
-  
-  background: #2a2c30;
+  background: var(--surface-raised);
   padding: 20px 24px;
   border-radius: 18px;
-  
   box-shadow: 
     6px 6px 15px rgba(0, 0, 0, 0.4),
     inset 1px 1px 2px rgba(255, 255, 255, 0.05);
@@ -467,7 +437,7 @@
 
 .commercial-page article:hover {
   transform: translateX(4px);
-  background: #313338;
+  background: var(--surface-highlight);
 }
 
 .commercial-page article > div {
@@ -480,11 +450,11 @@
   flex-direction: row;
   align-items: center;
   gap: 24px;
-  background: #0a0a0c;
+  background: var(--surface-sunken);
   border: 1px solid rgba(255, 255, 255, 0.05);
   padding: 12px 20px;
   border-radius: 12px;
-  box-shadow: inset 4px 4px 10px rgba(0,0,0,0.9);
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.9);
 }
 
 .commercial-page article strong {
@@ -499,12 +469,8 @@
 }
 
 .commercial-page article > div:nth-child(2) strong {
-  color: #01b478; /* Total en verde LED */
+  color: #01b478;
 }
-
-/* =========================================================
-   ERRORES
-   ========================================================= */
 
 .commercial-page p[role="alert"] {
   grid-column: 1 / -1;
@@ -512,10 +478,101 @@
   border: 1px solid #ad0000;
   color: #fca5a5;
   padding: 16px 20px;
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   font-size: 13px;
   font-weight: 600;
   box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
+}
+
+/* =========================================================
+   QUOTATION COMPONENTS
+   ========================================================= */
+
+.commercial-page form .quotation-components-section {
+  margin-top: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.commercial-page form .quotation-components-section .panel-heading {
+  padding: 0 0 16px;
+  background: transparent;
+  box-shadow: none;
+  border-bottom: 2px solid rgba(0, 0, 0, 0.4);
+  margin-bottom: 8px;
+}
+
+.commercial-page form .quotation-components-section .panel-heading p {
+  margin-top: 6px;
+}
+
+.commercial-page form .quotation-component-card {
+  background: var(--surface-base);
+  border: 2px solid var(--surface-raised);
+  border-radius: var(--radius-card);
+  padding: 24px;
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 16px;
+  align-items: end;
+  box-shadow:
+    6px 6px 15px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.commercial-page form .quotation-component-card > strong {
+  grid-column: 1 / -1;
+  color: var(--orange-500);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.15em;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.commercial-page form .quotation-component-card > div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.commercial-page form .quotation-component-card .quotation-component-clause-preview {
+  grid-column: 1 / -1;
+  padding: 14px 16px;
+  background: var(--surface-sunken);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  box-shadow: inset 4px 4px 10px rgba(0, 0, 0, 0.9);
+}
+
+.commercial-page form .quotation-component-card .quotation-component-clause-preview span {
+  color: #94a3b8;
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.commercial-page form .quotation-component-card > div:last-child {
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.commercial-page form .quotation-component-card > div:last-child span {
+  color: var(--orange-500);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.commercial-page form .quotation-component-card > div:last-child button {
+  color: #ad0000;
+}
+
+.commercial-page form .quotation-component-card > div:last-child button:hover:not(:disabled) {
+  background: #ad0000;
+  color: #ffffff;
 }
 
 /* =========================================================
@@ -527,9 +584,11 @@
     flex-direction: column;
     align-items: stretch;
   }
+
   .commercial-page article > div:nth-child(2) {
     justify-content: space-between;
   }
+
   .commercial-page article > div:last-child {
     flex-direction: row;
     justify-content: space-between;

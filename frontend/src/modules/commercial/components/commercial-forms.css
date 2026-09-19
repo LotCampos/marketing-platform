@@ -1,39 +1,34 @@
 /* =========================================================
-   UI CADO — APP FORM (3D Textured / Dark Neumorphic)
+   UI CADO — APP FORM
    ========================================================= */
 
 :root {
-  /* Variables adaptadas al entorno oscuro 3D */
-  --form-orange: #f36517;
-  --form-orange-dark: #ea580c;
+  --form-orange: var(--orange-500);
+  --form-orange-dark: var(--orange-700);
   --form-text: #ffffff;
   --form-muted: #94a3b8;
-  --form-border: #0a0a0a; /* Surcos oscuros */
-  --form-surface: #1e2024;
+  --form-border: #0a0a0a;
+  --form-surface: var(--surface-base);
 }
 
 /* =========================================================
-   MAIN CONTAINER (Chasis del formulario)
+   MAIN CONTAINER
    ========================================================= */
 
 .app-form {
   position: relative;
   background: var(--form-surface);
-  border: 6px solid #2a2c30;
-    border-radius: 32px;
-  box-shadow: 
-    inset 8px 8px 20px rgba(0, 0, 0, 0.8),
-    inset -4px -4px 10px rgba(255, 255, 255, 0.03),
-    15px 20px 40px rgba(0, 0, 0, 0.6);    
+  border: var(--border-panel-3d);
+  border-radius: 32px;
+  box-shadow: var(--shadow-panel-standard);    
   overflow: hidden;
 }
 
-/* Textura de ruido SVG para el panel */
 .app-form::before {
   content: '';
   position: absolute;
   inset: 0;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  background-image: var(--noise-texture);
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 0;
@@ -45,7 +40,7 @@
 }
 
 /* =========================================================
-   HEADER (Intro del formulario)
+   HEADER
    ========================================================= */
 
 .form-intro {
@@ -53,8 +48,6 @@
   align-items: center;
   gap: 20px;
   padding: 24px 30px;
-  
-  /* Surco físico separando el header */
   border-bottom: 2px solid var(--form-border);
   background: rgba(21, 23, 26, 0.6);
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
@@ -67,21 +60,16 @@
   place-items: center;
   flex: 0 0 46px;
   border-radius: 14px;
-  
-  /* Icono hundido con luz LED */
-  background: #111214;
+  background: var(--surface-sunken);
   color: var(--form-orange);
   border: none;
-  
-  box-shadow: 
-    inset 4px 4px 8px rgba(0, 0, 0, 0.9),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+  box-shadow: var(--shadow-input-sunken);
 }
 
 .form-intro-icon svg {
   width: 22px;
   height: 22px;
-  filter: drop-shadow(0 0 6px rgba(243, 101, 23, 0.5)); /* Resplandor */
+  filter: drop-shadow(0 0 6px rgba(243, 101, 23, 0.5));
 }
 
 .form-intro-content {
@@ -117,7 +105,7 @@
 }
 
 /* =========================================================
-   ALERT (Luz de emergencia)
+   ALERT
    ========================================================= */
 
 .form-alert {
@@ -126,12 +114,9 @@
   gap: 14px;
   margin-top: 24px;
   padding: 16px 18px;
-  
-  /* Panel hundido iluminado en rojo */
   background: #1a0f0f;
   border: 1px solid #7f1d1d;
-  border-radius: 14px;
-  
+  border-radius: var(--radius-input);
   color: #fca5a5;
   box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
 }
@@ -213,7 +198,6 @@
   flex-direction: column;
   color: #94a3b8;
   font-size: 14px;
-  
 }
 
 .form-required {
@@ -222,7 +206,7 @@
 }
 
 /* =========================================================
-   INPUTS (Pantallas hundidas)
+   INPUTS & TEXTAREAS
    ========================================================= */
 
 .form-field input,
@@ -231,20 +215,13 @@
   width: 100%;
   min-height: 48px;
   padding: 12px 16px;
-  
-  /* Neumorfismo interno (Hueco en la placa) */
-  background: #111214;
+  background: var(--surface-sunken);
   border: none;
-  border-radius: 14px;
-  
+  border-radius: var(--radius-input);
   color: #ffffff;
   font-size: 13px;
   outline: none;
-  
-  box-shadow: 
-    inset 4px 4px 8px rgba(0, 0, 0, 0.8),
-    inset -2px -2px 4px rgba(255, 255, 255, 0.05);
-    
+  box-shadow: var(--shadow-input-sunken);
   transition: all 160ms ease;
 }
 
@@ -272,7 +249,7 @@
   box-shadow: 
     inset 6px 6px 12px rgba(0, 0, 0, 0.9),
     inset -2px -2px 4px rgba(255, 255, 255, 0.05),
-    0 0 0 2px rgba(243, 101, 23, 0.4); /* Anillo LED */
+    0 0 0 2px rgba(243, 101, 23, 0.4);
 }
 
 .form-field-help {
@@ -293,7 +270,7 @@
 }
 
 /* =========================================================
-   ACTIONS (Groove y Botones Físicos)
+   ACTIONS & BUTTONS
    ========================================================= */
 
 .form-actions {
@@ -310,12 +287,11 @@
   box-shadow: inset 0 -4px 8px rgba(0, 0, 0, 0.4);
 }
 
-
 .form-button {
   min-height: 46px;
   padding: 0 22px;
   border: none;
-  border-radius: 14px;
+  border-radius: var(--radius-input);
   font-size: 13px;
   font-weight: 800;
   text-transform: uppercase;
@@ -327,7 +303,7 @@
 .form-primary-action,
 .form-secondary-action {
   border: 0;
-  border-radius: 16px;
+  border-radius: var(--radius-button);
   padding: 14px 22px;
   font: inherit;
   font-weight: 800;
@@ -338,20 +314,14 @@
   transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-/* Botón Principal (Naranja) */
 .form-primary-action {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 10px;
   color: #ffffff;
-  background: #f36517;
-  
-  /* Relieve de botón físico */
-  box-shadow: 
-    6px 6px 15px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
-    inset -3px -3px 5px rgba(139, 28, 0, 0.6);
+  background: var(--form-orange);
+  box-shadow: var(--shadow-button-primary);
 }
 
 .form-primary-action span {
@@ -377,20 +347,16 @@
     inset 4px 4px 8px rgba(139, 28, 0, 0.6);
 }
 
-/* Botón Secundario (Gris oscuro/Mecánico) */
 .form-secondary-action {
   color: #94a3b8;
-  background: #2a2c30;
-  box-shadow: 
-    4px 4px 10px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+  background: var(--surface-raised);
+  box-shadow: var(--shadow-button-secondary);
 }
 
 .form-secondary-action:hover:not(:disabled) {
   transform: translateY(-2px);
   color: #ffffff;
-  background: #313338;
+  background: var(--surface-highlight);
   box-shadow: 
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 1px 1px 3px rgba(255, 255, 255, 0.15),
@@ -399,7 +365,7 @@
 
 .form-secondary-action:active:not(:disabled) {
   transform: translateY(2px);
-  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.5);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.5);
 }
 
 .form-primary-action:disabled,

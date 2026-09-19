@@ -3,12 +3,25 @@ from datetime import date
 from decimal import Decimal, ROUND_HALF_UP
 from uuid import UUID
 
-from django.core.exceptions import ValidationError
+from core.exceptions import ValidationError
 from django.db import transaction
 from django.db.models import F
 
-from ..models import Opportunity, Prospect, ProspectStatus, Quotation, QuotationItem
-from ..repositories import QuotationItemRepository, QuotationRepository
+from ..models import (
+    CommercialClauseTemplate,
+    CommercialComponentType,
+    Opportunity,
+    Prospect,
+    ProspectStatus,
+    Quotation,
+    QuotationComponent,
+    QuotationItem,
+)
+from ..repositories import (
+    QuotationComponentRepository,
+    QuotationItemRepository,
+    QuotationRepository,
+)
 
 
 MONEY_QUANTUM = Decimal("0.01")
@@ -24,6 +37,15 @@ class QuotationItemCreateData:
 
 
 @dataclass(frozen=True)
+class QuotationComponentCreateData:
+    component_type_code: str
+    treatment: str
+    amount: Decimal = Decimal("0")
+    display_mode: str = "HIDDEN"
+    clause_code: str | None = None
+
+
+@dataclass(frozen=True)
 class QuotationCreateData:
     quotation_number: str
     opportunity_id: UUID
@@ -33,12 +55,91 @@ class QuotationCreateData:
     currency: str = "MXN"
     notes: str | None = None
     items: tuple[QuotationItemCreateData, ...] = ()
+    components: tuple[QuotationComponentCreateData, ...] = ()
 
 
 class QuotationService:
-    def __init__(self, repository: QuotationRepository | None = None, item_repository: QuotationItemRepository | None = None) -> None:
+    def __init__(
+        self,
+        repository: QuotationRepository | None = None,
+        item_repository: QuotationItemRepository | None = None,
+        component_repository: QuotationComponentRepository | None = None,
+    ) -> None:
         self.repository = repository or QuotationRepository()
         self.item_repository = item_repository or QuotationItemRepository()
+        self.component_repository = component_repository or QuotationComponentRepository()
+
+    @staticmethod
+    def _resolve_component(
+        component: QuotationComponentCreateData,
+    ) -> tuple[CommercialComponentType, CommercialClauseTemplate | None, Decimal]:
+        component_type_code = component.component_type_code.strip().upper()
+        treatment = component.treatment.strip().upper()
+        display_mode = component.display_mode.strip().upper()
+        amount = QuotationService._money(component.amount)
+
+        if not component_type_code:
+            raise ValidationError({"components": "Component type code is required."})
+
+        if treatment not in {"INCLUDED", "ADDITIONAL", "INFORMATIVE"}:
+            raise ValidationError({"components": "Invalid commercial component treatment."})
+
+        if display_mode not in {"LINE_ITEM", "CLAUSE", "HIDDEN"}:
+            raise ValidationError({"components": "Invalid commercial component display mode."})
+
+        if amount < Decimal("0"):
+            raise ValidationError({"components": "Component amount cannot be negative."})
+
+        try:
+            component_type = CommercialComponentType.objects.get(
+                code=component_type_code,
+                is_active=True,
+            )
+        except CommercialComponentType.DoesNotExist as exc:
+            raise ValidationError(
+                {"components": f"Active component type '{component_type_code}' does not exist."}
+            ) from exc
+
+        clause_template = None
+
+        if display_mode == "CLAUSE":
+            clause_code = (component.clause_code or "").strip().upper()
+
+            if not clause_code:
+                raise ValidationError(
+                    {"components": "A clause code is required when display_mode is CLAUSE."}
+                )
+
+            try:
+                clause_template = (
+                    CommercialClauseTemplate.objects
+                    .select_for_update()
+                    .get(
+                        code=clause_code,
+                        is_active=True,
+                    )
+                )
+            except CommercialClauseTemplate.DoesNotExist as exc:
+                raise ValidationError(
+                    {"components": f"Active clause '{clause_code}' does not exist."}
+                ) from exc
+
+            if clause_template.component_type_id != component_type.id:
+                raise ValidationError(
+                    {"components": "Clause template component type does not match the quotation component type."}
+                )
+
+            if clause_template.treatment != treatment:
+                raise ValidationError(
+                    {"components": "Clause template treatment does not match the quotation component treatment."}
+                )
+
+        elif component.clause_code:
+            raise ValidationError(
+                {"components": "A clause code is only valid when display_mode is CLAUSE."}
+            )
+
+        return component_type, clause_template, amount
 
     @staticmethod
     def _money(value: Decimal) -> Decimal:
@@ -109,7 +210,29 @@ class QuotationService:
         if Quotation.objects.filter(quotation_number=quotation_number).exists():
             raise ValidationError({"quotation_number": "A quotation with this number already exists."})
 
-        subtotal = self._calculate_subtotal(data.items)
+        resolved_components = tuple(
+            (
+                component,
+                *self._resolve_component(component),
+            )
+            for component in data.components
+        )
+
+        component_additions = self._money(
+            sum(
+                (
+                    amount
+                    for component, _component_type, _clause_template, amount
+                    in resolved_components
+                    if component.treatment.strip().upper() == "ADDITIONAL"
+                ),
+                Decimal("0"),
+            )
+        )
+
+        subtotal = self._money(
+            self._calculate_subtotal(data.items) + component_additions
+        )
         tax_amount = self._calculate_tax(subtotal)
         total_amount = self._calculate_total(subtotal, tax_amount)
         notes = data.notes.strip() if data.notes is not None else None
@@ -138,6 +261,27 @@ class QuotationService:
                 quantity=item.quantity,
                 unit_price=item.unit_price,
                 line_total=self._calculate_item_total(item.quantity, item.unit_price),
+                version_lock=1,
+            ))
+
+        for component, component_type, clause_template, amount in resolved_components:
+            self.component_repository.add(QuotationComponent(
+                quotation_id=quotation.id,
+                component_type=component_type,
+                treatment=component.treatment.strip().upper(),
+                amount=amount,
+                display_mode=component.display_mode.strip().upper(),
+                clause_template=clause_template,
+                clause_version=(
+                    clause_template.version
+                    if clause_template is not None
+                    else None
+                ),
+                clause_text_snapshot=(
+                    clause_template.template_text
+                    if clause_template is not None
+                    else None
+                ),
                 version_lock=1,
             ))
 

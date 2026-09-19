@@ -32,6 +32,10 @@ const navigation: NavigationItem[] = [
     label: 'Cotizaciones',
     path: '/commercial/quotations',
   },
+    {
+    label: 'Contratos',
+    path: '/commercial/agreements',
+  },
 ]
 
 export default function CommercialSidebar() {
@@ -97,9 +101,9 @@ export default function CommercialSidebar() {
       </nav>
 
       <div className="commercial-sidebar-footer">
-        <span>UI-CADO</span>
+        <span>Unidad de Inspección CADO</span>
         <small>
-          Enterprise Operations
+          Sistema Operativo Digital
         </small>
         <button
           type="button"

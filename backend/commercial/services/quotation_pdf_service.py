@@ -54,7 +54,8 @@ class QuotationPDFService:
         discount: Decimal = Decimal("0.00"),
         iva_percentage: Decimal = Decimal("16.00"),
         validity_days: int = 30,
-        viaticos_incluidos: bool = False,
+        viaticos_treatment: str = "NONE",
+        viaticos_clause_text: str | None = None,
     ) -> bytes:
         """
         Genera el PDF oficial de la cotización.
@@ -207,8 +208,13 @@ class QuotationPDFService:
                 validity_days
             ),
 
-            "VIATICOS_INCLUIDOS": bool(
-                viaticos_incluidos
+            "VIATICOS_TREATMENT": (
+                viaticos_treatment
+                or "NONE"
+            ),
+            "VIATICOS_CLAUSE_TEXT": (
+                viaticos_clause_text
+                or ""
             ),
 
             "LOGO_URI": cls._asset_uri(

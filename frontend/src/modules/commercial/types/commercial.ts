@@ -167,11 +167,44 @@ export interface CreateOpportunityInput {
   estimated_value?: string | null
 }
 
+
+export interface CommercialComponentType {
+  id: string
+  code: string
+  name: string
+  description: string | null
+  is_active: boolean
+  created_at: string
+}
+
+export interface CommercialClauseTemplate {
+  id: string
+  code: string
+  name: string
+  version: number
+  component_type_code: string
+  treatment: 'INCLUDED' | 'ADDITIONAL' | 'INFORMATIVE'
+  template_text: string
+  is_active: boolean
+  effective_from: string
+  effective_until: string | null
+  content_hash: string
+  created_at: string
+}
+
 export interface CreateQuotationItemInput {
   service_catalog_id: string
   description: string
   quantity: number
   unit_price: number
+}
+
+export interface CreateQuotationComponentInput {
+  component_type_code: string
+  treatment: 'INCLUDED' | 'ADDITIONAL' | 'INFORMATIVE'
+  amount?: number
+  display_mode?: 'LINE_ITEM' | 'CLAUSE' | 'HIDDEN'
+  clause_code?: string | null
 }
 
 export interface CreateQuotationInput {
@@ -183,6 +216,7 @@ export interface CreateQuotationInput {
   currency?: string
   notes?: string | null
   items: CreateQuotationItemInput[]
+  components?: CreateQuotationComponentInput[]
 }
 
 export interface QuotationItem {

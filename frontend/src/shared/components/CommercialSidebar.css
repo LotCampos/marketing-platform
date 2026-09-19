@@ -1,40 +1,43 @@
 /* =========================================================
-   UI-CADO
-   COMMERCIAL SIDEBAR (3D Textured Style)
-   Inspirado en formas orgánicas y neumorfismo
+   UI-CADO — COMMERCIAL SIDEBAR
+   CommercialSidebar.css
    ========================================================= */
 
 .commercial-sidebar {
   position: fixed;
-  inset: 0 auto 0 0;
+  top: 0;
+  left: 0;
+  bottom: 0;
   z-index: 100;
   width: var(--commercial-sidebar-width);
   display: flex;
   flex-direction: column;
   padding: 20px 16px;
   overflow-y: auto;
-
-  background-color: #1e2024;
+  overflow-x: hidden;
+  background-color: var(--surface-base);
   
-  border: 8px solid #2a2c30;
-  border-left: none; 
+  /* Borde 3D exacto sin desfasamiento superior */
+  border-right: 8px solid var(--surface-raised);
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
   
-  border-radius: 0 60px 30px 0;
-
+  /* Esquina superior izquierda en 0 estricto para evitar el triángulo */
+  border-radius: 0 32px 32px 0;
+  
   box-shadow: 
     inset 12px 0 25px rgba(0, 0, 0, 0.8), 
     inset -4px 0 10px rgba(255, 255, 255, 0.05), 
-    5px 0 10px rgba(0, 0, 0, 0.2); 
+    10px 0 30px rgba(0, 0, 0, 0.5); 
 }
-
 
 .commercial-sidebar::before {
   content: '';
-  position: fixed; 
+  position: absolute; 
   inset: 0;
-  width: var(--commercial-sidebar-width);
   border-radius: inherit;
-  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+  background-image: var(--noise-texture);
   pointer-events: none;
   mix-blend-mode: overlay;
   z-index: 0;
@@ -47,11 +50,6 @@
   position: relative;
   z-index: 1;
 }
-
-
-/* =========================================================
-   BRAND
-   ========================================================= */
 
 .commercial-brand {
   display: flex;
@@ -66,19 +64,14 @@
   display: grid;
   place-items: center;
   flex: 0 0 42px;
-
   border-radius: 14px;
-  background: #f36517;
+  background: var(--orange-500);
   color: #ffffff;
   font-size: 14px;
   font-weight: 850;
   letter-spacing: -0.02em;
-
   border: none;
-  box-shadow: 
-    4px 4px 12px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.5),
-    inset -3px -3px 6px rgba(139, 28, 0, 0.6);
+  box-shadow: var(--shadow-button-primary);
 }
 
 .commercial-brand-copy {
@@ -91,7 +84,7 @@
   font-size: 15px;
   font-weight: 800;
   letter-spacing: 0.02em;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .commercial-brand-copy span {
@@ -103,28 +96,19 @@
   white-space: nowrap;
 }
 
-
-/* =========================================================
-   MODULE (Efecto de hueco tallado/incrustado)
-   ========================================================= */
-
 .commercial-module {
   margin: 0 6px 14px;
   padding: 16px 14px;
-  
-  background: #15171a;
+  background: var(--surface-sunken);
   border-radius: 20px;
   border: none;
-  
-  box-shadow: 
-    inset 6px 6px 12px rgba(0, 0, 0, 0.9),
-    inset -3px -3px 6px rgba(255, 255, 255, 0.04);
+  box-shadow: var(--shadow-input-sunken);
 }
 
 .commercial-module-label {
   display: block;
   margin-bottom: 5px;
-  color: #f36517;
+  color: var(--orange-500);
   font-size: 9px;
   font-weight: 850;
   letter-spacing: 0.15em;
@@ -136,11 +120,6 @@
   font-size: 14px;
   font-weight: 750;
 }
-
-
-/* =========================================================
-   NAVIGATION (Botones 3D)
-   ========================================================= */
 
 .commercial-navigation {
   display: flex;
@@ -155,36 +134,28 @@
   gap: 12px;
   min-height: 48px;
   padding: 0 14px;
-  
-  border-radius: 16px;
+  border-radius: var(--radius-button);
   color: #94a3b8;
   font-size: 13px;
   font-weight: 650;
-  
   border: none;
   background: transparent;
-
   transition: all 200ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .commercial-navigation-link:hover {
   transform: translateX(4px);
   color: #ffffff;
-  background: #2a2c30;
+  background: var(--surface-raised);
   box-shadow: 
     4px 4px 10px rgba(0, 0, 0, 0.4),
     inset 1px 1px 2px rgba(255, 255, 255, 0.05);
 }
 
 .commercial-navigation-link-active {
-  background: #f36517;
+  background: var(--orange-500);
   color: #ffffff;
-  
-  box-shadow: 
-    6px 6px 15px rgba(0, 0, 0, 0.6),
-    inset 2px 2px 5px rgba(255, 255, 255, 0.4),
-    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
-    
+  box-shadow: var(--shadow-button-primary);
   transform: translateX(4px);
 }
 
@@ -196,8 +167,7 @@
   background: currentColor;
   opacity: 0.3;
   transition: all 160ms ease;
-  
-  box-shadow: inset 1px 1px 2px rgba(0,0,0,0.5);
+  box-shadow: inset 1px 1px 2px rgba(0, 0, 0, 0.5);
 }
 
 .commercial-navigation-link-active .commercial-navigation-indicator {
@@ -206,18 +176,38 @@
   flex-basis: 8px;
   opacity: 1;
   background: #ffffff;
-  box-shadow: 0 0 8px rgba(255,255,255,0.8);
+  box-shadow: 0 0 8px rgba(255, 255, 255, 0.8);
 }
 
 .commercial-navigation-label {
   min-width: 0;
-  text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
 }
 
+.commercial-logout-button {
+  width: 100%;
+  margin-top: 16px;
+  padding: 12px 16px;
+  background: var(--surface-raised);
+  border: none;
+  border-radius: var(--radius-input);
+  color: var(--orange-500);
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  cursor: pointer;
+  box-shadow: var(--shadow-button-secondary);
+  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
+}
 
-/* =========================================================
-   FOOTER
-   ========================================================= */
+.commercial-logout-button:hover {
+  transform: translateY(-2px);
+  background: var(--surface-highlight);
+  color: var(--orange-600);
+  text-shadow: 0 0 10px rgba(243, 101, 23, 0.6);
+}
 
 .commercial-sidebar-footer {
   margin-top: auto;
@@ -240,84 +230,13 @@
   font-size: 9px;
 }
 
-
-/* =========================================================
-   MOBILE
-   ========================================================= */
-
 @media (max-width: 680px) {
   .commercial-sidebar {
     position: relative;
     width: 100%;
     height: auto;
-    min-height: auto;
-    padding: 16px;
-    
     border-right: none;
-    border-left: none;
-    border-bottom: 8px solid #2a2c30;
-    border-radius: 0 0 40px 40px;
-    
-    box-shadow: 
-      inset 0 12px 25px rgba(0, 0, 0, 0.8),
-      inset 0 -4px 10px rgba(255, 255, 255, 0.05),
-      0 15px 40px rgba(0, 0, 0, 0.9);
+    border-bottom: 8px solid var(--surface-raised);
+    border-radius: 0 0 32px 32px;
   }
-  
-  .commercial-sidebar::before {
-    position: absolute; 
-  }
-
-  .commercial-navigation {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 12px;
-  }
-
-  .commercial-sidebar-footer {
-    display: none;
-  }
-}
-
-/* =========================================================
-   UI-CADO — LOGOUT BUTTON (3D Mechanical Key)
-   ========================================================= */
-
-.commercial-logout-button {
-  width: 100%;
-  margin-top: 16px;
-  padding: 12px 16px;
-  background: #2a2c30;
-  border: none;
-  border-radius: 14px;
-  color: #f36517;
-  font-family: inherit;
-  font-size: 13px;
-  font-weight: 800;
-  letter-spacing: 0.05em;
-  text-transform: uppercase;
-  cursor: pointer;
-  box-shadow:
-    4px 4px 10px rgba(0, 0, 0, 0.5),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
-  transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.commercial-logout-button:hover {
-  transform: translateY(-2px);
-  background: #313338;
-  color: #ff8c42;
-  text-shadow: 0 0 10px rgba(243, 101, 23, 0.6);
-  box-shadow:
-    6px 6px 15px rgba(0, 0, 0, 0.6),
-    inset 1px 1px 3px rgba(255, 255, 255, 0.15),
-    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
-}
-
-.commercial-logout-button:active {
-  transform: translateY(2px);
-  box-shadow:
-    inset 4px 4px 8px rgba(0, 0, 0, 0.7),
-    inset -1px -1px 2px rgba(255, 255, 255, 0.05);
 }

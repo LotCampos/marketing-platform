@@ -7,6 +7,7 @@ from rest_framework.decorators import action
 from rest_framework.exceptions import ValidationError as DRFValidationError
 from rest_framework.renderers import BaseRenderer
 from rest_framework.response import Response
+from rest_framework.views import APIView
 
 from core.exceptions import ValidationError as ApplicationValidationError
 from identity.permissions import (
@@ -28,20 +29,27 @@ from .models import (
     Opportunity,
     Prospect,
     Quotation,
+    QuotationComponent,
+    CommercialComponentType,
+    CommercialClauseTemplate,
     QuotationItem,
     ServiceRequest,
 )
 from .serializers import (
     AgreementSerializer,
+    CommercialDashboardSerializer,
     AgreementTermSerializer,
     CapacityAssessmentSerializer,
     OpportunitySerializer,
     ProspectSerializer,
     QuotationItemSerializer,
     QuotationSerializer,
+    CommercialComponentTypeSerializer,
+    CommercialClauseTemplateSerializer,
     ServiceRequestSerializer,
 )
 from .services import (
+    CommercialDashboardService,
     AgreementCreateData,
     AgreementService,
     OptimisticLockError,
@@ -51,10 +59,47 @@ from .services import (
     ProspectService,
     QuotationCreateData,
     QuotationItemCreateData,
+    QuotationComponentCreateData,
     QuotationService,
     ServiceRequestService,
 )
 from .services.quotation_pdf_service import QuotationPDFService
+
+class CommercialComponentTypeViewSet(viewsets.ReadOnlyModelViewSet):
+
+    permission_classes = [CanView]
+    serializer_class = CommercialComponentTypeSerializer
+
+    def get_queryset(self):
+        return (
+            CommercialComponentType.objects
+            .filter(is_active=True)
+            .order_by("name", "code")
+        )
+
+
+class CommercialClauseTemplateViewSet(viewsets.ReadOnlyModelViewSet):
+
+    permission_classes = [CanView]
+    serializer_class = CommercialClauseTemplateSerializer
+
+    def get_queryset(self):
+        return (
+            CommercialClauseTemplate.objects
+            .filter(is_active=True)
+            .select_related("component_type")
+            .order_by("code", "-version")
+        )
+
+
+class CommercialDashboardView(APIView):
+    permission_classes = [CanView]
+
+    def get(self, request):
+        data = CommercialDashboardService().get_dashboard()
+        serializer = CommercialDashboardSerializer(data=data)
+        serializer.is_valid(raise_exception=True)
+        return Response(serializer.validated_data, status=status.HTTP_200_OK)
 
 
 class PDFRenderer(BaseRenderer):
@@ -265,6 +310,16 @@ class QuotationViewSet(CommercialBaseViewSet):
             )
             for item in validated_data["items"]
         )
+        component_data = tuple(
+            QuotationComponentCreateData(
+                component_type_code=component["component_type_code"],
+                treatment=component["treatment"],
+                amount=component.get("amount", Decimal("0")),
+                display_mode=component.get("display_mode", "HIDDEN"),
+                clause_code=component.get("clause_code"),
+            )
+            for component in validated_data.get("components", [])
+        )
         data = QuotationCreateData(
             quotation_number=validated_data["quotation_number"],
             opportunity_id=validated_data["opportunity_id"],
@@ -274,6 +329,7 @@ class QuotationViewSet(CommercialBaseViewSet):
             currency=validated_data.get("currency", "MXN"),
             notes=validated_data.get("notes"),
             items=item_data,
+            components=component_data,
         )
         try:
             quotation = QuotationService().create(data)
@@ -365,6 +421,23 @@ class QuotationViewSet(CommercialBaseViewSet):
                 "descripcion": item.description,
             })
         service_names = list(dict.fromkeys(name for name in service_names if name))
+        viaticos_component = QuotationComponent.objects.filter(
+            quotation_id=quotation.id,
+            component_type__code="TRAVEL_EXPENSE",
+        ).order_by("-created_at", "-id").first()
+
+        viaticos_treatment = (
+            viaticos_component.treatment
+            if viaticos_component is not None
+            else "NONE"
+        )
+
+        viaticos_clause_text = (
+            viaticos_component.clause_text_snapshot
+            if viaticos_component is not None
+            else None
+        )
+
         pdf = QuotationPDFService.generate(
             quotation=quotation,
             partidas=partidas,
@@ -381,7 +454,8 @@ class QuotationViewSet(CommercialBaseViewSet):
             service_name=", ".join(service_names),
             service_type="SERVICIO",
             validity_days=((quotation.valid_until - quotation.issue_date.date()).days if quotation.valid_until else 30),
-            viaticos_incluidos=False,
+            viaticos_treatment=viaticos_treatment,
+            viaticos_clause_text=viaticos_clause_text,
         )
         response = HttpResponse(pdf, content_type="application/pdf")
         response["Content-Disposition"] = f'inline; filename="cotizacion-{quotation.quotation_number}.pdf"'

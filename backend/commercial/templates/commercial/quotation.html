@@ -173,6 +173,18 @@
       page-break-inside: avoid;
     }
 
+    .quotation-reference {
+      position: fixed;
+      right: 50px;
+      bottom: 22px;
+      font-size: 8pt;
+      line-height: 1.2;
+      color: #000000;
+      text-align: right;
+      white-space: nowrap;
+      z-index: 999;
+    }
+
     .info-block strong {
       color: #000000;
       font-weight: bold;
@@ -241,13 +253,13 @@
     }
 
     .col-instalacion {
-      width: 25%;
+      width: 20%;
       text-align: center;
     }
 
     .col-norma {
-      width: 45%;
-      text-align: left;
+      width: 40%;
+      text-align: center;
     }
 
     .col-cant {
@@ -256,13 +268,13 @@
     }
 
     .col-pu {
-      width: 10%;
+      width: 15%;
       text-align: right;
       white-space: nowrap;
     }
 
     .col-pt {
-      width: 10%;
+      width: 15%;
       text-align: right;
       white-space: nowrap;
     }
@@ -548,25 +560,27 @@
 
       <div class="info-block">
 
-        <strong>
-          FOLIO:
-        </strong>
+        <div class="quotation-reference">
 
-        <span class="ph">
-          {{ FOLIO_COTIZACION }}
-        </span>
+          <strong>
+            FOLIO:
+          </strong>
 
-        &nbsp;&nbsp;&nbsp;
+          <span class="ph">
+            {{ FOLIO_COTIZACION }}
+          </span>
 
-        <strong>
-          VERSIÓN:
-        </strong>
+          &nbsp;&nbsp;&nbsp;
 
-        <span class="ph">
-          {{ NUMERO_VERSION }}
-        </span>
+          <strong>
+            VERSIÓN:
+          </strong>
 
-        <br>
+          <span class="ph">
+            {{ NUMERO_VERSION }}
+          </span>
+
+        </div>
 
 
         <strong>
@@ -603,11 +617,7 @@
 
       <p class="paragraph">
 
-        En atención a su amable solicitud y con el compromiso de brindarle un servicio confiable y profesional, nos permitimos presentar a su consideración la siguiente cotización para los servicios de evaluación de la conformidad correspondientes a
-
-        <span class="ph">
-          {{ SERVICIO }}
-        </span>.
+        En atención a su amable solicitud y con el compromiso de brindarle un servicio confiable y profesional, nos permitimos presentar a su consideración la siguiente cotización para los servicios de evaluación de la conformidad correspondientes a:
 
       </p>
 
@@ -620,6 +630,14 @@
 
         <table class="cotizacion-table">
 
+          <colgroup>
+            <col style="width: 20%;">
+            <col style="width: 40%;">
+            <col style="width: 10%;">
+            <col style="width: 15%;">
+            <col style="width: 15%;">
+          </colgroup>
+
           <thead>
 
             <tr class="quotation-category-row">
@@ -629,23 +647,23 @@
             </tr>
             <tr>
 
-              <th style="width: 22%;">
-                TIPO DE INSTALACIÓN
+              <th>
+                TIPO DE UNIDAD
               </th>
 
-              <th style="width: 45%;">
+              <th>
                 NORMA OFICIAL
               </th>
 
-              <th style="width: 10%;">
+              <th>
                 CANTIDAD
               </th>
 
-              <th style="width: 11%;">
+              <th>
                 PRECIO UNITARIO
               </th>
 
-              <th style="width: 12%;">
+              <th>
                 PRECIO TOTAL
               </th>
 
@@ -854,13 +872,21 @@
 
               <span>
 
-                {% if VIATICOS_INCLUIDOS %}
+                {% if VIATICOS_TREATMENT == "INCLUDED" %}
 
-                  El costo por concepto de viáticos se encuentra incluidos en el monto total de esta propuesta.
+                  {{ VIATICOS_CLAUSE_TEXT }}
+
+                {% elif VIATICOS_TREATMENT == "ADDITIONAL" %}
+
+                  Los viáticos no se encuentran incluidos en el monto total de la presente cotización y serán cobrados adicionalmente conforme a las condiciones aplicables.
+
+                {% elif VIATICOS_TREATMENT == "INFORMATIVE" %}
+
+                  Los viáticos se consideran únicamente como información comercial y no forman parte del monto total de la presente cotización.
 
                 {% else %}
 
-                  El costo por concepto de viaticos vienen incluidos al aceptar la cotización.
+                  No se contemplan viáticos en el importe de la presente cotización.
 
                 {% endif %}
 

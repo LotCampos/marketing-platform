@@ -1,10 +1,5 @@
 /* =========================================================
    UI CADO — GLOBAL FOUNDATION (Dark Neumorphic 3D)
-   index.css
-   ========================================================= */
-
-/* =========================================================
-   GLOBAL TOKENS
    ========================================================= */
 
 :root {
@@ -17,61 +12,62 @@
     "Segoe UI",
     sans-serif;
 
-  color: #e2e8f0; /* Texto claro por defecto para fondo oscuro */
-  background: #0a0a0a; /* Base negra para todo el sistema */
+  color: #cbd5e1;
+  background-color: #0a0a0a;
 
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 
-  /* -------------------------------------------------------
-     GLOBAL BRAND (Naranja Vibrante 3D)
-  ------------------------------------------------------- */
+  /* BRAND TOKENS */
+  --orange-500: #f36517;
+  --orange-600: #ff7b30;
+  --orange-700: #c2410c;
 
-  --orange-500: #f36517; /* El naranja principal de tu nueva UI */
-  --orange-600: #ff7b30; /* Brillo / Hover */
-  --orange-700: #c2410c; /* Sombra / Hundido */
-
-  /* -------------------------------------------------------
-     DARK HARDWARE SURFACES (Reemplaza a los Slate claros)
-  ------------------------------------------------------- */
-
-  --surface-base: #1e2024; /* Base de paneles y tarjetas */
-  --surface-sunken: #15171a; /* Huecos, inputs y selects */
-  --surface-raised: #2a2c30; /* Bordes gruesos y botones elevados */
-  --surface-highlight: #313338; /* Efectos Hover */
-
-  /* -------------------------------------------------------
-     GLOBAL BORDERS & SHADOWS
-  ------------------------------------------------------- */
-
-  /* Borde grueso estándar para el efecto de placa 3D */
-  --border-3d: 6px solid var(--surface-raised);
+  /* HARDWARE SURFACES */
+  --surface-base: #1e2024;
+  --surface-sunken: #111214;
+  --surface-raised: #2a2c30;
+  --surface-highlight: #313338;
   
-  /* Sombra para paneles grandes (como Hero o Sidebar) */
-  --shadow-panel:
+  --layout-max-width: 1680px;
+  --commercial-sidebar-width: 272px;
+
+  /* ESTÁNDAR 3D */
+  --border-panel-3d: 6px solid var(--surface-raised);
+  --border-card-3d: 4px solid var(--surface-raised);
+  --radius-panel: 28px;
+  --radius-card: 20px;
+  --radius-button: 16px;
+  --radius-input: 14px;
+
+  --shadow-panel-hero:
+    inset 10px 10px 20px rgba(0, 0, 0, 0.8),
+    inset -4px -4px 10px rgba(255, 255, 255, 0.04),
+    20px 25px 50px rgba(0, 0, 0, 0.7);
+
+  --shadow-panel-standard:
     inset 8px 8px 20px rgba(0, 0, 0, 0.8),
     inset -4px -4px 10px rgba(255, 255, 255, 0.03),
-    15px 20px 40px rgba(0, 0, 0, 0.7);
+    15px 20px 40px rgba(0, 0, 0, 0.6);
 
-  /* Sombra para botones y elementos interactivos */
-  --shadow-button:
+  --shadow-input-sunken:
+    inset 4px 4px 8px rgba(0, 0, 0, 0.8),
+    inset -2px -2px 4px rgba(255, 255, 255, 0.05);
+
+  --shadow-button-primary:
     6px 6px 15px rgba(0, 0, 0, 0.6),
     inset 2px 2px 5px rgba(255, 255, 255, 0.4),
     inset -3px -3px 5px rgba(139, 28, 0, 0.6);
 
-  /* -------------------------------------------------------
-     GLOBAL TEXTURES
-  ------------------------------------------------------- */
-  
-  /* Guardamos la textura SVG en una variable para reutilizarla fácilmente */
+  --shadow-button-secondary:
+    4px 4px 10px rgba(0, 0, 0, 0.5),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.1),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+
   --noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
 }
-
-/* =========================================================
-   RESET
-   ========================================================= */
 
 *,
 *::before,
@@ -79,60 +75,39 @@
   box-sizing: border-box;
 }
 
-/* =========================================================
-   DOCUMENT
-   ========================================================= */
-
-html {
-  min-width: 320px;
-  min-height: 100%;
-  background-color: #0a0a0a; /* Fondo ultra oscuro */
-  scroll-behavior: smooth;
-}
-
-/* =========================================================
-   BODY (El tapete global)
-   ========================================================= */
-
-body {
+html, body {
   margin: 0;
-  min-width: 320px;
+  padding: 0;
+  width: 100%;
   min-height: 100vh;
-  
-  /* Color de fondo base */
   background-color: #0a0a0a;
-  
-  /* Aplicamos la textura granulada A TODA la aplicación */
   background-image: var(--noise-texture);
-  background-attachment: fixed; /* Mantiene la textura fija al hacer scroll */
+  background-attachment: fixed;
   background-blend-mode: overlay;
-
-  color: #cbd5e1; /* Gris claro para lectura óptima */
-  line-height: 1.5;
+  color: #cbd5e1;
+  overflow-x: hidden;
 }
 
-/* =========================================================
-   FORM ELEMENTS
-   ========================================================= */
+#root {
+  min-height: 100vh;
+  width: 100%;
+  overflow-x: hidden;
+}
 
-button,
-input,
-select,
-textarea {
+/* FIX TRIÁNGULO ESQUINA SUPERIOR IZQUIERDA */
+.commercial-shell,
+.commercial-layout,
+.application-shell {
+  overflow: hidden;
+  position: relative;
+}
+
+button, input, select, textarea {
   font: inherit;
 }
 
-button {
-  cursor: pointer;
-}
-
-button:disabled {
-  cursor: not-allowed;
-}
-
-/* =========================================================
-   LINKS
-   ========================================================= */
+button { cursor: pointer; }
+button:disabled { cursor: not-allowed; }
 
 a {
   color: inherit;
@@ -140,21 +115,7 @@ a {
   transition: color 160ms ease;
 }
 
-a:hover {
-  color: var(--orange-500);
-}
-
-/* =========================================================
-   ROOT APPLICATION
-   ========================================================= */
-
-#root {
-  min-height: 100vh;
-}
-
-/* =========================================================
-   GLOBAL SCROLLBAR (Adaptado a hardware 3D)
-   ========================================================= */
+a:hover { color: var(--orange-500); }
 
 * {
   scrollbar-width: thin;
@@ -168,15 +129,13 @@ a:hover {
 
 *::-webkit-scrollbar-track {
   background: var(--surface-sunken);
-  /* Canal hundido para la barra de scroll */
   box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.8);
 }
 
 *::-webkit-scrollbar-thumb {
   background: var(--surface-raised);
   border-radius: 999px;
-  border: 3px solid var(--surface-sunken); /* Crea un espacio vacío alrededor (padding) */
-  /* Pequeño relieve 3D para el "pulgar" */
+  border: 3px solid var(--surface-sunken);
   box-shadow: inset 1px 1px 2px rgba(255, 255, 255, 0.05);
 }
 
@@ -185,34 +144,5 @@ a:hover {
 }
 
 *::-webkit-scrollbar-thumb:active {
-  background: var(--orange-500); /* LED naranja al arrastrar la barra */
-}
-
-/* =========================================================
-   ACCESSIBILITY
-   ========================================================= */
-
-:focus-visible {
-  /* Resplandor naranja estilo luz de sistema */
-  outline: 2px solid var(--orange-500);
-  outline-offset: 4px;
-  box-shadow: 0 0 15px rgba(243, 101, 23, 0.4);
-}
-
-/* =========================================================
-   REDUCED MOTION
-   ========================================================= */
-
-@media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
-
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms;
-    animation-iteration-count: 1;
-    transition-duration: 0.01ms;
-  }
+  background: var(--orange-500);
 }
