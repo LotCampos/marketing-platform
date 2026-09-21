@@ -1,9 +1,9 @@
-{% load static %}
 <!DOCTYPE html>
 <html lang="es">
 <head>
 <meta charset="UTF-8">
 <title>PET-Contrato {{ PET_NUMERO|default:"" }}</title>
+
 <style>
 @page { size: Letter; margin: 0; }
 * { box-sizing: border-box; margin: 0; padding: 0; font-family: Arial, Helvetica, sans-serif; }
@@ -47,183 +47,208 @@ body { background:#f4f4f4; color:#000; }
 .note { font-size:6.8pt; margin-top:8px; text-align:justify; }
 @media print { body{background:#fff}.page{margin:0;box-shadow:none} }
 </style>
+
 </head>
 <body>
 
-<section class="page">
-<header class="header">
-  <div class="header-left"><img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image"></div>
-  <div class="header-right">
-    <div class="top-title">UNIDAD DE INSPECCIÓN</div>
-    <div class="header-bar"><div class="header-bar-orange"></div><div class="header-bar-grey"></div></div>
-    <div class="acreditaciones"><span>Acreditación EMA: ES-081 | UVPET-007</span><span>Acreditación MAAC: 23UIC015</span></div>
-  </div>
-</header>
-
-<main>
-  <div class="doc-title-container"><div class="doc-title">PROPUESTA ECONÓMICA Y TÉCNICA – CONTRATO DE SERVICIOS</div></div>
-
-  <div class="meta-row">
-    <span><strong>PET-Contrato No.:</strong> {{ PET_NUMERO|default:"—" }}</span>
-    <span><strong>Fecha:</strong> {{ FECHA_FIRMA|default:"—" }}</span>
-  </div>
-
-  <div class="section-title">DATOS DEL ESTABLECIMIENTO</div>
-  <table class="data-table">
-    <tr>
-      <td class="label">Razón social / Titular permiso descarga</td><td colspan="3" class="value">{{ CLIENTE_RAZON_SOCIAL|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">RFC</td><td class="value">{{ CLIENTE_RFC|default:"—" }}</td>
-      <td class="label">Número de permiso / Título de concesión</td><td class="value">{{ PERMISO_CONCESION|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Domicilio</td><td colspan="3" class="value">{{ INSTALACION_DOMICILIO|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Colonia / Población</td><td class="value">{{ INSTALACION_COLONIA|default:"—" }}</td>
-      <td class="label">Municipio</td><td class="value">{{ INSTALACION_MUNICIPIO|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Estado</td><td class="value">{{ INSTALACION_ESTADO|default:"—" }}</td>
-      <td class="label">C.P.</td><td class="value">{{ INSTALACION_CP|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Coordenadas geográficas</td><td colspan="3" class="value">Lat. {{ GPS_LAT|default:"—" }} / Long. {{ GPS_LNG|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Correo</td><td class="value">{{ CONTACTO_EMAIL|default:"—" }}</td>
-      <td class="label">Teléfono</td><td class="value">{{ CONTACTO_TELEFONO|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Representante legal</td><td class="value">{{ REPRESENTANTE_LEGAL|default:"—" }}</td>
-      <td class="label">RFC representante legal</td><td class="value">{{ REPRESENTANTE_RFC|default:"—" }}</td>
-    </tr>
-    <tr>
-      <td class="label">Solicitante</td><td colspan="3" class="value">{{ SOLICITANTE|default:"—" }}</td>
-    </tr>
-  </table>
-
-  <div class="section-title">DATOS DEL SERVICIO(S)</div>
-  <table class="service-table">
-    <thead>
-      <tr>
-        <th class="c1">Clave</th><th class="c2">Concepto</th><th class="c3">Periodo a evaluar</th>
-        <th class="c4">Unidad</th><th class="c5">Cantidad</th><th class="c6">Costo Unitario</th><th class="c7">Importe</th>
-      </tr>
-    </thead>
-    <tbody>
-      {% for item in SERVICIOS %}
-      <tr>
-        <td class="text-center">{{ item.clave|default:"—" }}</td>
-        <td>{{ item.concepto|default:"—" }}</td>
-        <td class="text-center">{{ item.periodo|default:"—" }}</td>
-        <td class="text-center">{{ item.unidad|default:"—" }}</td>
-        <td class="text-center">{{ item.cantidad|default:"0" }}</td>
-        <td class="text-right">{{ item.costo_unitario|default:"0.00" }}</td>
-        <td class="text-right">{{ item.importe|default:"0.00" }}</td>
-      </tr>
-      {% empty %}
-      <tr><td colspan="7" class="text-center">Sin servicios registrados.</td></tr>
-      {% endfor %}
-      <tr><td colspan="5"></td><td class="label text-right">IMPORTE</td><td class="text-right">{{ IMPORTE|default:"0.00" }}</td></tr>
-      <tr><td colspan="5"></td><td class="label text-right">IVA</td><td class="text-right">{{ IVA|default:"0.00" }}</td></tr>
-      <tr><td colspan="5"></td><td class="label text-right">TOTAL</td><td class="text-right"><strong>{{ TOTAL|default:"0.00" }}</strong></td></tr>
-    </tbody>
-  </table>
-
-  <div class="section-title">CONDICIONES DEL SERVICIO</div>
-  <ol class="conditions">
-    <li><span class="mark">1.</span><span>La prestación del servicio se realizará conforme al alcance contratado y a los requisitos aplicables de la evaluación de la conformidad.</span></li>
-    <li><span class="mark">2.</span><span>El cliente deberá proporcionar la información y documentación necesaria para realizar el servicio.</span></li>
-    <li><span class="mark">3.</span><span>El cliente deberá proporcionar las facilidades de acceso y disponibilidad requeridas para la visita, cuando aplique.</span></li>
-    <li><span class="mark">4.</span><span>Los resultados estarán sujetos a las condiciones observadas y a la evidencia disponible durante la evaluación.</span></li>
-    <li><span class="mark">5.</span><span>Cuando se detecten hallazgos, éstos serán comunicados y tratados conforme al procedimiento aplicable.</span></li>
-    <li><span class="mark">6.</span><span>La información proporcionada por el cliente será tratada bajo los principios de confidencialidad e imparcialidad.</span></li>
-    <li><span class="mark">7.</span><span>El servicio se desarrollará de acuerdo con la programación acordada entre las partes.</span></li>
-    <li><span class="mark">8.</span><span>Los costos indicados corresponden al alcance señalado en este documento.</span></li>
-    <li><span class="mark">9.</span><span>Cualquier servicio adicional deberá ser cotizado y autorizado por separado.</span></li>
-    <li><span class="mark">10.</span><span>La aceptación de esta propuesta implica conformidad con las condiciones económicas y técnicas aquí establecidas.</span></li>
-    <li><span class="mark">11.</span><span>Los documentos derivados del servicio serán entregados conforme al alcance contratado y una vez satisfechas las condiciones de pago aplicables.</span></li>
-    <li><span class="mark">12.</span><span>Las modificaciones posteriores a la emisión deberán quedar documentadas conforme al control documental aplicable.</span></li>
-    <li><span class="mark">13.</span><span>Las partes reconocen la vigencia y alcance de este PET-Contrato en los términos establecidos en el presente documento.</span></li>
-  </ol>
-
-  <div class="sign-date">
-    <strong>Lugar:</strong> {{ MUNICIPIO_FIRMA|default:"—" }}, {{ ESTADO_FIRMA|default:"—" }} &nbsp;&nbsp;
-    <strong>Día:</strong> {{ DIA_FIRMA|default:"—" }} &nbsp;&nbsp;
-    <strong>Mes:</strong> {{ MES_FIRMA|default:"—" }} &nbsp;&nbsp;
-    <strong>Año:</strong> {{ ANIO_FIRMA|default:"—" }}
-  </div>
-</main>
-
-<footer class="footer-container">
-  <div class="footer-text"><span>BIOTECNOLOGIA CADO, S.A. DE C.V. | Puebla, Pue.</span><span>REF: PROC-G-002 | Documento controlado y confidencial | Página 1 de 2</span></div>
-  <div class="footer-bar"><div class="footer-orange"></div><div class="footer-dark"></div></div>
-</footer>
-</section>
-
-<section class="page">
-<header class="header">
-  <div class="header-left"><img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image"></div>
-  <div class="header-right">
-    <div class="top-title">UNIDAD DE INSPECCIÓN</div>
-    <div class="header-bar"><div class="header-bar-orange"></div><div class="header-bar-grey"></div></div>
-    <div class="acreditaciones"><span>Acreditación EMA: ES-081 | UVPET-007</span><span>Acreditación MAAC: 23UIC015</span></div>
-  </div>
-</header>
-
-<main>
-  <div class="doc-title-container"><div class="doc-title">PROPUESTA ECONÓMICA Y TÉCNICA – CONTRATO DE SERVICIOS</div></div>
-
-  <div class="page-two-title">CONDICIONES DE LOS COSTOS</div>
-  <div class="conditions">
-    {{ CONDICIONES_COSTOS|default:"Los costos corresponden al alcance indicado en este PET-Contrato. Cualquier actividad adicional deberá ser cotizada y autorizada por separado." }}
-  </div>
-
-  <div class="page-two-title">CONDICIONES DEL PAGO</div>
-  <div class="conditions">
-    {{ CONDICIONES_PAGO|default:"El pago se realizará conforme a las condiciones comerciales acordadas entre las partes." }}
-  </div>
-
-  <div class="page-two-title">IMPARCIALIDAD - CONFIDENCIAL</div>
-  <ol class="conditions">
-    {% for condicion in CONDICIONES_IMPARCIALIDAD %}
-    <li><span class="mark">{{ forloop.counter }}.</span><span>{{ condicion }}</span></li>
-    {% empty %}
-    <li><span class="mark">1.</span><span>La Unidad de Inspección mantiene su compromiso con la imparcialidad, confidencialidad e independencia en la prestación de sus servicios.</span></li>
-    <li><span class="mark">2.</span><span>La información obtenida durante el servicio será tratada como confidencial, salvo obligación legal o autorización correspondiente.</span></li>
-    <li><span class="mark">3.</span><span>Las decisiones de inspección se tomarán con base en evidencia y requisitos aplicables.</span></li>
-    {% endfor %}
-  </ol>
-
-  <div class="page-two-title">CONDICIONES ESPECIALES DEL SERVICIO(S)</div>
-  <div class="special-box">{{ CONDICIONES_ESPECIALES|default:"No Aplica" }}</div>
-
-  <div class="page-two-title">CONDICIÓN DE TRABAJO URGENTE</div>
-  <div class="special-box">
-    {% if TRABAJO_URGENTE %}SÍ APLICA{% else %}NO APLICA{% endif %}
-  </div>
-
-  <div class="signatures">
-    <div class="sig-box">
-      <div class="sig-space"></div><div class="sig-line"></div>
-      <strong>GUSTAVO CABRERA FLORES</strong><br>REPRESENTANTE DE CADO
+<div class="documento">
+    <div class="header-container">
+        <div class="header-left">
+            <img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image">
+        </div>
+        <div class="header-right">
+            <div class="titulo-unidad">UNIDAD DE INSPECCIÓN</div>
+            <div class="linea-encabezado">
+                <div class="linea-naranja"></div>
+                <div class="linea-gris"></div>
+            </div>
+            <div class="textos-oficiales">
+                <div class="texto-rev">FOR-G-016 Rev.18</div>
+                <div class="texto-empresa">BIOTECNOLOGIA CADO, S.A. DE C.V.</div>
+                <div class="texto-propuesta">Propuesta Económica y Técnica – Contrato de Servicios</div>
+            </div>
+        </div>
     </div>
-    <div class="sig-box">
-      <div class="sig-space"></div><div class="sig-line"></div>
-      <strong>{{ REPRESENTANTE_LEGAL|default:"REPRESENTANTE LEGAL" }}</strong><br>{{ CLIENTE_RAZON_SOCIAL|default:"CLIENTE" }}
+
+    <div class="encabezado-pet">
+        <span class="etiqueta-pet">PET-Contrato No</span>
+        <div class="caja-pet-num">{{ PET_NUMERO|default:"" }}</div>
     </div>
-  </div>
 
-  <div class="note"><strong>CCP:</strong> {{ RESPONSABLE_TECNICO|default:"—" }}</div>
-  <div class="note"><strong>Nota de control documental:</strong> Los espacios no utilizados deberán cancelarse conforme al procedimiento vigente. Cualquier corrección deberá conservar visible el valor original, registrar el nuevo valor e incluir iniciales y fecha, sin ocultar la información original.</div>
-</main>
+    <div class="etiqueta-establecimiento">DATOS DEL ESTABLECIMIENTO</div>
+    <div class="marco-establecimiento">
+        <div class="filas-grid">
+            <div class="fila-flex">
+                <div class="col-izq"><div class="campo w-100">
+                    <label>Razón social o razón social del titular del permiso de descarga</label>
+                    <div class="caja-gris">{{ CLIENTE_RAZON_SOCIAL|default:"" }}</div>
+                </div></div>
+                <div class="col-der"><div class="campo w-100">
+                    <label>RFC</label><div class="caja-gris">{{ CLIENTE_RFC|default:"" }}</div>
+                </div></div>
+            </div>
+            <div class="fila-flex">
+                <div class="col-izq"><div class="campo w-100">
+                    <label>Domicilio</label><div class="caja-gris">{{ INSTALACION_DOMICILIO|default:"" }}</div>
+                </div></div>
+                <div class="col-der"><div class="campo w-100">
+                    <label>Colonia o Población</label><div class="caja-gris">{{ INSTALACION_COLONIA|default:"" }}</div>
+                </div></div>
+            </div>
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50"><label>Del. o Municipio</label><div class="caja-gris">{{ INSTALACION_MUNICIPIO|default:"" }}</div></div>
+                    <div class="campo w-25"><label>Estado</label><div class="caja-gris">{{ INSTALACION_ESTADO|default:"" }}</div></div>
+                    <div class="campo w-25"><label>C.P.</label><div class="caja-gris">{{ INSTALACION_CP|default:"" }}</div></div>
+                </div>
+                <div class="col-der"><div class="campo w-100">
+                    <label>Coordenadas geográficas del domicilio</label>
+                    <div class="caja-gris">Lat. {{ GPS_LAT|default:"" }} / Long. {{ GPS_LNG|default:"" }}</div>
+                </div></div>
+            </div>
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50"><label>Número de permiso o número del título de concesión</label><div class="caja-gris">{{ PERMISO_CONCESION|default:"" }}</div></div>
+                    <div class="campo w-50"><label>Correo electrónico</label><div class="caja-gris">{{ CONTACTO_EMAIL|default:"" }}</div></div>
+                </div>
+                <div class="col-der"><div class="campo w-100"><label>Teléfono</label><div class="caja-gris">{{ CONTACTO_TELEFONO|default:"" }}</div></div></div>
+            </div>
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50"><label>Nombre del Representante Legal:</label><div class="caja-gris">{{ REPRESENTANTE_LEGAL|default:"" }}</div></div>
+                    <div class="campo w-50"><label>RFC Representante Legal</label><div class="caja-gris">{{ REPRESENTANTE_RFC|default:"" }}</div></div>
+                </div>
+                <div class="col-der"><div class="campo w-100"><label>Nombre del Solicitante</label><div class="caja-gris">{{ SOLICITANTE|default:"" }}</div></div></div>
+            </div>
+        </div>
+    </div>
 
-<footer class="footer-container">
-  <div class="footer-text"><span>BIOTECNOLOGIA CADO, S.A. DE C.V. | Puebla, Pue.</span><span>REF: PROC-G-002 | Documento controlado y confidencial | Página 2 de 2</span></div>
-  <div class="footer-bar"><div class="footer-orange"></div><div class="footer-dark"></div></div>
-</footer>
-</section>
+    <div class="etiqueta-servicio">DATOS DEL SERVICIO(S)</div>
+    <div class="contenedor-datos-servicio">
+        <table class="tabla-servicios">
+            <thead><tr>
+                <th class="col-clave">Clave</th><th class="col-concepto">Concepto</th><th class="col-periodo">Periodo a evaluar</th>
+                <th class="col-unidad">Unidad</th><th class="col-cantidad">Cantidad</th><th class="col-costo">Costo Unitario</th>
+            </tr></thead>
+            <tbody>
+                {% for item in SERVICIOS %}
+                <tr>
+                    <td>{{ item.clave|default:"" }}</td><td>{{ item.concepto|default:"" }}</td><td>{{ item.periodo|default:"" }}</td>
+                    <td>{{ item.unidad|default:"" }}</td><td>{{ item.cantidad|default:"" }}</td><td>{{ item.costo_unitario|default:"" }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div class="contenedor-totales">
+            <table class="tabla-totales">
+                <tr><td class="etiqueta-total">IMPORTE</td><td class="celda-valor"><span class="simbolo-peso">$</span> {{ IMPORTE|default:"-" }}</td></tr>
+                <tr><td class="etiqueta-total">IVA</td><td class="celda-valor"><span class="simbolo-peso">$</span> {{ IVA|default:"-" }}</td></tr>
+                <tr><td class="etiqueta-total">TOTAL</td><td class="celda-valor"><span class="simbolo-peso">$</span> {{ TOTAL|default:"-" }}</td></tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="header-title">CONDICIONES DEL SERVICIO</div>
+    <div class="border-container">
+        <ul class="lista-condiciones">
+            <li><span class="num">1)</span><span class="texto">La inspección debe ser realizada en sitio y con personal acreditado por las Entidades de Acreditación y aprobada ante las Autoridades Normalizadoras.</span></li>
+            <li><span class="num">2)</span><span class="texto">El servicio tiene un alcance para la inspección de forma documental y visual de tal manera que se pueda determinar el cumplimiento con norma o disposición legal, según corresponda, y lo establecido en el presente PET-Contrato.</span></li>
+            <li><span class="num">3)</span><span class="texto">Cuando Biotecnología CADO, S.A. de C.V. en sus inspecciones utilice información proveniente de otras partes, el Gerente Técnico se asegura de su integridad y/o confiabilidad, constatando su fuente o investigando su veracidad.</span></li>
+            <li><span class="num">4)</span><span class="texto">La presente solicitud sirve como contrato para la prestación de los servicios por parte de Biotecnología CADO, S.A. de C.V.</span></li>
+            <li><span class="num">5)</span><span class="texto">Biotecnología CADO, S.A. de C.V. tiene un horario de atención de Lun. – Vie. 8:30 a 18:00 Hrs, sáb 9:00 a 14:00 Hrs. e informará al cliente el día y hora en que se realizará la inspección de su(s) servicio(s) conforme a su ruta de inspección o plan de trabajo.</span></li>
+            <li><span class="num">6)</span><span class="texto">"EL CLIENTE" deberá permitir el acceso al domicilio o instalaciones, al personal autorizado por parte de Biotecnología CADO, S.A. de C.V., para que realice el servicio de inspección (y en caso de requerir también autorice el ingreso a personal de apoyo y/o personal en entrenamiento) y entregar en tiempo y forma la documentación solicitada.</span></li>
+            <li><span class="num">7)</span><span class="texto">Biotecnología CADO, S.A. de C.V. presta su (s) servicio(s) de inspección al cliente y en ninguna parte de los procesos, objeto de la presente PET-Contrato, realiza actos de subcontratación.</span></li>
+            <li><span class="num">8)</span><span class="texto">Biotecnología CADO, S.A. de C.V. para la ejecución del objeto de esta PET-Contrato, se apega a los lineamientos establecidos en los instructivos de trabajo vigentes conforme al Sistema de Gestión, a la norma oficial mexicana o disposición legal correspondiente.</span></li>
+            <li><span class="num">9)</span><span class="texto">El inspector al finalizar el servicio(s) entregará al cliente copia del acta de evaluación y/o lista de inspección.</span></li>
+            <li><span class="num">10)</span><span class="texto">Biotecnología CADO, S.A de C.V. se compromete a emitir el dictamen o certificado, y/o la documentación correspondiente al resultado de inspección (según corresponda) de los servicios contratados en un tiempo estimado de 10 días hábiles contados a partir del día siguiente de la inspección.</span></li>
+            <li class="texto-continuo"><span class="num">11)</span><span class="texto">El presente PET-Contrato es vigente a partir de la fecha de aceptación y hasta la conclusión de la prestación de los servicios de inspección.</span></li>
+            <li class="texto-continuo"><span class="num">12)</span><span class="texto">En caso de presentase alguna inconformidad originada de esta PET-Contrato, Biotecnología CADO, S.A. de C.V. se someterá a la jurisdicción de las leyes y tribunales mexicanos, renunciando a cualquier otro fuero que, por razón de su domicilio, presente o futuro, pudiera corresponderle</span></li>
+            <li class="texto-continuo"><span class="num">13)</span><span class="texto">La firma del cliente en este documento sirve también como constancia de aceptación del Contrato de prestación de los servicios de inspección solicitados a Biotecnología CADO, S.A de C.V. del cual conoce perfectamente su contenido, alcance y fuerza legal; y al que se ha sujetado. Leído el presente contrato y enteradas las partes de su contenido y alcance lo firmán en:</span></li>
+        </ul>
+    </div>
+    <div class="border-container">
+        <table class="tabla-fechas"><tr>
+            <td class="col-code">{{ MUNICIPIO_FIRMA|default:"" }}</td><td class="col-label">el día</td>
+            <td class="col-code">{{ DIA_FIRMA|default:"" }}</td><td class="col-label">del mes de</td>
+            <td class="col-code">{{ MES_FIRMA|default:"" }}</td><td class="col-label">del</td><td class="col-code">{{ ANIO_FIRMA|default:"" }}</td>
+        </tr></table>
+    </div>
+    <div class="footer-info"><span>Priv. 29 A Sur No. 3302, Col. El Vergel, C.P.72400, Puebla, Puebla.</span><span>Tel: 222 243 16 03</span><span>direccion@uvcado.com.mx</span></div>
+    <div class="barras-decorativas"><div class="barra-naranja"></div><div class="barra-gris"></div></div>
+    <div class="ref-code">REF: PROC-G-002</div>
+    <div class="footer-legal"><div class="texto-legal">Documento controlado, prohibida su reproducción parcial o total sin previa autorización de Biotecnología CADO, SA de CV. Esta información es confidencial y para uso exclusivo del destinatario y personal autorizado de Biotecnología CADO, SA de CV.</div><div class="pagina">Página 1 de 2</div></div>
+</div>
+
+<div class="documento">
+    <div class="header-container">
+        <div class="header-left"><img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image"></div>
+        <div class="header-right">
+            <div class="titulo-unidad">UNIDAD DE INSPECCIÓN</div>
+            <div class="linea-encabezado"><div class="linea-naranja"></div><div class="linea-gris"></div></div>
+            <div class="textos-oficiales">
+                <div class="texto-rev">FOR-G-016 Rev.18</div>
+                <div class="texto-empresa">BIOTECNOLOGIA CADO, S.A. DE C.V.</div>
+                <div class="texto-propuesta">Propuesta Económica y Técnica – Contrato de Servicios</div>
+            </div>
+        </div>
+    </div>
+    <div class="encabezado-pet"><span class="etiqueta-pet">PET-Contrato No</span><div class="caja-pet-num">{{ PET_NUMERO|default:"" }}</div></div>
+
+    <div class="contenedor-costos-pago">
+        <div class="etiqueta-condicion">CONDICIONES DE LOS COSTOS</div>
+        <div class="bloque-condiciones"><ul class="lista-condiciones">
+            <li><span class="num">1)</span><span class="texto">Los costos de la presente PET-Contrato tienen una vigencia de 30 días naturales, incluyen IVA y están expresados en MONEDA MEXICANA.</span></li>
+            <li><span class="num">2)</span><span class="texto">Cualquier eventualidad que represente retraso en la prestación del servicio imputable al cliente o visitas adicionales, se verá reflejado en el costo del servicio.</span></li>
+            <li><span class="num">3)</span><span class="texto">La reprogramación del servicio(s) contratado(s) deberá notificarse a la Unidad de Inspección con 72 horas de anticipación, de lo contrario causará honorarios.</span></li>
+            <li><span class="num">4)</span><div class="fila-aplica"><span class="texto">En el caso de trabajos urgentes, Biotecnología CADO, S.A. de C.V. cobrará un cargo adicional del 35% conforme al precio establecido en el presente PET-Contrato.</span><div class="opciones-checkbox"><span>Aplica</span><span class="caja-checkbox">{% if TRABAJO_URGENTE %}X{% endif %}</span><span>No Aplica</span><span class="caja-checkbox">{% if not TRABAJO_URGENTE %}X{% endif %}</span></div></div></li>
+            <li><span class="num">5)</span><span class="texto">La cancelación total del servicio(s) antes de su realización y/o sin causas imputables a Biotecnología CADO, S.A. de C.V., generará un cobro total de los gastos realizados (viáticos y/o transportes), no tendrá derecho a reclamar la devolución del anticipo o cubrirá el gasto total de lo ejecutado hasta el momento de la cancelación.</span></li>
+        </ul></div>
+        <div class="etiqueta-condicion">CONDICIONES DEL PAGO</div>
+        <div class="bloque-condiciones"><ul class="lista-condiciones">
+            <li><span class="num">1)</span><div class="texto">"EL CLIENTE" se obliga a pagar a Biotecnología CADO, S.A. de C.V. por el(los) servicio(s) de inspección realizados. El pago debe ser realizado nombre de Biotecnología CADO, S.A. de C.V por medio de transferencia electrónica de fondos, depósito de cheque nominativo o efectivo en:
+                <table class="tabla-bancaria"><thead><tr><th class="col-banco">BANCO</th><th class="col-cuenta">CUENTA</th><th class="col-clabe">CLABE</th><th class="col-rfc">RFC</th></tr></thead><tbody><tr><td>BBVA BANCOMER</td><td>0193692027</td><td>012650001936920277</td><td>BCA110222Q14</td></tr></tbody></table>
+            </div></li>
+            <li><span class="num">2)</span><span class="texto">"EL CLIENTE" realizará el pago en una sola exhibición o 2 pagos diferidos, 50% al contratar el servicio y 50% antes de entregar el dictamen y/o el certificado.</span></li>
+            <li><span class="num">3)</span><span class="texto">"EL CLIENTE", una vez realizado el pago, enviará el comprobante del pago al siguiente correo: ventas@uvcado.com.mx</span></li>
+        </ul></div>
+    </div>
+
+    <div class="contenedor-imparcialidad">
+        <div class="etiqueta-imparcialidad">IMPARCIALIDAD-CONFIDENCIAL</div>
+        <div class="bloque-marco">
+            <div class="texto-introductorio">Biotecnología CADO, S.A. de C.V. asegura la confidencialidad, imparcialidad e independencia de las actividades relacionadas a los servicios contratados, como se describe a continuación:</div>
+            <ul class="lista-imparcialidad">
+                {% for condicion in CONDICIONES_IMPARCIALIDAD %}
+                <li><span class="num">{{ forloop.counter }})</span><span class="texto">{{ condicion }}</span></li>
+                {% empty %}
+                <li><span class="num">1)</span><span class="texto">Tendrá acceso a la información relacionada con el ítem de inspección, esta información se considera confidencial misma que es propiedad del cliente, así como toda la información que se obtenga y/o genere durante la realización de los servicios de forma verbal, electrónica, visual, por escrito o en cualquier otra forma tangible. Ambas partes aceptan y se comprometen a no divulgar, reproducir en cualquier forma, dar a conocer todo o en partes, a terceras personas la información técnica y comercial intercambiada con la firma de la presente PET-Contrato, excepto cuando se requiera por una entidad.</span></li>
+                <li><span class="num">2)</span><span class="texto">Podrá hacer pública la información de la evidencia objetiva del servicio contratado por el cliente registrada en el acta y FOR-G-003 "Formato para asegurar la protección de la información confidencial de los clientes" ante cualquier Entidad de Acreditación y/o Autoridad Normalizadora cuando así lo solicite, notificando de inmediato por correo electrónico cuando esto ocurra, excepto cuando la ley lo prohíba; conforme a lo establecido en el Artículo 56, fracción V, VI, VII de la Ley de Infraestructura de la Calidad; Artículo 88 del Reglamento de la Ley Federal de Metrología y Normalización o por la que la sustituya y conforme los lineamientos de Aprobación de las normas en las cuales la Unidad de Inspección está acreditada. Misma información proporcionada por el cliente quedará bajo resguardo de la Unidad de Inspección por diez (10) años.</span></li>
+                <li><span class="num">3)</span><span class="texto">Las actividades de inspección realizadas por la Unidad de Inspección son llevadas a cabo apegadas al Sistema de Gestión de la Calidad, las cuales guían al personal a actuar con imparcialidad, independencia, ausencia de conflicto de interés, ausencia de prejuicios, neutralidad y equidad.</span></li>
+                <li><span class="num">4)</span><span class="texto">En caso de que la Unidad de Inspección identifique un riesgo imprevisto a la imparcialidad, posterior al inicio del servicio(s), se notificará al cliente de esta situación, para su conocimiento y tomar las acciones correspondientes para eliminar el riesgo, en caso contrario, se iniciará con el servicio(s) contratado(s) nuevamente. En caso de la aceptación de la presente PET-Contrato y la Unidad de Inspección identificará riesgos a la imparcialidad, podrá rechazar la solicitud del servicio, sin que esto motive acto de discriminación de cualquier índole.</span></li>
+                <li><span class="num">5)</span><span class="texto">El personal de la Unidad de Inspección rechazará todo tipo de beneficios personales que no emanen del ejercicio ético de su profesión, por lo que quedará prohibido que el cliente o su personal den gratificaciones de cualquier índole (regalos, bonificaciones, propinas, incentivos económicos, o de cualquier otro tipo).</span></li>
+                <li><span class="num">6)</span><span class="texto">Cuando se presente una situación de dolo, mala fe o falta de ética, por parte del personal de la Unidad de Inspección, el cliente, asociados, etc.; la Unidad de Inspección revisará la gravedad del incumplimiento con los reglamentos, lineamientos o políticas para implementar las acciones correctivas necesarias e impondrá las sanciones que correspondan: como actas administrativas, inhabilitación del personal de la Unidad de Inspección, cancelación del servicio o de índole legal, al personal de la Unidad y el cliente, entre otros.</span></li>
+                <li><span class="num">7)</span><span class="texto">El cliente tiene derecho de acceder a sus datos personales que poseemos y a los detalles del tratamiento de los mismos, así como a rectificarlos en caso de ser inexactos o incompletos; cancelarlos cuando considere que no se requieren para alguna de las finalidad de señaladas en el aviso de privacidad de Biotecnología CADO, S.A. de C.V., estén siendo utilizados para finalidades no consentidas o haya finalizado la relación contractual o de servicio, o bien, oponerse al tratamiento de los mismos para fines específicos. Puede consultar nuestro aviso de privacidad en la página web <a href="http://uvcado.com.mx/" target="_blank">http://uvcado.com.mx/</a> o para mayor información comuníquese con nosotros en el siguiente correo electrónico <a href="mailto:info.confidencial@uvcado.com.mx">info.confidencial@uvcado.com.mx</a></span></li>
+                <li><span class="num">8)</span><span class="texto">Para su conocimiento Biotecnología CADO, S.A. de C.V. cuenta con un procedimiento de atención de quejas y apelaciones, en caso de presentase una queja o apelación, el cliente contará con 5 días hábiles posteriores a la realización del servicio y/o entrega de resultados de inspección, haciendo uso de este recurso por escrito o vía correo electrónico <a href="mailto:buzon.quejas@uvcado.com.mx">buzon.quejas@uvcado.com.mx</a>, o al tel (222)-243-16-03 o verbalmente con el personal de Biotecnología CADO, S.A. de C.V.</span></li>
+                <li><span class="num">9)</span><span class="texto">Biotecnología CADO, S.A. de C.V., cuando sea necesario y a solicitud del cliente pone a su disposición el FOR-G-037 Bitácora de quejas, reclamaciones u observaciones</span></li>
+                <li><span class="num">10)</span><span class="texto">El inspector tiene la autoridad de suspender las actividades de inspección si identifica una condición insegura en las instalaciones del cliente, que pueda afectar la integridad del inspector(es), en caso de existir se notificará al cliente sobre la condición insegura para evaluar si esta puede ser eliminada al momento. El inspector podrá suspender la inspección, sin causas imputables a la Unidad de Inspección, si la información presentada no es suficiente para evaluar el cumplimiento de la norma oficial mexicana o disposición legal.</span></li>
+                {% endfor %}
+            </ul>
+        </div>
+        <div class="etiqueta-imparcialidad">CONDICIONES ESPECIALES DEL SERVICIO(S)</div>
+        <div class="bloque-especiales"><span class="indicador-especial"><sup>(31)</sup> Indicar si existen condiciones especiales establecida por el cliente para realizar el servicio(s) de inspección: {{ CONDICIONES_ESPECIALES|default:"No Aplica" }}</span></div>
+    </div>
+
+    <div class="contenedor-firmas">
+        <div class="bloque-firmas-flex">
+            <div class="columna-firma"><div class="caja-firma-gris">GUSTAVO CABRERA FLORES</div><div class="texto-cargo">Representante Legal</div><div class="texto-empresa-firma">Biotecnología CADO, S.A. de C.V.</div></div>
+            <div class="columna-firma"><div class="caja-firma-gris">{{ REPRESENTANTE_LEGAL|default:"" }}</div><div class="texto-cargo">Representante Legal</div><div class="texto-empresa-firma">{{ CLIENTE_RAZON_SOCIAL|default:"" }}</div></div>
+        </div>
+        <div class="fila-ccp"><span class="etiqueta-ccp">ccp GT/GTS</span><div class="caja-ccp-gris">{{ RESPONSABLE_TECNICO|default:"" }}</div></div>
+    </div>
+    <div class="footer-info"><span>Priv. 29 A Sur No. 3302, Col. El Vergel, C.P.72400, Puebla, Puebla.</span><span>Tel: 222 243 16 03</span><span>direccion@uvcado.com.mx</span></div>
+    <div class="barras-decorativas"><div class="barra-naranja"></div><div class="barra-gris"></div></div>
+    <div class="ref-code">REF: PROC-G-002</div>
+    <div class="footer-legal"><div class="texto-legal">Documento controlado, prohibida su reproducción parcial o total sin previa autorización de Biotecnología CADO, SA de CV. Esta información es confidencial y para uso exclusivo del destinatario y personal autorizado de Biotecnología CADO, SA de CV.</div><div class="pagina">Página 2 de 2</div></div>
+</div>
 </body>
 </html>
