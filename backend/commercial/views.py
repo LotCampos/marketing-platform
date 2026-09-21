@@ -366,6 +366,12 @@ class AgreementViewSet(CommercialBaseViewSet):
             effective_until=validated_data.get("effective_until"),
             terms_hash=validated_data.get("terms_hash"),
             notes=validated_data.get("notes"),
+            pet_number=validated_data.get("pet_number"),
+            legal_representative=validated_data.get("legal_representative"),
+            legal_representative_rfc=validated_data.get("legal_representative_rfc"),
+            technical_responsible=validated_data.get("technical_responsible"),
+            urgent_work=validated_data.get("urgent_work", False),
+            special_conditions=validated_data.get("special_conditions", False),
         )
         try:
             agreement = AgreementService().create(data)
