@@ -30,6 +30,10 @@ const navigation: NavigationItem[] = [
   },
 
   {
+    label: 'Contratos / PET',
+    path: '/commercial/agreements',
+  },
+  {
     label: 'Instalaciones',
     path: '/commercial/installations',
   },
