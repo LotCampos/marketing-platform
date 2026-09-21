@@ -25,6 +25,7 @@ export interface Installation {
   address: string | null
   street: string | null
   street_number: string | null
+  colony: string | null
   state: string | null
   municipality: string | null
   postal_code: string | null
@@ -184,6 +185,8 @@ export interface CreateQuotationItemInput {
   description: string
   quantity: string
   unit_price: string
+  evaluation_period?: string | null
+  unit?: string | null
 }
 
 export interface CreateQuotationInput {
@@ -206,6 +209,8 @@ export interface QuotationItem {
   quantity: string
   unit_price: string
   line_total: string
+  evaluation_period: string | null
+  unit: string | null
   version_lock: number
   created_at: string
 }
@@ -241,6 +246,12 @@ export interface Agreement {
   effective_until: string | null
   starts_at: string | null
   ends_at: string | null
+  pet_number: string | null
+  legal_representative: string | null
+  legal_representative_rfc: string | null
+  technical_responsible: string | null
+  urgent_work: boolean
+  special_conditions: boolean
 }
 
 export interface AgreementTerm {
