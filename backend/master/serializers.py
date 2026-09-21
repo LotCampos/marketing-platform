@@ -44,6 +44,7 @@ class InstallationSerializer(serializers.ModelSerializer):
             "address",
             "street",
             "street_number",
+            "colony",
             "state",
             "municipality",
             "postal_code",
