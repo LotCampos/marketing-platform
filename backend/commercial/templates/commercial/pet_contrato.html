@@ -235,7 +235,7 @@ body { background:#f4f4f4; color:#000; }
             </ul>
         </div>
         <div class="etiqueta-imparcialidad">CONDICIONES ESPECIALES DEL SERVICIO(S)</div>
-        <div class="bloque-especiales"><span class="indicador-especial"><sup>(31)</sup> Indicar si existen condiciones especiales establecida por el cliente para realizar el servicio(s) de inspección: {{ CONDICIONES_ESPECIALES|default:"No Aplica" }}</span></div>
+        <div class="bloque-especiales"><span class="indicador-especial"><sup>(31)</sup> Indicar si existen condiciones especiales establecida por el cliente para realizar el servicio(s) de inspección: {% if CONDICIONES_ESPECIALES %}Sí{% else %}No{% endif %}</span></div>
     </div>
 
     <div class="contenedor-firmas">
