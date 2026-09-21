@@ -7,6 +7,7 @@ from django.core.exceptions import ValidationError
 from django.db import transaction
 from django.utils import timezone
 
+from master.models import Installation
 from master.services.client_service import ClientCreateData, ClientService
 
 from ..models import Opportunity, Prospect, ProspectStatus, Quotation
@@ -33,7 +34,6 @@ class ProspectConversionService:
             prospect = (
                 Prospect.objects
                 .select_for_update()
-                .select_related("installation")
                 .get(id=prospect_id)
             )
         except Prospect.DoesNotExist as exc:
@@ -66,9 +66,14 @@ class ProspectConversionService:
         )
 
         if prospect.installation_id is not None:
-            prospect.installation.client_id = client.id
-            prospect.installation.version_lock += 1
-            prospect.installation.save(update_fields=["client_id", "version_lock"])
+            installation = (
+                Installation.objects
+                .select_for_update()
+                .get(id=prospect.installation_id)
+            )
+            installation.client_id = client.id
+            installation.version_lock += 1
+            installation.save(update_fields=["client_id", "version_lock"])
 
         Opportunity.objects.filter(prospect_id=prospect.id).update(client_id=client.id)
         Quotation.objects.filter(

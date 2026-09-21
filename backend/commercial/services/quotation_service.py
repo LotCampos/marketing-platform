@@ -224,7 +224,7 @@ class QuotationService:
                     amount
                     for component, _component_type, _clause_template, amount
                     in resolved_components
-                    if component.treatment.strip().upper() == "ADDITIONAL"
+                    if component.treatment.strip().upper() == "INCLUDED"
                 ),
                 Decimal("0"),
             )

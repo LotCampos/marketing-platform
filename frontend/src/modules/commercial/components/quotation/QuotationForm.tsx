@@ -202,15 +202,26 @@ export default function QuotationForm({
   )
 
   const subtotal = useMemo(
-    () =>
-      items.reduce(
+    () => {
+      const itemsSubtotal = items.reduce(
         (sum, item) =>
           sum +
           Number(item.quantity || 0) *
             Number(item.unit_price || 0),
         0,
-      ),
-    [items],
+      )
+
+      const includedComponents = components.reduce(
+        (sum, component) =>
+          component.treatment === 'INCLUDED'
+            ? sum + Number(component.amount || 0)
+            : sum,
+        0,
+      )
+
+      return itemsSubtotal + includedComponents
+    },
+    [items, components],
   )
 
   const tax = useMemo(
@@ -601,7 +612,7 @@ export default function QuotationForm({
           <div className="panel-heading">
             <div>
               <h3>
-                Conceptos
+                Servicios
               </h3>
             </div>
 
@@ -609,14 +620,14 @@ export default function QuotationForm({
               type="button"
               onClick={addItem}
             >
-              Agregar concepto
+              Agregar servicio
             </button>
           </div>
 
           {items.map((item, index) => (
             <div key={item.key}>
               <strong>
-                Concepto {index + 1}
+                Servicio {index + 1}
               </strong>
 
               <div>
@@ -743,13 +754,12 @@ export default function QuotationForm({
           ))}
         </section>
 
-        <section className="quotation-components-section">
+        <section>
           <div className="panel-heading">
             <div>
               <h3>Componentes comerciales</h3>
               <p>
-                Configure viáticos, traslados, materiales y otros componentes
-                conforme al catálogo comercial.
+                Agrega viáticos y otros componentes
               </p>
             </div>
 
@@ -758,16 +768,11 @@ export default function QuotationForm({
               onClick={addComponent}
               disabled={componentTypes.length === 0}
             >
-              Agregar componente
+              Agregar viáticos
             </button>
           </div>
 
           {components.map((component, index) => {
-            const selectedType = componentTypes.find(
-              (type) =>
-                type.code === component.component_type_code,
-            )
-
             const componentClauses =
               activeClauseTemplates.filter(
                 (template) =>
@@ -788,15 +793,14 @@ export default function QuotationForm({
             return (
               <div
                 key={component.key}
-                className="quotation-component-card"
               >
                 <strong>
-                  Componente {index + 1}
+                  Viáticos {index + 1}
                 </strong>
 
                 <div>
                   <label htmlFor={`component-type-${component.key}`}>
-                    Tipo de componente
+                    Tipo de viáticos
                   </label>
                   <select
                     id={`component-type-${component.key}`}
@@ -838,7 +842,7 @@ export default function QuotationForm({
 
                 <div>
                   <label htmlFor={`component-treatment-${component.key}`}>
-                    Tratamiento económico
+                   Tipo de inciso
                   </label>
                   <select
                     id={`component-treatment-${component.key}`}
@@ -868,13 +872,13 @@ export default function QuotationForm({
                     }}
                   >
                     <option value="INCLUDED">
-                      Incluido
+                      Con viáticos incluidos
                     </option>
                     <option value="ADDITIONAL">
-                      Adicional
+                      Sin viaticos incluidos
                     </option>
                     <option value="INFORMATIVE">
-                      Informativo
+                      Viáticos agregados por volumen
                     </option>
                   </select>
                 </div>
@@ -906,7 +910,7 @@ export default function QuotationForm({
                 {isClauseMode && (
                   <div>
                     <label htmlFor={`component-clause-${component.key}`}>
-                      Cláusula controlada
+                      Cláusula
                     </label>
                     <select
                       id={`component-clause-${component.key}`}
@@ -948,7 +952,7 @@ export default function QuotationForm({
                 {selectedClause && (
                   <div className="quotation-component-clause-preview">
                     <label>
-                      Texto controlado
+                      Texto de clausula
                     </label>
                     <span>
                       {selectedClause.template_text}
@@ -957,10 +961,6 @@ export default function QuotationForm({
                 )}
 
                 <div>
-                  <span>
-                    {selectedType?.name ??
-                      component.component_type_code}
-                  </span>
                   <button
                     type="button"
                     onClick={() =>

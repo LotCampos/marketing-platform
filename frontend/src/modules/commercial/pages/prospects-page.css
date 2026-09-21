@@ -707,27 +707,29 @@
 }
 
 .prospect-modal-body button {
-  min-height: 46px;
-  padding: 0 24px;
+  width: 100%;
+  box-sizing: border-box;
+  display: block;
+  padding: 12px 16px;
   border: none;
+  color: #ad0000;
   border-radius: var(--radius-input);
-  font-size: 13px;
+  font-size: 12px;
   font-weight: 800;
   text-transform: uppercase;
-  letter-spacing: 0.05em;
   cursor: pointer;
   transition: all 160ms cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .prospect-modal-body button[type="button"]:not(.prospect-modal-close) {
   background: var(--surface-raised);
-  color: #94a3b8;
+  color: #ad0000;
   box-shadow: var(--shadow-button-secondary);
 }
 
 .prospect-modal-body button[type="button"]:not(.prospect-modal-close):hover:not(:disabled) {
   transform: translateY(-2px);
-  color: #ffffff;
+  color: #ad0000;
   background: var(--surface-highlight);
   box-shadow: 6px 6px 15px rgba(0, 0, 0, 0.6), inset 1px 1px 3px rgba(255, 255, 255, 0.15);
 }
@@ -843,7 +845,7 @@
 }
 
 .prospect-modal-actions button[type="button"] {
-  min-height: 46px;
+  width: 100%;
   padding: 0 24px;
   border: none;
   border-radius: var(--radius-input);
@@ -889,7 +891,8 @@
 }
 
 .prospect-modal-body form .panel-heading button[type="button"] {
-  min-height: 48px !important;
+   width: 25%  !important;
+  min-height: 44px !important;
   padding: 0 24px !important;
   background: var(--orange-500) !important;
   border: none !important;
@@ -1029,8 +1032,8 @@
 
 .prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > div:nth-of-type(5) span {
   color: #01b478;
-  font-weight: 700;
-  font-size: 15px;
+  font-weight: 500;
+  font-size: 14px;
 }
 
 .prospect-modal-large:has(#prospect-quotation-modal-title) .prospect-modal-body form > section > div > button {

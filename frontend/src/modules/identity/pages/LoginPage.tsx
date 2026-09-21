@@ -110,8 +110,7 @@ export default function LoginPage() {
             </h1>
 
             <p className="login-card-subtitle">
-              Ingresa tus credenciales para acceder
-              al sistema UI CADO.
+              Ingresa tus correo y contraseña para acceder.
             </p>
           </header>
 
