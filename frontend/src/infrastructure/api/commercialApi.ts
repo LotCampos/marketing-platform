@@ -201,6 +201,31 @@ export function getAgreements() {
   )
 }
 
+export function createAgreement(data: {
+  agreement_number: string
+  quotation_id: string
+  opportunity_id: string
+  client_id: string
+  status: string
+  pet_number?: string | null
+  legal_representative?: string | null
+  legal_representative_rfc?: string | null
+  technical_responsible?: string | null
+  urgent_work?: boolean
+  special_conditions?: boolean
+}) {
+  return httpPost<Agreement>(
+    `${commercialPath}/agreements/`,
+    data,
+  )
+}
+
+export function getAgreementPdf(agreementId: string): Promise<Blob> {
+  return httpGetBlob(
+    `${commercialPath}/agreements/` + agreementId + '/pdf/',
+  )
+}
+
 /* =========================================================
    AGREEMENT TERMS
 ========================================================= */
@@ -240,6 +265,7 @@ export function createInstallation(
     address?: string | null
     street?: string | null
     street_number?: string | null
+    colony?: string | null
     state?: string | null
     municipality?: string | null
     postal_code?: string | null
