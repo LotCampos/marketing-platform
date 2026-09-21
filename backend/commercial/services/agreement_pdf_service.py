@@ -61,7 +61,7 @@ class AgreementPDFService:
             "LOGO_URI": cls._asset_uri(cls.LOGO_STATIC_PATH),
             "CLIENTE_RAZON_SOCIAL": client.business_name or prospect.business_name or "",
             "CLIENTE_RFC": client.rfc or prospect.rfc or "",
-            "INSTALACION_DOMICILIO": installation.address or "",
+            "INSTALACION_DOMICILIO": installation.address or " ".join(part for part in [installation.street, installation.street_number] if part) or "",
             "INSTALACION_COLONIA": installation.colony or "",
             "INSTALACION_MUNICIPIO": installation.municipality or "",
             "INSTALACION_ESTADO": installation.state or "",
@@ -85,7 +85,7 @@ class AgreementPDFService:
             "TRABAJO_URGENTE": agreement.urgent_work,
             "CONDICIONES_ESPECIALES": agreement.special_conditions,
             "RESPONSABLE_TECNICO": agreement.technical_responsible or "",
-            "CONDICIONES_IMPARCIALIDAD": True,
+            "CONDICIONES_IMPARCIALIDAD": [],
         }
 
         html = render_to_string(cls.TEMPLATE_NAME, context)
