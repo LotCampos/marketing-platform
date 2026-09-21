@@ -76,6 +76,15 @@ export default function QuotationsPage() {
   const [taxPercentage, setTaxPercentage] = useState('16.00')
   const [notes, setNotes] = useState('')
 
+  const [agreementQuotation, setAgreementQuotation] = useState<Quotation | null>(null)
+  const [agreementNumber, setAgreementNumber] = useState('')
+  const [petNumber, setPetNumber] = useState('')
+  const [legalRepresentative, setLegalRepresentative] = useState('')
+  const [legalRepresentativeRfc, setLegalRepresentativeRfc] = useState('')
+  const [technicalResponsible, setTechnicalResponsible] = useState('')
+  const [urgentWork, setUrgentWork] = useState(false)
+  const [specialConditions, setSpecialConditions] = useState(false)
+
   const [items, setItems] = useState<DraftItem[]>([
     createEmptyItem(),
   ])
