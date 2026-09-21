@@ -29,8 +29,14 @@ import type {
   ServiceCatalog,
 } from '../types/commercial'
 
-interface DraftItem extends CreateQuotationItemInput {
+interface DraftItem {
   key: string
+  service_catalog_id: string
+  description: string
+  quantity: string
+  unit_price: string
+  evaluation_period?: string | null
+  unit?: string | null
 }
 
 function createEmptyItem(): DraftItem {
