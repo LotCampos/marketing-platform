@@ -129,6 +129,8 @@ class QuotationItem(CommercialBaseModel):
     quotation_id = models.UUIDField(db_column="quotation_id")
     service_catalog_id = models.UUIDField(db_column="service_catalog_id")
     description = models.CharField(max_length=500, db_column="description")
+    evaluation_period = models.CharField(max_length=100, db_column="evaluation_period", null=True, blank=True)
+    unit = models.CharField(max_length=100, db_column="unit", null=True, blank=True)
     quantity = models.DecimalField(max_digits=12, decimal_places=3, db_column="quantity", default=Decimal("1"))
     unit_price = models.DecimalField(max_digits=14, decimal_places=2, db_column="unit_price", default=Decimal("0"))
     line_total = models.DecimalField(max_digits=14, decimal_places=2, db_column="line_total", default=Decimal("0"))
@@ -152,6 +154,12 @@ class Agreement(CommercialBaseModel):
     effective_until = models.DateField(db_column="effective_until", null=True, blank=True)
     terms_hash = models.CharField(max_length=128, db_column="terms_hash", null=True, blank=True)
     notes = models.TextField(db_column="notes", null=True, blank=True)
+    pet_number = models.CharField(max_length=50, db_column="pet_number", null=True, blank=True)
+    legal_representative = models.CharField(max_length=255, db_column="legal_representative", null=True, blank=True)
+    legal_representative_rfc = models.CharField(max_length=13, db_column="legal_representative_rfc", null=True, blank=True)
+    technical_responsible = models.CharField(max_length=255, db_column="technical_responsible", null=True, blank=True)
+    urgent_work = models.BooleanField(db_column="urgent_work", default=False)
+    special_conditions = models.BooleanField(db_column="special_conditions", default=False)
 
     class Meta:
         db_table = "agreements"
