@@ -350,6 +350,7 @@ class QuotationItemViewSet(CommercialBaseViewSet):
 
 
 class AgreementViewSet(CommercialBaseViewSet):
+    permission_by_action = {**CommercialBaseViewSet.permission_by_action, "pdf": CanDownload}
     queryset = Agreement.objects.all().order_by("-created_at")
     serializer_class = AgreementSerializer
 
