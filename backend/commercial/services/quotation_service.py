@@ -20,6 +20,8 @@ class QuotationItemCreateData:
     description: str
     quantity: Decimal
     unit_price: Decimal
+    evaluation_period: str | None = None
+    unit: str | None = None
 
 
 @dataclass(frozen=True)
@@ -141,6 +143,8 @@ class QuotationService:
                 quantity=item.quantity,
                 unit_price=item.unit_price,
                 line_total=self._calculate_item_total(item.quantity, item.unit_price),
+                evaluation_period=item.evaluation_period.strip() if item.evaluation_period else None,
+                unit=item.unit.strip() if item.unit else None,
                 version_lock=1,
             ))
 
