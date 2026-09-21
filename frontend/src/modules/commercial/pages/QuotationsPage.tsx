@@ -39,6 +39,8 @@ function createEmptyItem(): DraftItem {
     description: '',
     quantity: '1',
     unit_price: '0.00',
+    evaluation_period: '',
+    unit: '',
   }
 }
 
