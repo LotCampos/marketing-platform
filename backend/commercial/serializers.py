@@ -73,7 +73,7 @@ class QuotationItemSerializer(serializers.ModelSerializer):
         model = QuotationItem
         fields = (
             "id", "quotation_id", "service_catalog_id", "description",
-            "quantity", "unit_price", "line_total", "version_lock", "created_at",
+            "quantity", "unit_price", "line_total", "evaluation_period", "unit", "version_lock", "created_at",
         )
         read_only_fields = ("id", "quotation_id", "line_total", "version_lock", "created_at")
 
@@ -83,6 +83,8 @@ class QuotationItemInputSerializer(serializers.Serializer):
     description = serializers.CharField(max_length=500, allow_blank=False, trim_whitespace=True)
     quantity = serializers.DecimalField(max_digits=12, decimal_places=3, min_value=Decimal("0.001"))
     unit_price = serializers.DecimalField(max_digits=14, decimal_places=2, min_value=Decimal("0.00"))
+    evaluation_period = serializers.CharField(max_length=100, required=False, allow_blank=True, allow_null=True)
+    unit = serializers.CharField(max_length=100, required=False, allow_blank=True, allow_null=True)
 
     def validate_description(self, value: str) -> str:
         value = " ".join(value.strip().split())
