@@ -211,6 +211,13 @@ class Installation(MasterBaseModel):
         db_column="street_number",
     )
 
+    colony = models.CharField(
+        max_length=150,
+        blank=True,
+        null=True,
+        db_column="colony",
+    )
+
     state = models.CharField(
         max_length=100,
         blank=True,
