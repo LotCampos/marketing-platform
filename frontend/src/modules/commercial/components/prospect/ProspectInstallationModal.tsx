@@ -115,6 +115,8 @@ export default function ProspectInstallationModal({
         street: form.street.trim() || null,
         street_number:
           form.street_number.trim() || null,
+        colony:
+          form.colony.trim() || null,
         state: form.state.trim() || null,
         municipality:
           form.municipality.trim() || null,
