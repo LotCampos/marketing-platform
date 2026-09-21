@@ -296,6 +296,7 @@ export function updateInstallation(
     address?: string | null
     street?: string | null
     street_number?: string | null
+    colony?: string | null
     state?: string | null
     municipality?: string | null
     postal_code?: string | null
