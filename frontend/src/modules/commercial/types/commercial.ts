@@ -197,7 +197,7 @@ export interface CreateQuotationInput {
   valid_until?: string | null
   currency?: string
   notes?: string | null
-  tax_percentage?: string
+  tax_percentage?: string | number
   items: CreateQuotationItemInput[]
 }
 
