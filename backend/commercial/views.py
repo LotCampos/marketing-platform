@@ -44,6 +44,7 @@ from .serializers import (
 from .services import (
     AgreementCreateData,
     AgreementService,
+    AgreementPDFService,
     OptimisticLockError,
     OpportunityCreateData,
     OpportunityService,
@@ -262,6 +263,8 @@ class QuotationViewSet(CommercialBaseViewSet):
                 description=item["description"],
                 quantity=item["quantity"],
                 unit_price=item["unit_price"],
+                evaluation_period=item.get("evaluation_period"),
+                unit=item.get("unit"),
             )
             for item in validated_data["items"]
         )
@@ -380,6 +383,17 @@ class AgreementViewSet(CommercialBaseViewSet):
         response_serializer = self.get_serializer(agreement)
         headers = self.get_success_headers(response_serializer.data)
         return Response(response_serializer.data, status=status.HTTP_201_CREATED, headers=headers)
+
+    @action(detail=True, methods=["get"], url_path="pdf", url_name="pdf", renderer_classes=[PDFRenderer])
+    def pdf(self, request, pk=None):
+        agreement = self.get_object()
+        try:
+            pdf = AgreementPDFService.generate(agreement)
+        except ApplicationValidationError as exc:
+            raise DRFValidationError({"detail": exc.message_dict}) from exc
+        response = HttpResponse(pdf, content_type="application/pdf")
+        response["Content-Disposition"] = f'inline; filename="pet-contrato-{agreement.pet_number or agreement.agreement_number}.pdf"'
+        return response
 
 
 class AgreementTermViewSet(CommercialBaseViewSet):
