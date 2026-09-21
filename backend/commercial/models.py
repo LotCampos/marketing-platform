@@ -129,6 +129,12 @@ class QuotationItem(CommercialBaseModel):
     quotation_id = models.UUIDField(db_column="quotation_id")
     service_catalog_id = models.UUIDField(db_column="service_catalog_id")
     description = models.CharField(max_length=500, db_column="description")
+    evaluation_period = models.CharField(
+        max_length=255,
+        db_column="evaluation_period",
+        null=True,
+        blank=True,
+    )
     quantity = models.IntegerField(db_column="quantity", default=1)
     unit_price = models.IntegerField(db_column="unit_price", default=0)
     line_total = models.DecimalField(max_digits=14, decimal_places=2, db_column="line_total", default=Decimal("0"))
@@ -299,6 +305,38 @@ class Agreement(CommercialBaseModel):
     quotation_id = models.UUIDField(db_column="quotation_id")
     opportunity_id = models.UUIDField(db_column="opportunity_id")
     client_id = models.UUIDField(db_column="client_id")
+
+    legal_name = models.CharField(
+        max_length=255,
+        db_column="legal_name",
+        null=True,
+        blank=True,
+    )
+    tax_id = models.CharField(
+        max_length=13,
+        db_column="tax_id",
+        null=True,
+        blank=True,
+    )
+    legal_representative_name = models.CharField(
+        max_length=255,
+        db_column="legal_representative_name",
+        null=True,
+        blank=True,
+    )
+    legal_representative_tax_id = models.CharField(
+        max_length=13,
+        db_column="legal_representative_tax_id",
+        null=True,
+        blank=True,
+    )
+    employer_registration = models.CharField(
+        max_length=50,
+        db_column="employer_registration",
+        null=True,
+        blank=True,
+    )
+
     status = models.CharField(max_length=17, choices=AgreementStatus.choices, db_column="status")
     signed_by = models.UUIDField(db_column="signed_by", null=True, blank=True)
     signed_at = models.DateTimeField(db_column="signed_at", null=True, blank=True)

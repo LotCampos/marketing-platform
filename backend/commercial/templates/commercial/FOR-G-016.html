@@ -1,0 +1,1209 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+        font-family: Arial, Helvetica, sans-serif;
+    }
+
+    body {
+        background-color: #f4f4f4;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 20px 0;
+    }
+
+    .documento {
+        background-color: #ffffff;
+        width: 800px;
+        min-height: 1050px;
+        padding: 20px 25px 15px 25px;
+        margin-bottom: 20px;
+        position: relative;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        font-size: 10px;
+        color: #000000;
+        line-height: 1.2;
+    }
+
+    .contenedor-seccion-datos {
+        width: 800px;
+        background-color: #ffffff;
+        margin: 0 auto;
+    }
+
+    .header-container {
+        width: 100%;
+        height: 26mm;
+        background-color: #ffffff;
+        display: flex;
+        align-items: flex-start;
+        z-index: 1000;
+        justify-content: space-between;
+
+    }
+
+    .header-left {
+        width: 30%;
+        display: flex;
+        align-items: center;
+    }
+
+    .logo-image {
+        width: 100%;
+        max-height: 65px;
+        object-fit: contain;
+        object-position: left center;
+        display: block;
+    }
+
+    .header-right {
+        width: 70%;
+        display: flex;
+        flex-direction: column;
+        margin-right: 25px;
+    }
+
+    .titulo-unidad {
+        font-size: 15pt;
+        font-weight: 900;
+        color: #1a1a1a;
+        letter-spacing: 4px;
+        text-align: center;
+        margin-bottom: 5px;
+    }
+
+    .linea-encabezado {
+        display: flex;
+        height: 7px;
+        width: 100%;
+        margin-bottom: 5px;
+    }
+
+    .linea-naranja {
+        width: 50%;
+        background-color: #e57f24;
+    }
+
+    .linea-gris {
+        width: 50%;
+        background-color: #000000;
+    }
+
+    .textos-oficiales {
+        justify-content: space-between;
+        text-align: right;
+        display: flex;
+        flex-direction: column;
+        gap: 3px;
+    }
+
+    .texto-rev {
+        font-size: 13px;
+        font-weight: bold;
+        color: #000000;
+    }
+
+    .texto-empresa {
+        font-size: 15px;
+        font-weight: bold;
+        color: #000000;
+        letter-spacing: 0.5px;
+    }
+
+    .texto-propuesta {
+        font-size: 15px;
+        font-weight: bold;
+        color: #000000;
+    }
+
+    .encabezado-pet {
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        margin-top: 10px;
+        margin-bottom: 2px;
+        margin-right: 25px;
+    }
+
+    .etiqueta-pet {
+        font-size: 11px;
+        font-weight: bold;
+        margin-right: 10px;
+    }
+
+    .caja-pet-num {
+        border-bottom: 1px solid #000;
+        background-color: #fca000;
+        width: 90px;
+        height: 22px;
+    }
+
+    .marco-establecimiento {
+        border: 1.9px solid #000;
+        padding: 5px 25px 7px;
+        position: relative;
+    }
+
+    .etiqueta-establecimiento {
+        background-color: #fca000;
+        margin-left: 25px;
+        color: #000;
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 15px;
+        font-size: 11px;
+        margin-bottom: 0px;
+    }
+
+    .filas-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 9px;
+    }
+
+    .fila-flex {
+        display: flex;
+        gap: 15px;
+        width: 100%;
+    }
+
+    .col-izq {
+        width: 68%;
+        display: flex;
+        gap: 11px;
+    }
+
+    .col-der {
+        width: 32%;
+        display: flex;
+        gap: 11px;
+    }
+
+    .campo {
+        display: flex;
+        flex-direction: column;
+    }
+
+    .campo label {
+        font-size: 9.5px;
+        text-align: center;
+        margin-bottom: 2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .caja-gris {
+        background-color: #d9d9d9;
+        border: 1px solid #7f7f7f;
+        height: 20px;
+        width: 100%;
+    }
+
+    .w-100 {
+        width: 100%;
+    }
+
+    .w-65 {
+        width: 65%;
+    }
+
+    .w-50 {
+        width: 50%;
+    }
+
+    .w-35 {
+        width: 35%;
+    }
+
+    .w-25 {
+        width: 25%;
+    }
+
+    .contenedor-datos-servicio {
+        width: 100%;
+        border: 1.5px solid #000;
+        padding: 0 0 5px 0;
+        background-color: #ffffff;
+    }
+
+    .etiqueta-servicio {
+        background-color: #fca000;
+        margin-left: 25px;
+        color: #000;
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 15px;
+        font-size: 11px;
+        margin-bottom: 0px;
+    }
+
+    .tabla-servicios {
+        margin-left: 25px;
+        width: 93.5%;
+        border-collapse: collapse;
+        font-size: 10px;
+    }
+
+    .tabla-servicios th {
+        font-weight: normal;
+        text-align: center;
+        padding: 3px 4px;
+        border: none;
+        background-color: #ffffff;
+        white-space: nowrap;
+    }
+
+    .tabla-servicios th:first-child,
+    .tabla-servicios td:first-child {}
+
+    .tabla-servicios th:last-child,
+    .tabla-servicios td:last-child {}
+
+    .tabla-servicios td {
+        border: 1px solid #000;
+        height: 18px;
+        background-color: #e0e0e0;
+    }
+
+    .col-clave {
+        width: 10%;
+    }
+
+    .col-concepto {
+        width: 30%;
+    }
+
+    .col-periodo {
+        width: 15%;
+    }
+
+    .col-unidad {
+        width: 10%;
+    }
+
+    .col-cantidad {
+        width: 5%;
+    }
+
+    .col-costo {
+        width: 30%;
+    }
+
+    .tabla-totales {
+        border-collapse: collapse;
+        font-size: 9px;
+        text-align: right;
+        margin-left: auto;
+        margin-right: 24px;
+    }
+
+    .tabla-totales .etiqueta-total {
+        text-align: right;
+        padding-right: 25px;
+    }
+
+    .tabla-totales .celda-valor {
+        border-bottom: 1px solid #000;
+        border-right: 1px solid #000;
+        border-left: 1px solid #000;
+        width: 60%;
+        height: 22px;
+        padding: 5px;
+        background-color: #ffffff;
+    }
+
+    .tabla-totales .simbolo-peso {
+        float: left;
+    }
+
+    .border-container {
+        border-top: 1.5px solid #000;
+        border-bottom: 1.5px solid #000;
+        border-left: 1.5px solid #000;
+        border-right: 1.5px solid #000;
+        padding-top: 2px;
+        padding-bottom: 0px;
+        padding-left: 5px;
+        padding-right: 6px;
+        position: relative;
+    }
+
+    .header-title {
+        background-color: #fca000;
+        margin-left: 25px;
+        color: #000;
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 15px;
+        font-size: 11px;
+        margin-bottom: 0px;
+    }
+
+    .lista-condiciones {
+        list-style: none;
+    }
+
+    .lista-condiciones li {
+        display: flex;
+        font-size: 9px;
+        margin-top: 4px;
+        margin-bottom: 5px;
+        margin-left: 2px;
+        text-align: justify;
+    }
+
+    .lista-condiciones li .num {
+        width: 25px;
+        flex-shrink: 0;
+    }
+
+    .lista-condiciones li .texto {
+        flex-grow: 1;
+    }
+
+    .lista-condiciones li.texto-continuo {
+        margin-top: 8px;
+        margin-bottom: 8px;
+    }
+
+    .tabla-fechas {
+        table-layout: fixed;
+        width: 100%;
+    }
+
+    .tabla-fechas td {
+        text-align: center;
+        font-size: 9.5px;
+    }
+
+    .tabla-fechas .col-code {
+        background-color: #e6e6e6;
+        width: 45%;
+        padding: 10px;
+        color: #333;
+        font-size: 9px;
+    }
+
+    .tabla-fechas .col-label {
+        width: 20%;
+    }
+
+    .tabla-fechas .col-space {
+        width: 20%;
+    }
+
+    .footer-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 9.5px;
+        margin-top: 65px;
+        padding: 0 70px;
+    }
+
+    .barras-decorativas {
+        display: flex;
+        height: 15px;
+        margin-top: 6px;
+        margin-bottom: 2px;
+    }
+
+    .barra-naranja {
+        background-color: #ff8000;
+        width: 50%;
+    }
+
+    .barra-gris {
+        background-color: #3b3b3b;
+        width: 50%;
+    }
+
+    .ref-code {
+        text-align: right;
+        font-weight: bold;
+        font-size: 9px;
+        margin-bottom: 2px;
+    }
+
+    .footer-legal {
+        display: block;
+        font-size: 11px;
+        line-height: 1.25;
+    }
+
+    .footer-legal .texto-legal {
+        width: 100%;
+        text-align: justify;
+    }
+
+    .footer-legal .pagina {
+        width: 100%;
+        text-align: right;
+        font-weight: bold;
+        margin-top: -10px;
+    }
+
+    .contenedor-costos-pago {
+        width: 100%;
+        background-color: #ffffff;
+        margin: 0 auto;
+    }
+
+    .bloque-condiciones {
+        border: 1.5px solid #000;
+        padding: 1px 25px 2px 5px;
+        position: relative;
+        margin-bottom: 0px;
+    }
+
+    .etiqueta-condicion {
+        background-color: #fca000;
+        margin-left: 25px;
+        color: #000;
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 15px;
+        font-size: 11px;
+        margin-bottom: 0px;
+    }
+
+    .lista-condiciones {
+        list-style: none;
+    }
+
+    .lista-condiciones li {
+        display: flex;
+        font-size: 9px;
+        margin-bottom: 4px;
+        text-align: justify;
+        line-height: 1.2;
+    }
+
+    .lista-condiciones li .num {
+        width: 20px;
+        flex-shrink: 0;
+    }
+
+    .lista-condiciones li .texto {
+        flex-grow: 1;
+    }
+
+    .fila-aplica {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+    }
+
+    .opciones-checkbox {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        white-space: nowrap;
+        margin-left: 10px;
+    }
+
+    .opciones-checkbox label {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+        font-size: 9px;
+    }
+
+    .caja-checkbox {
+        width: 10px;
+        height: 10px;
+        border: 1px solid #000;
+        display: inline-block;
+        background-color: #fff;
+    }
+
+    .tabla-bancaria {
+        width: 100%;
+        border-collapse: collapse;
+        margin: 6px 0 6px 0;
+        font-size: 9.5px;
+    }
+
+    .tabla-bancaria th {
+        border: 1px solid #000;
+        font-weight: normal;
+        text-align: center;
+        padding: 2px 4px;
+        background-color: #ffffff;
+    }
+
+    .tabla-bancaria td {
+        border: 1px solid #000;
+        text-align: center;
+        padding: 3px 4px;
+        font-weight: bold;
+        background-color: #e0e0e0;
+        /* Color gris de relleno */
+    }
+
+    .col-banco {
+        width: 25%;
+    }
+
+    .col-cuenta {
+        width: 25%;
+    }
+
+    .col-clabe {
+        width: 25%;
+    }
+
+    .col-rfc {
+        width: 25%;
+    }
+
+    .contenedor-imparcialidad {
+        width: 100%;
+        background-color: #ffffff;
+        margin: 0 auto;
+    }
+
+    .bloque-marco {
+        border: 1.5px solid #000;
+        padding: 8px 6px 8px;
+        position: relative;
+        margin-bottom: 0px;
+    }
+
+    .etiqueta-imparcialidad {
+        background-color: #fca000;
+        margin-left: 25px;
+        color: #000;
+        font-weight: bold;
+        display: inline-block;
+        padding: 4px 15px;
+        font-size: 11px;
+        margin-bottom: 0px;
+    }
+
+    .texto-introductorio {
+        font-size: 9.5px;
+        text-align: justify;
+        line-height: 1.25;
+        padding-left: 2px;
+    }
+
+    .lista-imparcialidad {
+        list-style: none;
+    }
+
+    .lista-imparcialidad li {
+        display: flex;
+        font-size: 9.5px;
+        margin-bottom: 2px;
+        text-align: justify;
+        line-height: 1.25;
+    }
+
+    .lista-imparcialidad li .num {
+        width: 20px;
+        flex-shrink: 0;
+    }
+
+    .lista-imparcialidad li .texto {
+        flex-grow: 1;
+    }
+
+    .lista-imparcialidad a {
+        color: #0066cc;
+        text-decoration: underline;
+    }
+
+    .bloque-especiales {
+        border: 1.5px solid #000;
+        min-height: 25px;
+        padding: 4px 5px;
+        margin-bottom: 0px;
+    }
+
+    .indicador-especial {
+        font-size: 9.5px;
+        color: #000000;
+    }
+
+    .contenedor-firmas {
+            width: 100%;
+            background-color: #ffffff;
+            margin: 0 auto;
+            padding: 20px 0 10px 0;
+        }
+
+        /* Disposición en 2 columnas para las firmas */
+        .bloque-firmas-flex {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 15px;
+                       margin-top: 35px;
+        }
+
+        .columna-firma {
+            width: 44%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            text-align: center;
+        }
+
+        .caja-firma-gris {
+            background-color: #d9d9d9;
+            width: 100%;
+            height: 22px;
+            border-bottom: 1.5px solid #000000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 11px;
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        .caja-firma-gris .codigo-ref {
+            font-size: 8.5px;
+            font-weight: normal;
+        }
+
+        /* Cargos y empresa debajo de las líneas de firma */
+        .texto-cargo {
+            font-size: 9.5px;
+            line-height: 1.3;
+        }
+
+        .texto-empresa-firma {
+            font-size: 9.5px;
+            line-height: 1.3;
+        }
+
+        /* Fila inferior de ccp GT/GTS */
+        .fila-ccp {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 9px;
+            margin-top: 10px;
+        }
+
+        .etiqueta-ccp {
+            white-space: nowrap;
+        }
+
+        .caja-ccp-gris {
+            background-color: #d9d9d9;
+            width: 320px;
+            height: 18px;
+        }
+</style>
+
+<div class="documento">
+
+    <div class="header-container">
+        <div class="header-left">
+            <img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image">
+        </div>
+
+        <div class="header-right">
+            <div class="titulo-unidad">UNIDAD DE INSPECCIÓN</div>
+
+            <div class="linea-encabezado">
+                <div class="linea-naranja"></div>
+                <div class="linea-gris"></div>
+            </div>
+
+            <div class="textos-oficiales">
+                <div class="texto-rev">FOR-G-016 Rev.18</div>
+                <div class="texto-empresa">BIOTECNOLOGIA CADO, S.A. DE C.V.</div>
+                <div class="texto-propuesta">Propuesta Económica y Técnica – Contrato de Servicios</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="encabezado-pet">
+        <span class="etiqueta-pet">PET-Contrato No</span>
+        <div class="caja-pet-num"></div>
+    </div>
+
+    <div class="etiqueta-establecimiento">DATOS DEL ESTABLECIMIENTO</div>
+    <div class="marco-establecimiento">
+
+        <div class="filas-grid">
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-100">
+                        <label>Razón social o razón social del titular del permiso de descarga</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+                <div class="col-der">
+                    <div class="campo w-100">
+                        <label>RFC</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-100">
+                        <label>Domicilio</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+                <div class="col-der">
+                    <div class="campo w-100">
+                        <label>Colonia o Población</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50">
+                        <label>Del. o Municipio</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                    <div class="campo w-25">
+                        <label>Estado</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                    <div class="campo w-25">
+                        <label>C.P.</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+                <div class="col-der">
+                    <div class="campo w-100">
+                        <label>Coordenadas geográficas del domicilio</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50">
+                        <label>Número de permiso o número del título de concesión</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                    <div class="campo w-50">
+                        <label>Correo electrónico</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+                <div class="col-der">
+                    <div class="campo w-100">
+                        <label>Teléfono</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="fila-flex">
+                <div class="col-izq">
+                    <div class="campo w-50">
+                        <label>Nombre del Representante Legal:</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                    <div class="campo w-50">
+                        <label>RFC Representante Legal</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+                <div class="col-der">
+                    <div class="campo w-100">
+                        <label>Nombre del Solicitante</label>
+                        <div class="caja-gris"></div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="etiqueta-servicio">DATOS DEL SERVICIO(S)</div>
+    <div class="contenedor-datos-servicio">
+        <table class="tabla-servicios">
+            <thead>
+                <tr>
+                    <th class="col-clave">Clave</th>
+                    <th class="col-concepto">Concepto</th>
+                    <th class="col-periodo">Periodo a evaluar</th>
+                    <th class="col-unidad">Unidad</th>
+                    <th class="col-cantidad">Cantidad</th>
+                    <th class="col-costo">Costo Unitario</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="contenedor-totales">
+            <table class="tabla-totales">
+                <tr>
+                    <td class="etiqueta-total">IMPORTE</td>
+                    <td class="celda-valor"><span class="simbolo-peso">$</span> -</td>
+                </tr>
+                <tr>
+                    <td class="etiqueta-total">IVA</td>
+                    <td class="celda-valor"><span class="simbolo-peso">$</span> -</td>
+                </tr>
+                <tr>
+                    <td class="etiqueta-total">TOTAL</td>
+                    <td class="celda-valor"><span class="simbolo-peso">$</span> -</td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+    <div class="header-title">CONDICIONES DEL SERVICIO</div>
+    <div class="border-container">
+        <ul class="lista-condiciones">
+            <li>
+                <span class="num">1)</span>
+                <span class="texto">La inspección debe ser realizada en sitio y con personal acreditado por las Entidades de Acreditación y aprobada ante las Autoridades Normalizadoras.</span>
+            </li>
+            <li>
+                <span class="num">2)</span>
+                <span class="texto">El servicio tiene un alcance para la inspección de forma documental y visual de tal manera que se pueda determinar el cumplimiento con norma o disposición legal, según corresponda, y lo establecido en el presente PET-Contrato.</span>
+            </li>
+            <li>
+                <span class="num">3)</span>
+                <span class="texto">Cuando Biotecnología CADO, S.A. de C.V. en sus inspecciones utilice información proveniente de otras partes, el Gerente Técnico se asegura de su integridad y/o confiabilidad, constatando su fuente o investigando su veracidad.</span>
+            </li>
+            <li>
+                <span class="num">4)</span>
+                <span class="texto">La presente solicitud sirve como contrato para la prestación de los servicios por parte de Biotecnología CADO, S.A. de C.V.</span>
+            </li>
+            <li>
+                <span class="num">5)</span>
+                <span class="texto">Biotecnología CADO, S.A. de C.V. tiene un horario de atención de Lun. – Vie. 8:30 a 18:00 Hrs, sáb 9:00 a 14:00 Hrs. e informará al cliente el día y hora en que se realizará la inspección de su(s) servicio(s) conforme a su ruta de inspección o plan de trabajo.</span>
+            </li>
+            <li>
+                <span class="num">6)</span>
+                <span class="texto">"EL CLIENTE" deberá permitir el acceso al domicilio o instalaciones, al personal autorizado por parte de Biotecnología CADO, S.A. de C.V., para que realice el servicio de inspección (y en caso de requerir también autorice el ingreso a personal de apoyo y/o personal en entrenamiento) y entregar en tiempo y forma la documentación solicitada.</span>
+            </li>
+            <li>
+                <span class="num">7)</span>
+                <span class="texto">Biotecnología CADO, S.A. de C.V. presta su (s) servicio(s) de inspección al cliente y en ninguna parte de los procesos, objeto de la presente PET-Contrato, realiza actos de subcontratación.</span>
+            </li>
+            <li>
+                <span class="num">8)</span>
+                <span class="texto">Biotecnología CADO, S.A. de C.V. para la ejecución del objeto de esta PET-Contrato, se apega a los lineamientos establecidos en los instructivos de trabajo vigentes conforme al Sistema de Gestión, a la norma oficial mexicana o disposición legal correspondiente.</span>
+            </li>
+            <li>
+                <span class="num">9)</span>
+                <span class="texto">El inspector al finalizar el servicio(s) entregará al cliente copia del acta de evaluación y/o lista de inspección.</span>
+            </li>
+            <li>
+                <span class="num">10)</span>
+                <span class="texto">Biotecnología CADO, S.A de C.V. se compromete a emitir el dictamen o certificado, y/o la documentación correspondiente al resultado de inspección (según corresponda) de los servicios contratados en un tiempo estimado de 10 días hábiles contados a partir del día siguiente de la inspección.</span>
+            </li>
+            <li class="texto-continuo">
+                <span class="num">11)</span>
+                <span class="texto">El presente PET-Contrato es vigente a partir de la fecha de aceptación y hasta la conclusión de la prestación de los servicios de inspección.</span>
+            </li>
+            <li class="texto-continuo">
+                <span class="num">12)</span>
+                <span class="texto">En caso de presentase alguna inconformidad originada de esta PET-Contrato, Biotecnología CADO, S.A. de C.V. se someterá a la jurisdicción de las leyes y tribunales mexicanos, renunciando a cualquier otro fuero que, por razón de su domicilio, presente o futuro, pudiera corresponderle</span>
+            </li>
+            <li class="texto-continuo">
+                <span class="num">13)</span>
+                <span class="texto">La firma del cliente en este documento sirve también como constancia de aceptación del Contrato de prestación de los servicios de inspección solicitados a Biotecnología CADO, S.A de C.V. del cual conoce perfectamente su contenido, alcance y fuerza legal; y al que se ha sujetado. Leído el presente contrato y enteradas las partes de su contenido y alcance lo firmán en:</span>
+            </li>
+        </ul>
+    </div>
+
+    <div class=border-container>
+        <table class="tabla-fechas">
+            <tr>
+                <td class="col-code"></td>
+                <td class="col-label">el día</td>
+                <td class="col-code"></td>
+                <td class="col-label">del mes de</td>
+                <td class="col-code"></td>
+                <td class="col-label">del</td>
+                <td class="col-code"></td>
+            </tr>
+        </table>
+    </div>
+
+    <div class="footer-info">
+        <span>Priv. 29 A Sur No. 3302, Col. El Vergel, C.P.72400, Puebla, Puebla.</span>
+        <span>Tel: 222 243 16 03</span>
+        <span>direccion@uvcado.com.mx</span>
+    </div>
+
+    <div class="barras-decorativas">
+        <div class="barra-naranja"></div>
+        <div class="barra-gris"></div>
+    </div>
+
+    <div class="ref-code">REF: PROC-G-002</div>
+
+    <div class="footer-legal">
+        <div class="texto-legal">
+            Documento controlado, prohibida su reproducción parcial o total sin previa autorización de Biotecnología CADO, SA de CV. Esta información es confidencial y para uso exclusivo del destinatario y personal autorizado de Biotecnología CADO, SA de CV.
+        </div>
+        <div class="pagina">
+            Página 1 de 2
+        </div>
+    </div>
+</div>
+
+<div class="documento">
+    <div class="header-container">
+        <div class="header-left">
+            <img src="{{ LOGO_URI }}" alt="UI CADO" class="logo-image">
+        </div>
+
+        <div class="header-right">
+            <div class="titulo-unidad">UNIDAD DE INSPECCIÓN</div>
+
+            <div class="linea-encabezado">
+                <div class="linea-naranja"></div>
+                <div class="linea-gris"></div>
+            </div>
+
+            <div class="textos-oficiales">
+                <div class="texto-rev">FOR-G-016 Rev.18</div>
+                <div class="texto-empresa">BIOTECNOLOGIA CADO, S.A. DE C.V.</div>
+                <div class="texto-propuesta">Propuesta Económica y Técnica – Contrato de Servicios</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="encabezado-pet">
+        <span class="etiqueta-pet">PET-Contrato No</span>
+        <div class="caja-pet-num"></div>
+    </div>
+
+
+    <div class="contenedor-costos-pago">
+
+        <!-- SECCIÓN: CONDICIONES DE LOS COSTOS -->
+        <div class="etiqueta-condicion">CONDICIONES DE LOS COSTOS</div>
+        <div class="bloque-condiciones">
+            <ul class="lista-condiciones">
+                <li>
+                    <span class="num">1)</span>
+                    <span class="texto">Los costos de la presente PET-Contrato tienen una vigencia de 30 días naturales, incluyen IVA y están expresados en MONEDA MEXICANA.</span>
+                </li>
+                <li>
+                    <span class="num">2)</span>
+                    <span class="texto">Cualquier eventualidad que represente retraso en la prestación del servicio imputable al cliente o visitas adicionales, se verá reflejado en el costo del servicio.</span>
+                </li>
+                <li>
+                    <span class="num">3)</span>
+                    <span class="texto">La reprogramación del servicio(s) contratado(s) deberá notificarse a la Unidad de Inspección con 72 horas de anticipación, de lo contrario causará honorarios.</span>
+                </li>
+                <li>
+                    <span class="num">4)</span>
+                    <div class="fila-aplica">
+                        <span class="texto">En el caso de trabajos urgentes, Biotecnología CADO, S.A. de C.V. cobrará un cargo adicional del 35% conforme al precio establecido en el presente PET-Contrato.</span>
+                        <div class="opciones-checkbox">
+                            <span>Aplica</span>
+                            <span class="caja-checkbox"></span>
+                            <span>No Aplica</span>
+                            <span class="caja-checkbox"></span>
+                        </div>
+                    </div>
+                </li>
+                <li>
+                    <span class="num">5)</span>
+                    <span class="texto">La cancelación total del servicio(s) antes de su realización y/o sin causas imputables a Biotecnología CADO, S.A. de C.V., generará un cobro total de los gastos realizados (viáticos y/o transportes), no tendrá derecho a reclamar la devolución del anticipo o cubrirá el gasto total de lo ejecutado hasta el momento de la cancelación.</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="etiqueta-condicion">CONDICIONES DEL PAGO</div>
+        <div class="bloque-condiciones">
+            <ul class="lista-condiciones">
+                <li>
+                    <span class="num">1)</span>
+                    <div class="texto">
+                        "EL CLIENTE" se obliga a pagar a Biotecnología CADO, S.A. de C.V. por el(los) servicio(s) de inspección realizados. El pago debe ser realizado nombre de Biotecnología CADO, S.A. de C.V por medio de transferencia electrónica de fondos, depósito de cheque nominativo o efectivo en:
+
+                        <!-- Tabla de datos de banco -->
+                        <table class="tabla-bancaria">
+                            <thead>
+                                <tr>
+                                    <th class="col-banco">BANCO</th>
+                                    <th class="col-cuenta">CUENTA</th>
+                                    <th class="col-clabe">CLABE</th>
+                                    <th class="col-rfc">RFC</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>BBVA BANCOMER</td>
+                                    <td>0193692027</td>
+                                    <td>012650001936920277</td>
+                                    <td>BCA110222Q14</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </li>
+                <li>
+                    <span class="num">2)</span>
+                    <span class="texto">"EL CLIENTE" realizará el pago en una sola exhibición o 2 pagos diferidos, 50% al contratar el servicio y 50% antes de entregar el dictamen y/o el certificado.</span>
+                </li>
+                <li>
+                    <span class="num">3)</span>
+                    <span class="texto">"EL CLIENTE", una vez realizado el pago, enviará el comprobante del pago al siguiente correo: ventas@uvcado.com.mx</span>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+
+    <div class="contenedor-imparcialidad">
+
+        <div class="etiqueta-imparcialidad">IMPARCIALIDAD-CONFIDENCIAL</div>
+        <div class="bloque-marco">
+
+            <div class="texto-introductorio">
+                Biotecnología CADO, S.A. de C.V. asegura la confidencialidad, imparcialidad e independencia de las actividades relacionadas a los servicios contratados, como se describe a continuación:
+            </div>
+
+            <ul class="lista-imparcialidad">
+                <li>
+                    <span class="num">1)</span>
+                    <span class="texto">Tendrá acceso a la información relacionada con el ítem de inspección, esta información se considera confidencial misma que es propiedad del cliente, así como toda la información que se obtenga y/o genere durante la realización de los servicios de forma verbal, electrónica, visual, por escrito o en cualquier otra forma tangible. Ambas partes aceptan y se comprometen a no divulgar, reproducir en cualquier forma, dar a conocer todo o en partes, a terceras personas la información técnica y comercial intercambiada con la firma de la presente PET-Contrato, excepto cuando se requiera por una entidad.</span>
+                </li>
+                <li>
+                    <span class="num">2)</span>
+                    <span class="texto">Podrá hacer pública la información de la evidencia objetiva del servicio contratado por el cliente registrada en el acta y FOR-G-003 "Formato para asegurar la protección de la información confidencial de los clientes" ante cualquier Entidad de Acreditación y/o Autoridad Normalizadora cuando así lo solicite, notificando de inmediato por correo electrónico cuando esto ocurra, excepto cuando la ley lo prohíba; conforme a lo establecido en el Artículo 56, fracción V, VI, VII de la Ley de Infraestructura de la Calidad; Artículo 88 del Reglamento de la Ley Federal de Metrología y Normalización o por la que la sustituya y conforme los lineamientos de Aprobación de las normas en las cuales la Unidad de Inspección está acreditada. Misma información proporcionada por el cliente quedará bajo resguardo de la Unidad de Inspección por diez (10) años.</span>
+                </li>
+                <li>
+                    <span class="num">3)</span>
+                    <span class="texto">Las actividades de inspección realizadas por la Unidad de Inspección son llevadas a cabo apegadas al Sistema de Gestión de la Calidad, las cuales guían al personal a actuar con imparcialidad, independencia, ausencia de conflicto de interés, ausencia de prejuicios, neutralidad y equidad.</span>
+                </li>
+                <li>
+                    <span class="num">4)</span>
+                    <span class="texto">En caso de que la Unidad de Inspección identifique un riesgo imprevisto a la imparcialidad, posterior al inicio del servicio(s), se notificará al cliente de esta situación, para su conocimiento y tomar las acciones correspondientes para eliminar el riesgo, en caso contrario, se iniciará con el servicio(s) contratado(s) nuevamente. En caso de la aceptación de la presente PET-Contrato y la Unidad de Inspección identificará riesgos a la imparcialidad, podrá rechazar la solicitud del servicio, sin que esto motive acto de discriminación de cualquier índole.</span>
+                </li>
+                <li>
+                    <span class="num">5)</span>
+                    <span class="texto">El personal de la Unidad de Inspección rechazará todo tipo de beneficios personales que no emanen del ejercicio ético de su profesión, por lo que quedará prohibido que el cliente o su personal den gratificaciones de cualquier índole (regalos, bonificaciones, propinas, incentivos económicos, o de cualquier otro tipo).</span>
+                </li>
+                <li>
+                    <span class="num">6)</span>
+                    <span class="texto">Cuando se presente una situación de dolo, mala fe o falta de ética, por parte del personal de la Unidad de Inspección, el cliente, asociados, etc.; la Unidad de Inspección revisará la gravedad del incumplimiento con los reglamentos, lineamientos o políticas para implementar las acciones correctivas necesarias e impondrá las sanciones que correspondan: como actas administrativas, inhabilitación del personal de la Unidad de Inspección, cancelación del servicio o de índole legal, al personal de la Unidad y el cliente, entre otros.</span>
+                </li>
+                <li>
+                    <span class="num">7)</span>
+                    <span class="texto">El cliente tiene derecho de acceder a sus datos personales que poseemos y a los detalles del tratamiento de los mismos, así como a rectificarlos en caso de ser inexactos o incompletos; cancelarlos cuando considere que no se requieren para alguna de las finalidad de señaladas en el aviso de privacidad de Biotecnología CADO, S.A. de C.V., estén siendo utilizados para finalidades no consentidas o haya finalizado la relación contractual o de servicio, o bien, oponerse al tratamiento de los mismos para fines específicos. Puede consultar nuestro aviso de privacidad en la página web <a href="http://uvcado.com.mx/" target="_blank">http://uvcado.com.mx/</a> o para mayor información comuníquese con nosotros en el siguiente correo electrónico <a href="mailto:info.confidencial@uvcado.com.mx">info.confidencial@uvcado.com.mx</a></span>
+                </li>
+                <li>
+                    <span class="num">8)</span>
+                    <span class="texto">Para su conocimiento Biotecnología CADO, S.A. de C.V. cuenta con un procedimiento de atención de quejas y apelaciones, en caso de presentase una queja o apelación, el cliente contará con 5 días hábiles posteriores a la realización del servicio y/o entrega de resultados de inspección, haciendo uso de este recurso por escrito o vía correo electrónico <a href="mailto:buzon.quejas@uvcado.com.mx">buzon.quejas@uvcado.com.mx</a>, o al tel (222)-243-16-03 o verbalmente con el personal de Biotecnología CADO, S.A. de C.V.</span>
+                </li>
+                <li>
+                    <span class="num">9)</span>
+                    <span class="texto">Biotecnología CADO, S.A. de C.V., cuando sea necesario y a solicitud del cliente pone a su disposición el FOR-G-037 Bitácora de quejas, reclamaciones u observaciones</span>
+                </li>
+                <li>
+                    <span class="num">10)</span>
+                    <span class="texto">El inspector tiene la autoridad de suspender las actividades de inspección si identifica una condición insegura en las instalaciones del cliente, que pueda afectar la integridad del inspector(es), en caso de existir se notificará al cliente sobre la condición insegura para evaluar si esta puede ser eliminada al momento. El inspector podrá suspender la inspección, sin causas imputables a la Unidad de Inspección, si la información presentada no es suficiente para evaluar el cumplimiento de la norma oficial mexicana o disposición legal.</span>
+                </li>
+            </ul>
+        </div>
+
+        <div class="etiqueta-imparcialidad">CONDICIONES ESPECIALES DEL SERVICIO(S)</div>
+        <div class="bloque-especiales">
+            <span class="indicador-especial"><sup>(31)</sup> Indicar si existen condiciones especiales establecida por el cliente para realizar el servicio(s) de inspección:</span>
+        </div>
+    </div>
+
+    <div class="contenedor-firmas">
+        <div class="bloque-firmas-flex">
+            <div class="columna-firma">
+                <div class="caja-firma-gris">
+                    GUSTAVO CABRERA FLORES
+                </div>
+                <div class="texto-cargo">Representante Legal</div>
+                <div class="texto-empresa-firma">Biotecnología CADO, S.A. de C.V.</div>
+            </div>
+
+            <div class="columna-firma">
+                <div class="caja-firma-gris">
+                    <span class="codigo-ref"></span>
+                </div>
+                <div class="texto-cargo">Representante Legal</div>
+                <div class="texto-empresa-firma">
+
+                </div>
+            </div>
+        </div>
+
+        <div class="fila-ccp">
+            <span class="etiqueta-ccp">ccp GT/GTS</span>
+            <div class="caja-ccp-gris"></div>
+        </div>
+
+    </div>
+    <div class="footer-info">
+        <span>Priv. 29 A Sur No. 3302, Col. El Vergel, C.P.72400, Puebla, Puebla.</span>
+        <span>Tel: 222 243 16 03</span>
+        <span>direccion@uvcado.com.mx</span>
+    </div>
+
+    <div class="barras-decorativas">
+        <div class="barra-naranja"></div>
+        <div class="barra-gris"></div>
+    </div>
+
+    <div class="ref-code">REF: PROC-G-002</div>
+
+    <div class="footer-legal">
+        <div class="texto-legal">
+            Documento controlado, prohibida su reproducción parcial o total sin previa autorización de Biotecnología CADO, SA de CV. Esta información es confidencial y para uso exclusivo del destinatario y personal autorizado de Biotecnología CADO, SA de CV.
+        </div>
+        <div class="pagina">
+            Página 2 de 2
+        </div>
+    </div>
+</div>
