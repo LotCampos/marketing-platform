@@ -23,6 +23,7 @@ interface InstallationFormState {
   installation_type_id: string
   street: string
   street_number: string
+  colony: string
   state: string
   municipality: string
   postal_code: string
@@ -323,6 +324,22 @@ export default function ProspectInstallationModal({
                 }))
               }
               placeholder="Número exterior"
+              disabled={loading || updateMutation.isPending}
+            />
+          </label>
+
+          <label>
+            Colonia / población
+            <input
+              type="text"
+              value={form.colony}
+              onChange={(event) =>
+                setForm((current) => ({
+                  ...current,
+                  colony: event.target.value,
+                }))
+              }
+              placeholder="Colonia o población"
               disabled={loading || updateMutation.isPending}
             />
           </label>
