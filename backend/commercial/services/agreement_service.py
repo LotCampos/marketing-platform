@@ -6,7 +6,7 @@ from uuid import UUID
 from django.core.exceptions import ValidationError
 from django.db import transaction
 
-from ..models import Agreement, AgreementStatus, Opportunity, Quotation
+from ..models import Agreement, AgreementStatus, Opportunity, Prospect, Quotation, QuotationItem
 
 
 @dataclass(frozen=True)
@@ -61,6 +61,9 @@ class AgreementService:
                 {"client_id": "Agreement client must match the quotation client."}
             )
 
+        if not QuotationItem.objects.filter(quotation_id=quotation.id).exists():
+            raise ValidationError({"quotation_id": "The quotation must contain at least one service item."})
+
         try:
             opportunity = Opportunity.objects.select_for_update().get(id=data.opportunity_id)
         except Opportunity.DoesNotExist as exc:
@@ -70,6 +73,23 @@ class AgreementService:
             raise ValidationError(
                 {"client_id": "Agreement client must match the opportunity client."}
             )
+
+        if opportunity.prospect_id is None:
+            raise ValidationError({"opportunity_id": "The opportunity must originate from a prospect."})
+        prospect = Prospect.objects.select_related("installation").get(id=opportunity.prospect_id)
+        if prospect.converted_client_id != data.client_id:
+            raise ValidationError({"client_id": "The prospect must be converted to the selected client before an agreement can be created."})
+        if prospect.installation_id is None or prospect.installation is None:
+            raise ValidationError({"opportunity_id": "The prospect must have an installation before an agreement can be created."})
+        required_fields = {
+            "pet_number": data.pet_number,
+            "legal_representative": data.legal_representative,
+            "legal_representative_rfc": data.legal_representative_rfc,
+            "technical_responsible": data.technical_responsible,
+        }
+        missing = [name for name, value in required_fields.items() if not value or not str(value).strip()]
+        if missing:
+            raise ValidationError({name: "This field is required to issue the FOR-G-016 PET." for name in missing})
 
         if Agreement.objects.filter(agreement_number=agreement_number).exists():
             raise ValidationError({"agreement_number": "An agreement with this number already exists."})
