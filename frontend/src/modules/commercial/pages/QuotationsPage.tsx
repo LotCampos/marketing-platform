@@ -9,6 +9,7 @@ import {
 import './quotations-page.css'
 
 import {
+  createAgreement,
   createQuotation,
   getClients,
   getOpportunities,
@@ -109,6 +110,41 @@ export default function QuotationsPage() {
       })
 
       resetForm()
+    },
+  })
+
+  const agreementMutation = useMutation({
+    mutationFn: () => {
+      if (!agreementQuotation) {
+        throw new Error('Selecciona una cotización.')
+      }
+      if (!agreementQuotation.client_id) {
+        throw new Error('La cotización no tiene un cliente convertido.')
+      }
+      return createAgreement({
+        agreement_number: agreementNumber.trim(),
+        quotation_id: agreementQuotation.id,
+        opportunity_id: agreementQuotation.opportunity_id,
+        client_id: agreementQuotation.client_id,
+        status: 'DRAFT',
+        pet_number: petNumber.trim(),
+        legal_representative: legalRepresentative.trim(),
+        legal_representative_rfc: legalRepresentativeRfc.trim().toUpperCase(),
+        technical_responsible: technicalResponsible.trim(),
+        urgent_work: urgentWork,
+        special_conditions: specialConditions,
+      })
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['commercial', 'agreements'] })
+      setAgreementQuotation(null)
+      setAgreementNumber('')
+      setPetNumber('')
+      setLegalRepresentative('')
+      setLegalRepresentativeRfc('')
+      setTechnicalResponsible('')
+      setUrgentWork(false)
+      setSpecialConditions(false)
     },
   })
 
@@ -329,6 +365,17 @@ export default function QuotationsPage() {
     createMutation.mutate(payload)
   }
 
+  function openAgreement(quotation: Quotation) {
+    setAgreementQuotation(quotation)
+    setAgreementNumber('')
+    setPetNumber('')
+    setLegalRepresentative('')
+    setLegalRepresentativeRfc('')
+    setTechnicalResponsible('')
+    setUrgentWork(false)
+    setSpecialConditions(false)
+  }
+
   function handlePdf(
     quotationId: string,
   ) {
@@ -372,6 +419,63 @@ export default function QuotationsPage() {
             : '+ Nueva cotización'}
         </button>
       </header>
+
+      {agreementQuotation && (
+        <section className="dashboard-panel">
+          <div className="panel-heading">
+            <div>
+              <p className="eyebrow">FORMALIZACIÓN / FOR-G-016 REV.18</p>
+              <h2>Crear acuerdo — PET-Contrato</h2>
+              <p>
+                Cotización {agreementQuotation.quotation_number}. Los datos comerciales,
+                del cliente y de la instalación se toman de sus registros de origen.
+              </p>
+            </div>
+            <button type="button" onClick={() => setAgreementQuotation(null)}>Cerrar</button>
+          </div>
+
+          <div>
+            <p><strong>Cliente:</strong> {clients.find(c => c.id === agreementQuotation.client_id)?.business_name ?? 'Cliente no disponible'}</p>
+            <p><strong>Oportunidad:</strong> {opportunities.find(o => o.id === agreementQuotation.opportunity_id)?.opportunity_number ?? agreementQuotation.opportunity_id}</p>
+            <p><strong>Importe:</strong> {agreementQuotation.total_amount} {agreementQuotation.currency}</p>
+          </div>
+
+          <form onSubmit={(event) => { event.preventDefault(); agreementMutation.mutate() }}>
+            <div>
+              <label>Número de acuerdo</label>
+              <input value={agreementNumber} onChange={e => setAgreementNumber(e.target.value)} placeholder="AGR-0001" required />
+            </div>
+            <div>
+              <label>PET número</label>
+              <input value={petNumber} onChange={e => setPetNumber(e.target.value)} placeholder="3201" required />
+            </div>
+            <div>
+              <label>Representante legal</label>
+              <input value={legalRepresentative} onChange={e => setLegalRepresentative(e.target.value)} required />
+            </div>
+            <div>
+              <label>RFC representante legal</label>
+              <input value={legalRepresentativeRfc} onChange={e => setLegalRepresentativeRfc(e.target.value.toUpperCase())} maxLength={13} required />
+            </div>
+            <div>
+              <label>Responsable técnico / GT-GTS</label>
+              <input value={technicalResponsible} onChange={e => setTechnicalResponsible(e.target.value)} required />
+            </div>
+            <label>
+              <input type="checkbox" checked={urgentWork} onChange={e => setUrgentWork(e.target.checked)} />
+              Trabajo urgente
+            </label>
+            <label>
+              <input type="checkbox" checked={specialConditions} onChange={e => setSpecialConditions(e.target.checked)} />
+              Existen condiciones especiales
+            </label>
+            {agreementMutation.isError && <p role="alert">{getErrorMessage(agreementMutation.error)}</p>}
+            <button type="submit" disabled={agreementMutation.isPending}>
+              {agreementMutation.isPending ? 'Creando acuerdo...' : 'Crear acuerdo y habilitar FOR-G-016'}
+            </button>
+          </form>
+        </section>
+      )}
 
       {isFormOpen && (
         <section className="dashboard-panel">
@@ -833,6 +937,14 @@ export default function QuotationsPage() {
                       'es-MX',
                     )}
                   </span>
+
+                  <button
+                    type="button"
+                    onClick={() => openAgreement(quotation)}
+                    disabled={!quotation.client_id}
+                  >
+                    Crear acuerdo
+                  </button>
 
                   <button
                     type="button"
