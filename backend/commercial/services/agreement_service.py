@@ -22,6 +22,12 @@ class AgreementCreateData:
     effective_until: object | None = None
     terms_hash: str | None = None
     notes: str | None = None
+    pet_number: str | None = None
+    legal_representative: str | None = None
+    legal_representative_rfc: str | None = None
+    technical_responsible: str | None = None
+    urgent_work: bool = False
+    special_conditions: bool = False
 
 
 class AgreementService:
@@ -85,5 +91,11 @@ class AgreementService:
             effective_until=data.effective_until,
             terms_hash=terms_hash or None,
             notes=notes or None,
+            pet_number=data.pet_number.strip() if data.pet_number else None,
+            legal_representative=data.legal_representative.strip() if data.legal_representative else None,
+            legal_representative_rfc=data.legal_representative_rfc.strip().upper() if data.legal_representative_rfc else None,
+            technical_responsible=data.technical_responsible.strip() if data.technical_responsible else None,
+            urgent_work=bool(data.urgent_work),
+            special_conditions=bool(data.special_conditions),
             version_lock=1,
         )
