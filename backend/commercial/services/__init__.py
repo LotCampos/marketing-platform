@@ -1,4 +1,5 @@
 from .agreement_service import AgreementCreateData, AgreementService
+from .agreement_pdf_service import AgreementPDFService
 from .opportunity_service import OpportunityCreateData, OpportunityService
 from .prospect_conversion_service import ProspectConversionResult, ProspectConversionService
 from .prospect_service import OptimisticLockError, ProspectCreateData, ProspectService
@@ -9,6 +10,7 @@ from .service_request_service import ServiceRequestService
 __all__ = [
     "AgreementCreateData",
     "AgreementService",
+    "AgreementPDFService",
     "OptimisticLockError",
     "OpportunityCreateData",
     "OpportunityService",
