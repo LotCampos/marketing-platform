@@ -1,0 +1,87 @@
+/* =========================================================
+   DESIGN SYSTEM - COMPONENTS: BADGES & TAGS
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. ESTADO / STATUS BADGE (Píldora)
+   --------------------------------------------------------- */
+
+.crm-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 14px;
+  background: var(--crm-color-surface-sunken, #111214);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  white-space: nowrap;
+  box-shadow: 
+    inset 2px 2px 5px rgba(0, 0, 0, 0.8),
+    inset -1px -1px 2px rgba(255, 255, 255, 0.03);
+}
+
+.crm-badge--orange {
+  color: var(--crm-color-orange-500, #f36517);
+  text-shadow: var(--crm-glow-orange-text);
+}
+
+.crm-badge--green {
+  color: var(--crm-color-success-text, #22c55e);
+  background: rgba(34, 197, 94, 0.08); 
+  border-color: rgba(34, 197, 94, 0.2);
+  text-shadow: 0 0 6px rgba(34, 197, 94, 0.4);
+}
+
+.crm-badge--neutral {
+  color: var(--crm-color-text-muted, #94a3b8);
+  background: var(--crm-color-surface-base, #1e2024);
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+/* ---------------------------------------------------------
+   2. CONTADORES (Record Count)
+   --------------------------------------------------------- */
+
+.crm-counter {
+  flex: 0 0 auto;
+  margin-left: auto;
+  padding: 8px 16px;
+  background: var(--crm-color-surface-sunken, #111214);
+  border-radius: 999px;
+  color: var(--crm-color-text-muted, #94a3b8);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: 
+    inset 3px 3px 6px rgba(0, 0, 0, 0.9), 
+    inset -1px -1px 3px rgba(255, 255, 255, 0.05);
+}
+
+/* ---------------------------------------------------------
+   3. STATUS HEADER (Top nav indicator)
+   --------------------------------------------------------- */
+
+.crm-header-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  border-radius: 999px;
+  background: var(--crm-color-surface-sunken);
+  color: var(--crm-color-text-muted);
+  font-size: 11px;
+  font-weight: 700;
+  box-shadow: inset 3px 3px 6px rgba(0, 0, 0, 0.8);
+}
+
+.crm-header-status__dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 7px;
+  border-radius: 50%;
+  background: var(--crm-color-success-text, #22c55e);
+  box-shadow: 0 0 8px rgba(34, 197, 94, 0.6);
+}

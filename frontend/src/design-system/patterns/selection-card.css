@@ -1,0 +1,62 @@
+.crm-selection-card {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  margin-top: 20px;
+  padding: 18px 20px;
+  border: var(--crm-border-card-3d);
+  border-radius: var(--crm-radius-card);
+  background: var(--crm-color-surface-highlight);
+  box-shadow: var(--crm-shadow-panel);
+}
+
+.crm-selection-card__icon {
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  border-radius: var(--crm-radius-input);
+  background: var(--crm-color-surface-sunken);
+  color: var(--crm-color-orange-500);
+  box-shadow: var(--crm-shadow-sunken);
+}
+
+.crm-selection-card__icon svg {
+  width: 21px;
+  height: 21px;
+}
+
+.crm-selection-card__content {
+  min-width: 0;
+  flex: 1;
+}
+
+.crm-selection-card__code {
+  display: block;
+  margin-bottom: 4px;
+  color: var(--crm-color-orange-500);
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+}
+
+.crm-selection-card__content h5 {
+  margin: 0;
+  color: var(--crm-color-text-primary);
+  font-size: 15px;
+  font-weight: 750;
+  line-height: 1.4;
+}
+
+.crm-selection-card__content p {
+  margin: 7px 0 0;
+  color: var(--crm-color-text-secondary);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.crm-selection-card__content p strong {
+  color: var(--crm-color-text-primary);
+}

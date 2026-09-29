@@ -1,0 +1,150 @@
+/* =========================================================
+   DESIGN SYSTEM - COMPONENTS: LOGIN PAGE
+   ========================================================= */
+
+.crm-login-page {
+  position: relative;
+  min-height: 100vh;
+  width: 100%;
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 50% 50%;
+  background-color: var(--crm-color-bg, #0a0a0a);
+  background-image: var(--crm-noise-texture);
+  background-attachment: fixed;
+}
+
+/* ---------------------------------------------------------
+   1. BRANDING AREA (Left Side)
+   --------------------------------------------------------- */
+
+.crm-login__brand {
+  position: relative;
+  z-index: 1;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 5vw, 80px);
+  background-color: var(--crm-color-orange-500, #f36517);
+  border-radius: 0 120px 200px 0;
+  border: 12px solid var(--crm-color-orange-600, #ff7b30);
+  box-shadow: 
+    inset 15px 15px 30px rgba(139, 28, 0, 0.7),
+    inset -10px -10px 20px rgba(255, 255, 255, 0.4),
+    20px 0 50px rgba(0, 0, 0, 0.9);
+}
+.crm-login__brand::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--crm-noise-texture);
+  pointer-events: none;
+  mix-blend-mode: multiply;
+}
+
+.crm-login__brand-content {
+  position: relative;
+  z-index: 2;
+  max-width: 520px;
+  color: #ffffff; 
+  text-shadow: 0 4px 10px rgba(0, 0, 0, 0.3);
+}
+
+.crm-login__accent-line {
+  display: block;
+  width: 92px;
+  height: 4px;
+  margin-top: 30px;
+  border-radius: 999px;
+  background: #ffffff;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ---------------------------------------------------------
+   2. ACCESS AREA (Right Side)
+   --------------------------------------------------------- */
+
+.crm-login__access {
+  position: relative;
+  z-index: 2;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: clamp(40px, 5vw, 80px)
+}
+
+.crm-login-card {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+  padding: 45px 40px;
+  background-color: var(--crm-color-surface-base, #1e2024);
+  border-radius: 60px 30px 80px 40px; 
+  border: 8px solid var(--crm-color-surface-raised, #2a2c30);
+  box-shadow: 
+    inset 12px 12px 25px rgba(0, 0, 0, 0.9),
+    inset -6px -6px 15px rgba(255, 255, 255, 0.05),
+    15px 25px 40px rgba(0, 0, 0, 0.7);
+}
+
+.crm-login-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--crm-noise-texture);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+}
+
+.crm-login-card > * {
+  position: relative;
+  z-index: 1;
+
+}
+
+.crm-login-submit {
+  width: 100%;
+  height: 56px; 
+  margin-top: 20px;
+  border-radius: 20px;
+  font-size: 15px; 
+}
+
+.crm-login-card-footer {
+  position: relative;
+  z-index: 1;
+  margin-top: 40px;
+  padding-top: 20px;
+  border-top: 1px solid rgba(255, 255, 255, 0.05);
+  color: #64748b;
+  font-size: 0.8rem;
+  line-height: 1.5;
+  text-align: center;
+}
+/* ---------------------------------------------------------
+   3. RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 900px) {
+  .crm-login-page {
+    display: flex;
+    flex-direction: column;
+    grid-template-columns: 100%;
+  }
+
+  .crm-login__brand {
+    min-height: auto;
+    border-radius: 0 0 60px 60px;
+    padding: 60px 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.8);
+  }
+
+  .crm-login__access {
+    min-height: auto;
+    padding: 40px 24px;
+  }
+}

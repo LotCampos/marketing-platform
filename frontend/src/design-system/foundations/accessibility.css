@@ -1,0 +1,73 @@
+/* =========================================================
+   DESIGN SYSTEM - FOUNDATIONS: ACCESSIBILITY (A11Y)
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. REDUCCIÓN DE MOVIMIENTO (PREFERS-REDUCED-MOTION)
+   --------------------------------------------------------- */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ---------------------------------------------------------
+   2. FOCUS VISIBLE Y NAVEGACIÓN POR TECLADO
+   --------------------------------------------------------- */
+
+:focus-visible {
+  outline: 2px solid var(--crm-color-orange-500, #f36517);
+  outline-offset: 4px;
+  box-shadow: 0 0 0 6px rgba(243, 101, 23, 0.2);
+  border-radius: 4px; 
+}
+
+:focus:not(:focus-visible) {
+  outline: none;
+  box-shadow: none;
+}
+
+/* ---------------------------------------------------------
+   3. UTILIDADES PARA LECTORES DE PANTALLA (SCREEN READERS)
+   --------------------------------------------------------- */
+
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+.sr-only-focusable:focus,
+.sr-only-focusable:focus-visible {
+  position: static;
+  width: auto;
+  height: auto;
+  padding: 0;
+  margin: 0;
+  overflow: visible;
+  clip: auto;
+  white-space: normal;
+}
+
+/* ---------------------------------------------------------
+   4. ESTADOS ARIA GLOBALES
+   --------------------------------------------------------- */
+
+[aria-disabled="true"] {
+  cursor: not-allowed;
+}
+
+[aria-hidden="true"] {
+  display: none;
+}

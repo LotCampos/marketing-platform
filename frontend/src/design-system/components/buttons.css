@@ -1,0 +1,156 @@
+/* =========================================================
+   DESIGN SYSTEM - COMPONENTS: BUTTONS
+   ========================================================= */
+
+/* ---------------------------------------------------------
+   1. BOTÓN BASE (CHASIS)
+   --------------------------------------------------------- */
+.crm-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 48px; 
+  padding: 0 24px;
+  
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  white-space: nowrap;
+  
+  border: none;
+  border-radius: var(--crm-radius-button, 16px);
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+}
+
+/* ---------------------------------------------------------
+   2. VARIANTES VISUALES
+   --------------------------------------------------------- */
+
+.crm-btn--primary {
+  color: var(--crm-color-text-primary, #ffffff);
+  background: var(--crm-color-orange-500, #f36517);
+  box-shadow: var(--crm-shadow-btn-primary);
+}c
+
+.crm-btn--primary:hover:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(-2px);
+  filter: brightness(1.1);
+  box-shadow: 
+    8px 8px 20px rgba(0, 0, 0, 0.7),
+    inset 2px 2px 5px rgba(255, 255, 255, 0.5),
+    inset -3px -3px 5px rgba(139, 28, 0, 0.5);
+}
+
+.crm-btn--primary:active:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: 
+    2px 2px 5px rgba(0, 0, 0, 0.6),
+    inset 4px 4px 8px rgba(139, 28, 0, 0.6);
+}
+
+.crm-btn--secondary {
+  color: var(--crm-color-text-muted, #94a3b8);
+  background: var(--crm-color-surface-raised, #2a2c30);
+  box-shadow: var(--crm-shadow-btn-secondary);
+}
+
+.crm-btn--secondary:hover:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(-2px);
+  color: var(--crm-color-text-primary, #ffffff);
+  background: var(--crm-color-surface-highlight, #313338);
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.15),
+    inset -2px -2px 4px rgba(0, 0, 0, 0.4);
+}
+
+.crm-btn--secondary:active:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 3px 3px 6px rgba(0,0,0,0.5);
+}
+
+.crm-btn--danger {
+  color: #fca5a5;
+  background: #1a0f0f;
+  border: 1px solid #7f1d1d;
+  box-shadow: inset 2px 2px 6px rgba(0, 0, 0, 0.8);
+}
+
+.crm-btn--danger:hover:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(-2px);
+  background: #7f1d1d;
+  color: #ffffff;
+  border-color: transparent;
+  box-shadow: 
+    6px 6px 15px rgba(0, 0, 0, 0.6),
+    inset 1px 1px 3px rgba(255, 255, 255, 0.2);
+}
+
+.crm-btn--danger:active:not([aria-disabled="true"]):not(:disabled) {
+  transform: translateY(2px);
+  box-shadow: inset 3px 3px 8px rgba(0,0,0,0.7);
+}
+
+/* ---------------------------------------------------------
+   3. ESTADOS ARIA & SEMÁNTICOS (Accesibilidad)
+   --------------------------------------------------------- */
+
+.crm-btn[aria-disabled="true"],
+.crm-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  transform: none; 
+  pointer-events: none; 
+}
+
+.crm-btn[aria-busy="true"] {
+  color: transparent !important; 
+  pointer-events: none;
+}
+
+.crm-btn[aria-busy="true"]::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 20px;
+  height: 20px;
+  margin-top: -10px;
+  margin-left: -10px;
+  border: 3px solid rgba(255, 255, 255, 0.3);
+  border-top-color: #ffffff;
+  border-radius: 50%;
+  animation: crmBtnSpin 0.8s linear infinite;
+}
+
+@keyframes crmBtnSpin {
+  to { transform: rotate(360deg); }
+}
+
+.crm-btn:focus-visible {
+  border-radius: var(--crm-radius-button, 16px);
+}
+
+/* ---------------------------------------------------------
+   4. TAMAÑOS (SIZING)
+   --------------------------------------------------------- */
+   
+.crm-btn--small {
+  min-height: 36px;
+  padding: 0 16px;
+  font-size: 11px;
+  border-radius: 12px;
+}
+
+.crm-btn--large {
+  min-height: 56px;
+  padding: 0 32px;
+  font-size: 15px;
+  border-radius: 20px;
+}

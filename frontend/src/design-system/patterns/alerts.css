@@ -1,0 +1,18 @@
+.crm-alert {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 16px 20px;
+  border-radius: var(--crm-radius-input);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.crm-alert--error {
+  background: var(--crm-color-error-bg);
+  border: 1px solid var(--crm-color-error-border);
+  color: var(--crm-color-error-text);
+  box-shadow: inset 4px 4px 12px rgba(0, 0, 0, 0.8);
+}

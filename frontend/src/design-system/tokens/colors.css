@@ -1,0 +1,41 @@
+/* =========================================================
+   DESIGN SYSTEM - TOKENS: COLORS
+   ========================================================= */
+  
+:root {
+  /* Brand Colors */
+  --crm-color-orange-500: #f36517;
+  --crm-color-orange-600: #ff7b30;
+  --crm-color-orange-700: #c2410c;
+
+  /* Surfaces & Hardware Colors (Dark Mode Base) */
+  --crm-color-bg: #0a0a0a;
+  --crm-color-surface-base: #1e2024;
+  --crm-color-surface-raised: #2a2c30;
+  --crm-color-surface-highlight: #313338;
+  --crm-color-surface-sunken: #111214;
+  --crm-color-surface-deep: #050505;
+
+  /* Typography Colors (WCAG Contrast Optimized) */
+  --crm-color-text-primary: #ffffff;     
+  --crm-color-text-secondary: #cbd5e1;   
+  --crm-color-text-muted: #94a3b8;     
+  --crm-color-text-inverse: #000000;
+
+  /* Status Colors */
+  --crm-color-success-bg: rgba(34, 197, 94, 0.12);
+  --crm-color-success-text: #22c55e;
+  --crm-color-success-glow: rgba(34, 197, 94, 0.4);
+  
+  --crm-color-error-bg: #1a0f0f;
+  --crm-color-error-border: #7f1d1d;
+  --crm-color-error-text: #fca5a5;
+  --crm-color-error-glow: rgba(239, 68, 68, 0.4);
+  
+  --crm-color-warning-bg: #1f140d;
+  --crm-color-warning-border: #9a3412;
+  --crm-color-warning-text: #fdba74;
+
+  /* Decorative Textures */
+  --crm-noise-texture: url("data:image/svg+xml,%3Csvg viewBox='0 0 200 200' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noiseFilter'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='1.5' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noiseFilter)' opacity='0.15'/%3E%3C/svg%3E");
+}

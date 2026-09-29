@@ -1,0 +1,22 @@
+
+.crm-action-grid {
+  position: relative;
+  z-index: 1;
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 20px;
+  padding: 30px;
+}
+
+@media (max-width: 1100px) {
+  .crm-action-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 760px) {
+  .crm-action-grid {
+    grid-template-columns: 1fr;
+    padding: 24px;
+  }
+}

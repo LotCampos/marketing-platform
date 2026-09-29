@@ -1,0 +1,4 @@
+:root {
+  --crm-border-panel-3d: 6px solid var(--crm-color-surface-raised);
+  --crm-border-card-3d: 4px solid var(--crm-color-surface-raised);
+}

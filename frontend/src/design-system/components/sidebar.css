@@ -1,0 +1,241 @@
+/* =========================================================
+   DESIGN SYSTEM - COMPONENTS: SIDEBAR
+   ========================================================= */
+
+.crm-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 100;
+  width: var(--crm-sidebar-width, 272px);
+  display: flex;
+  flex-direction: column;
+  padding: 20px 16px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  background-color: var(--crm-color-surface-base, #1e2024);
+  border-right: 8px solid var(--crm-color-surface-raised, #2a2c30);
+  border-top: none;
+  border-left: none;
+  border-bottom: none;
+  border-radius: 0 32px 32px 0;
+  box-shadow: 
+    inset 12px 0 25px rgba(0, 0, 0, 0.8), 
+    inset -4px 0 10px rgba(255, 255, 255, 0.05), 
+    10px 0 30px rgba(0, 0, 0, 0.5); 
+}
+
+.crm-sidebar::before {
+  content: '';
+  position: absolute; 
+  inset: 0;
+  border-radius: inherit;
+  background-image: var(--crm-noise-texture);
+  pointer-events: none;
+  mix-blend-mode: overlay;
+  z-index: 0;
+}
+
+.crm-sidebar > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* ---------------------------------------------------------
+   1. BRANDING AREA
+   --------------------------------------------------------- */
+
+.crm-sidebar__brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 8px 22px;
+}
+
+.crm-sidebar__logo {
+  width: 42px;
+  height: 42px;
+  display: grid;
+  place-items: center;
+  flex: 0 0 42px;
+  border-radius: 14px;
+  background: var(--crm-color-orange-500, #f36517);
+  color: #ffffff;
+  font-size: 14px;
+  font-weight: 850;
+  box-shadow: var(--crm-shadow-btn-primary);
+}
+
+.crm-sidebar__brand-text {
+  min-width: 0;
+}
+
+.crm-sidebar__brand-text strong {
+  display: block;
+  color: #ffffff; 
+  font-size: 15px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
+}
+
+.crm-sidebar__brand-text span {
+  display: block;
+  margin-top: 2px;
+  color: var(--crm-color-text-muted, #94a3b8);
+  font-size: 10px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   2. MODULE INFO (Sunken Box)
+   --------------------------------------------------------- */
+
+.crm-sidebar__module {
+  margin: 0 6px 14px;
+  padding: 16px 14px;
+  background: var(--crm-color-surface-sunken, #111214);
+  border-radius: 20px;
+  box-shadow: var(--crm-shadow-sunken);
+}
+
+/* ---------------------------------------------------------
+   3. NAVIGATION LINKS
+   --------------------------------------------------------- */
+
+.crm-sidebar__nav {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  margin: 2px 0 0;
+}
+
+.crm-nav-link {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-height: 48px;
+  padding: 0 14px 0 18px;
+  overflow: visible;
+  border-radius: var(--crm-radius-button, 16px);
+  color: var(--crm-color-text-muted, #94a3b8);
+  font-size: 13px;
+  font-weight: 650;
+  background: transparent;
+  transition:
+    color 0.2s ease,
+    background-color 0.2s ease,
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.crm-nav-link::before {
+  content: '';
+  position: absolute;
+  left: -2px;
+  top: 9px;
+  bottom: 9px;
+  width: 3px;
+  border-radius: 999px;
+  background: var(--crm-color-orange-500, #f36517);
+  opacity: 0;
+  transform: scaleY(0.35);
+  box-shadow: var(--crm-glow-orange-intense);
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.crm-nav-link:hover,
+.crm-nav-link:focus-visible {
+  color: var(--crm-color-text-primary, #ffffff);
+  background: var(--crm-color-surface-raised, #2a2c30);
+  transform: translateX(3px);
+  box-shadow:
+    4px 4px 10px rgba(0, 0, 0, 0.4),
+    inset 1px 1px 2px rgba(255, 255, 255, 0.05);
+}
+
+.crm-nav-link[aria-current="page"] {
+  color: var(--crm-color-text-primary, #ffffff);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(243, 101, 23, 0.16) 0%,
+      rgba(243, 101, 23, 0.06) 55%,
+      rgba(243, 101, 23, 0) 100%
+    );
+  transform: translateX(3px);
+  box-shadow:
+    inset 1px 0 0 rgba(243, 101, 23, 0.12),
+    6px 6px 15px rgba(0, 0, 0, 0.3);
+}
+
+.crm-nav-link[aria-current="page"]::before {
+  opacity: 1;
+  transform: scaleY(1);
+}
+
+.crm-nav-link__indicator {
+  width: 5px;
+  height: 5px;
+  flex: 0 0 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.28;
+  box-shadow:
+    inset 1px 1px 2px rgba(0, 0, 0, 0.5);
+  transition:
+    width 0.2s ease,
+    height 0.2s ease,
+    flex-basis 0.2s ease,
+    opacity 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.crm-nav-link[aria-current="page"] .crm-nav-link__indicator {
+  width: 7px;
+  height: 7px;
+  flex-basis: 7px;
+  opacity: 1;
+  background: var(--crm-color-orange-500, #f36517);
+  box-shadow:
+    0 0 5px rgba(243, 101, 23, 0.9),
+    0 0 12px rgba(243, 101, 23, 0.65);
+}
+
+.crm-nav-link__label {
+  min-width: 0;
+  white-space: nowrap;
+}
+
+/* ---------------------------------------------------------
+   4. FOOTER
+   --------------------------------------------------------- */
+
+.crm-sidebar-footer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 1;
+  margin-top: auto;
+  border-top: 2px solid rgba(255, 255, 255, 0.03);
+}
+
+/* ---------------------------------------------------------
+   5. RESPONSIVE
+   --------------------------------------------------------- */
+
+@media (max-width: 680px) {
+  .crm-sidebar {
+    position: relative;
+    width: 100%;
+    height: auto;
+    border-right: none;
+    border-bottom: 8px solid var(--crm-color-surface-raised);
+    border-radius: 0 0 32px 32px;
+  }
+}
